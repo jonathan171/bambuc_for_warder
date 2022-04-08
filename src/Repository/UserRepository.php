@@ -62,6 +62,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function loadUserByIdentifier(string $usernameOrEmail): ?User
+    {
+        $entityManager = $this->getEntityManager();
+
+        return $entityManager->createQuery(
+                'SELECT u
+                FROM App\Entity\User u
+                WHERE u.username = :query
+                OR u.email = :query'
+            )
+            ->setParameter('query', $usernameOrEmail)
+            ->getOneOrNullResult();
+    }
+
+    /** @deprecated since Symfony 5.3 */
+    public function loadUserByUsername(string $usernameOrEmail): ?User
+    {
+        return $this->loadUserByIdentifier($usernameOrEmail);
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

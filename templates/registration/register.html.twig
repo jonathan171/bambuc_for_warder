@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registrar{% endblock %}
+
+{% block body %}
+    <h1>Registrar</h1>
+
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.email,{
+             label: 'Correo: '
+        }) }}
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'contraseña:'
+        }) }}
+        {{ form_row(registrationForm.agreeTerms,{
+            label: 'Acepta los terminos'
+        }) }}
+
+        <button type="submit" class="btn">Register</button>
+    {{ form_end(registrationForm) }}
+{% endblock %}
