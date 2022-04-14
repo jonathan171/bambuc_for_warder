@@ -2,78 +2,106 @@
 
 namespace App\Entity;
 
-use App\Repository\EnvioRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=EnvioRepository::class)
+ * Envio
+ *
+ * @ORM\Table(name="envio")
+ * @ORM\Entity
  */
 class Envio
 {
     /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="codigo", type="string", length=255, nullable=false)
      */
     private $codigo;
 
     /**
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="estado", type="integer", nullable=false)
      */
     private $estado;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="numero_orden", type="string", length=255, nullable=false)
      */
-    private $numero_orden;
+    private $numeroOrden;
 
     /**
-     * @ORM\Column(type="text")
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="text", length=0, nullable=false)
      */
     private $descripcion;
 
     /**
-     * @ORM\Column(type="decimal", precision=5, scale=2, nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="total_peso_estimado", type="decimal", precision=20, scale=2, nullable=true)
      */
-    private $total_peso_estimado;
+    private $totalPesoEstimado;
 
     /**
-     * @ORM\Column(type="decimal", precision=5, scale=2, nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="total_peso_real", type="decimal", precision=20, scale=2, nullable=true)
      */
-    private $total_peso_real;
+    private $totalPesoReal;
 
     /**
-     * @ORM\Column(type="decimal", precision=5, scale=2, nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="total_dimencional", type="decimal", precision=20, scale=2, nullable=true)
      */
-    private $total_dimencional;
+    private $totalDimencional;
 
     /**
-     * @ORM\Column(type="date")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_estimada_entrega", type="date", nullable=false)
      */
-    private $fecha_estimada_entrega;
+    private $fechaEstimadaEntrega;
 
     /**
-     * @ORM\Column(type="text")
+     * @var string
+     *
+     * @ORM\Column(name="piezas", type="text", length=0, nullable=false)
      */
     private $piezas;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @var int|null
+     *
+     * @ORM\Column(name="cantidad_piezas", type="integer", nullable=true)
      */
-    private $cantidad_piezas;
+    private $cantidadPiezas;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="json_recibido", type="text", length=0, nullable=true)
      */
-    private $json_recibido;
+    private $jsonRecibido;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @var bool
+     *
+     * @ORM\Column(name="facturado", type="boolean", nullable=false)
      */
     private $facturado;
 
@@ -108,12 +136,12 @@ class Envio
 
     public function getNumeroOrden(): ?string
     {
-        return $this->numero_orden;
+        return $this->numeroOrden;
     }
 
-    public function setNumeroOrden(string $numero_orden): self
+    public function setNumeroOrden(string $numeroOrden): self
     {
-        $this->numero_orden = $numero_orden;
+        $this->numeroOrden = $numeroOrden;
 
         return $this;
     }
@@ -132,48 +160,48 @@ class Envio
 
     public function getTotalPesoEstimado(): ?string
     {
-        return $this->total_peso_estimado;
+        return $this->totalPesoEstimado;
     }
 
-    public function setTotalPesoEstimado(?string $total_peso_estimado): self
+    public function setTotalPesoEstimado(?string $totalPesoEstimado): self
     {
-        $this->total_peso_estimado = $total_peso_estimado;
+        $this->totalPesoEstimado = $totalPesoEstimado;
 
         return $this;
     }
 
     public function getTotalPesoReal(): ?string
     {
-        return $this->total_peso_real;
+        return $this->totalPesoReal;
     }
 
-    public function setTotalPesoReal(?string $total_peso_real): self
+    public function setTotalPesoReal(?string $totalPesoReal): self
     {
-        $this->total_peso_real = $total_peso_real;
+        $this->totalPesoReal = $totalPesoReal;
 
         return $this;
     }
 
     public function getTotalDimencional(): ?string
     {
-        return $this->total_dimencional;
+        return $this->totalDimencional;
     }
 
-    public function setTotalDimencional(?string $total_dimencional): self
+    public function setTotalDimencional(?string $totalDimencional): self
     {
-        $this->total_dimencional = $total_dimencional;
+        $this->totalDimencional = $totalDimencional;
 
         return $this;
     }
 
     public function getFechaEstimadaEntrega(): ?\DateTimeInterface
     {
-        return $this->fecha_estimada_entrega;
+        return $this->fechaEstimadaEntrega;
     }
 
-    public function setFechaEstimadaEntrega(\DateTimeInterface $fecha_estimada_entrega): self
+    public function setFechaEstimadaEntrega(\DateTimeInterface $fechaEstimadaEntrega): self
     {
-        $this->fecha_estimada_entrega = $fecha_estimada_entrega;
+        $this->fechaEstimadaEntrega = $fechaEstimadaEntrega;
 
         return $this;
     }
@@ -183,7 +211,7 @@ class Envio
         return $this->piezas;
     }
 
-    public function setPiesas(string $piezas): self
+    public function setPiezas(string $piezas): self
     {
         $this->piezas = $piezas;
 
@@ -192,24 +220,24 @@ class Envio
 
     public function getCantidadPiezas(): ?int
     {
-        return $this->cantidad_piezas;
+        return $this->cantidadPiezas;
     }
 
-    public function setCantidadPiezas(?int $cantidad_piezas): self
+    public function setCantidadPiezas(?int $cantidadPiezas): self
     {
-        $this->cantidad_piezas = $cantidad_piezas;
+        $this->cantidadPiezas = $cantidadPiezas;
 
         return $this;
     }
 
     public function getJsonRecibido(): ?string
     {
-        return $this->json_recibido;
+        return $this->jsonRecibido;
     }
 
-    public function setJsonRecibido(?string $json_recibido): self
+    public function setJsonRecibido(?string $jsonRecibido): self
     {
-        $this->json_recibido = $json_recibido;
+        $this->jsonRecibido = $jsonRecibido;
 
         return $this;
     }
@@ -225,4 +253,6 @@ class Envio
 
         return $this;
     }
+
+
 }
