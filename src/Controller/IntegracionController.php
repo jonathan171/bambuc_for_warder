@@ -33,6 +33,7 @@ class IntegracionController extends AbstractController
     {
 
         echo 'hola';
+        echo  $request->request->get('codigo_barras');
         die();
     }
 }

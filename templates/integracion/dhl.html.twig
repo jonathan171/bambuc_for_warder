@@ -4,7 +4,19 @@
 
 {% block body %}
 <form action="{{ path('app_integracion_enviodhl') }}" method="post">
- <input id="codigo_barras" type="text" name="codigo_barras">
-  <input type="submit" value="Buscar">
+<div class="row">
+
+<div class="col-md-8">
+ <input class="form-control" id="codigo_barras" type="text" name="codigo_barras">
+</div>
+<div  class="col-md-4">
+ <input type="submit" value="Buscar" class="
+                                btn btn-info
+                                font-weight-medium
+                                rounded-pill
+                                px-4
+                              ">
+</div>
+ </div>
 </form>
 {% endblock %}
