@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DHLController!{% endblock %}
+
+{% block body %}
+<form action="{{ path('app_integracion_enviodhl') }}" method="post">
+ <input id="codigo_barras" type="text" name="codigo_barras">
+  <input type="submit" value="Buscar">
+</form>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Envio index{% endblock %}
+
+{% block body %}
+    <h1>Envio index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Codigo</th>
+                <th>Estado</th>
+                <th>NumeroOrden</th>
+                <th>Descripcion</th>
+                <th>TotalPesoEstimado</th>
+                <th>TotalPesoReal</th>
+                <th>TotalDimencional</th>
+                <th>TotalCostoPrevisto</th>
+                <th>TotalCostoReal</th>
+                <th>TotalACobrar</th>
+                <th>FechaEstimadaEntrega</th>
+                <th>Piezas</th>
+                <th>Empresa</th>
+                <th>CantidadPiezas</th>
+                <th>JsonRecibido</th>
+                <th>Facturado</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for envio in envios %}
+            <tr>
+                <td>{{ envio.id }}</td>
+                <td>{{ envio.codigo }}</td>
+                <td>{{ envio.estado }}</td>
+                <td>{{ envio.numeroOrden }}</td>
+                <td>{{ envio.descripcion }}</td>
+                <td>{{ envio.totalPesoEstimado }}</td>
+                <td>{{ envio.totalPesoReal }}</td>
+                <td>{{ envio.totalDimencional }}</td>
+                <td>{{ envio.totalCostoPrevisto }}</td>
+                <td>{{ envio.totalCostoReal }}</td>
+                <td>{{ envio.totalACobrar }}</td>
+                <td>{{ envio.fechaEstimadaEntrega ? envio.fechaEstimadaEntrega|date('Y-m-d') : '' }}</td>
+                <td>{{ envio.piezas }}</td>
+                <td>{{ envio.empresa }}</td>
+                <td>{{ envio.cantidadPiezas }}</td>
+                <td>{{ envio.jsonRecibido }}</td>
+                <td>{{ envio.facturado ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_envio_show', {'id': envio.id}) }}">show</a>
+                    <a href="{{ path('app_envio_edit', {'id': envio.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="18">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_envio_new') }}">Create new</a>
+{% endblock %}

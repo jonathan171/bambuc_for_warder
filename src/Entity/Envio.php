@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Envio
  *
- * @ORM\Table(name="envio")
+ * @ORM\Table(name="envio", indexes={@ORM\Index(name="factura_items_id", columns={"factura_items_id"})})
  * @ORM\Entity
  */
 class Envio
@@ -71,6 +71,27 @@ class Envio
     private $totalDimencional;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="total_costo_previsto", type="decimal", precision=20, scale=2, nullable=false, options={"default"="0.00"})
+     */
+    private $totalCostoPrevisto = '0.00';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="total_costo_real", type="decimal", precision=20, scale=2, nullable=false, options={"default"="0.00"})
+     */
+    private $totalCostoReal = '0.00';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="total_a_cobrar", type="decimal", precision=20, scale=2, nullable=false, options={"default"="0.00"})
+     */
+    private $totalACobrar = '0.00';
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="fecha_estimada_entrega", type="date", nullable=false)
@@ -83,6 +104,13 @@ class Envio
      * @ORM\Column(name="piezas", type="text", length=0, nullable=false)
      */
     private $piezas;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="empresa", type="string", length=255, nullable=false)
+     */
+    private $empresa;
 
     /**
      * @var int|null
@@ -104,6 +132,16 @@ class Envio
      * @ORM\Column(name="facturado", type="boolean", nullable=false)
      */
     private $facturado;
+
+    /**
+     * @var \FacturaItems
+     *
+     * @ORM\ManyToOne(targetEntity="FacturaItems")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="factura_items_id", referencedColumnName="id")
+     * })
+     */
+    private $facturaItems;
 
     public function getId(): ?int
     {
@@ -194,6 +232,42 @@ class Envio
         return $this;
     }
 
+    public function getTotalCostoPrevisto(): ?string
+    {
+        return $this->totalCostoPrevisto;
+    }
+
+    public function setTotalCostoPrevisto(string $totalCostoPrevisto): self
+    {
+        $this->totalCostoPrevisto = $totalCostoPrevisto;
+
+        return $this;
+    }
+
+    public function getTotalCostoReal(): ?string
+    {
+        return $this->totalCostoReal;
+    }
+
+    public function setTotalCostoReal(string $totalCostoReal): self
+    {
+        $this->totalCostoReal = $totalCostoReal;
+
+        return $this;
+    }
+
+    public function getTotalACobrar(): ?string
+    {
+        return $this->totalACobrar;
+    }
+
+    public function setTotalACobrar(string $totalACobrar): self
+    {
+        $this->totalACobrar = $totalACobrar;
+
+        return $this;
+    }
+
     public function getFechaEstimadaEntrega(): ?\DateTimeInterface
     {
         return $this->fechaEstimadaEntrega;
@@ -214,6 +288,18 @@ class Envio
     public function setPiezas(string $piezas): self
     {
         $this->piezas = $piezas;
+
+        return $this;
+    }
+
+    public function getEmpresa(): ?string
+    {
+        return $this->empresa;
+    }
+
+    public function setEmpresa(string $empresa): self
+    {
+        $this->empresa = $empresa;
 
         return $this;
     }
@@ -250,6 +336,18 @@ class Envio
     public function setFacturado(bool $facturado): self
     {
         $this->facturado = $facturado;
+
+        return $this;
+    }
+
+    public function getFacturaItems(): ?FacturaItems
+    {
+        return $this->facturaItems;
+    }
+
+    public function setFacturaItems(?FacturaItems $facturaItems): self
+    {
+        $this->facturaItems = $facturaItems;
 
         return $this;
     }
