@@ -38,6 +38,13 @@ class Envio
     /**
      * @var string
      *
+     * @ORM\Column(name="numero_envio", type="string", length=255, nullable=false)
+     */
+    private $numeroEnvio;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="descripcion", type="text", length=0, nullable=false)
      */
     private $descripcion;
@@ -147,6 +154,18 @@ class Envio
     public function setEstado(int $estado): self
     {
         $this->estado = $estado;
+
+        return $this;
+    }
+
+    public function getNumeroEnvio(): ?string
+    {
+        return $this->numeroEnvio;
+    }
+
+    public function setNumeroEnvio(string $numeroEnvio): self
+    {
+        $this->numeroEnvio = $numeroEnvio;
 
         return $this;
     }

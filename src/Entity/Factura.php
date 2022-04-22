@@ -246,26 +246,6 @@ class Factura
     private $respuestaCorreo;
 
     /**
-     * @var \ObligacionesFiscales
-     *
-     * @ORM\ManyToOne(targetEntity="ObligacionesFiscales")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_obligacion", referencedColumnName="id")
-     * })
-     */
-    private $idObligacion;
-
-    /**
-     * @var \CondicionPago
-     *
-     * @ORM\ManyToOne(targetEntity="CondicionPago")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cond_de_pago", referencedColumnName="id")
-     * })
-     */
-    private $condDePago;
-
-    /**
      * @var \Tributos
      *
      * @ORM\ManyToOne(targetEntity="Tributos")
@@ -284,6 +264,26 @@ class Factura
      * })
      */
     private $cliente;
+
+    /**
+     * @var \ObligacionesFiscales
+     *
+     * @ORM\ManyToOne(targetEntity="ObligacionesFiscales")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_obligacion", referencedColumnName="id")
+     * })
+     */
+    private $idObligacion;
+
+    /**
+     * @var \CondicionPago
+     *
+     * @ORM\ManyToOne(targetEntity="CondicionPago")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cond_de_pago", referencedColumnName="id")
+     * })
+     */
+    private $condDePago;
 
     public function getId(): ?string
     {
@@ -674,30 +674,6 @@ class Factura
         return $this;
     }
 
-    public function getIdObligacion(): ?ObligacionesFiscales
-    {
-        return $this->idObligacion;
-    }
-
-    public function setIdObligacion(?ObligacionesFiscales $idObligacion): self
-    {
-        $this->idObligacion = $idObligacion;
-
-        return $this;
-    }
-
-    public function getCondDePago(): ?CondicionPago
-    {
-        return $this->condDePago;
-    }
-
-    public function setCondDePago(?CondicionPago $condDePago): self
-    {
-        $this->condDePago = $condDePago;
-
-        return $this;
-    }
-
     public function getIdTributo(): ?Tributos
     {
         return $this->idTributo;
@@ -718,6 +694,30 @@ class Factura
     public function setCliente(?Clientes $cliente): self
     {
         $this->cliente = $cliente;
+
+        return $this;
+    }
+
+    public function getIdObligacion(): ?ObligacionesFiscales
+    {
+        return $this->idObligacion;
+    }
+
+    public function setIdObligacion(?ObligacionesFiscales $idObligacion): self
+    {
+        $this->idObligacion = $idObligacion;
+
+        return $this;
+    }
+
+    public function getCondDePago(): ?CondicionPago
+    {
+        return $this->condDePago;
+    }
+
+    public function setCondDePago(?CondicionPago $condDePago): self
+    {
+        $this->condDePago = $condDePago;
 
         return $this;
     }

@@ -92,6 +92,16 @@ class Clientes
     private $apellidos;
 
     /**
+     * @var \Municipio
+     *
+     * @ORM\ManyToOne(targetEntity="Municipio")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="municipio_id", referencedColumnName="id")
+     * })
+     */
+    private $municipio;
+
+    /**
      * @var \Tributos
      *
      * @ORM\ManyToOne(targetEntity="Tributos")
@@ -110,16 +120,6 @@ class Clientes
      * })
      */
     private $idObligacion;
-
-    /**
-     * @var \Municipio
-     *
-     * @ORM\ManyToOne(targetEntity="Municipio")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="municipio_id", referencedColumnName="id")
-     * })
-     */
-    private $municipio;
 
     public function getId(): ?int
     {
@@ -246,6 +246,18 @@ class Clientes
         return $this;
     }
 
+    public function getMunicipio(): ?Municipio
+    {
+        return $this->municipio;
+    }
+
+    public function setMunicipio(?Municipio $municipio): self
+    {
+        $this->municipio = $municipio;
+
+        return $this;
+    }
+
     public function getIdTributo(): ?Tributos
     {
         return $this->idTributo;
@@ -266,18 +278,6 @@ class Clientes
     public function setIdObligacion(?ObligacionesFiscales $idObligacion): self
     {
         $this->idObligacion = $idObligacion;
-
-        return $this;
-    }
-
-    public function getMunicipio(): ?Municipio
-    {
-        return $this->municipio;
-    }
-
-    public function setMunicipio(?Municipio $municipio): self
-    {
-        $this->municipio = $municipio;
 
         return $this;
     }
