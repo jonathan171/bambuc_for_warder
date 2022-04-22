@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Clientes
  *
- * @ORM\Table(name="clientes", indexes={@ORM\Index(name="municipio_id", columns={"municipio_id"}), @ORM\Index(name="id_tributo", columns={"id_tributo"}), @ORM\Index(name="id_obligacion", columns={"id_obligacion"}), @ORM\Index(name="nit", columns={"nit"})})
+ * @ORM\Table(name="clientes", indexes={@ORM\Index(name="id_tributo", columns={"id_tributo"}), @ORM\Index(name="id_obligacion", columns={"id_obligacion"}), @ORM\Index(name="nit", columns={"nit"}), @ORM\Index(name="municipio_id", columns={"municipio_id"})})
  * @ORM\Entity
  */
 class Clientes
@@ -92,6 +92,16 @@ class Clientes
     private $apellidos;
 
     /**
+     * @var \Tributos
+     *
+     * @ORM\ManyToOne(targetEntity="Tributos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_tributo", referencedColumnName="id")
+     * })
+     */
+    private $idTributo;
+
+    /**
      * @var \ObligacionesFiscales
      *
      * @ORM\ManyToOne(targetEntity="ObligacionesFiscales")
@@ -110,16 +120,6 @@ class Clientes
      * })
      */
     private $municipio;
-
-    /**
-     * @var \Tributos
-     *
-     * @ORM\ManyToOne(targetEntity="Tributos")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_tributo", referencedColumnName="id")
-     * })
-     */
-    private $idTributo;
 
     public function getId(): ?int
     {
@@ -246,6 +246,18 @@ class Clientes
         return $this;
     }
 
+    public function getIdTributo(): ?Tributos
+    {
+        return $this->idTributo;
+    }
+
+    public function setIdTributo(?Tributos $idTributo): self
+    {
+        $this->idTributo = $idTributo;
+
+        return $this;
+    }
+
     public function getIdObligacion(): ?ObligacionesFiscales
     {
         return $this->idObligacion;
@@ -266,18 +278,6 @@ class Clientes
     public function setMunicipio(?Municipio $municipio): self
     {
         $this->municipio = $municipio;
-
-        return $this;
-    }
-
-    public function getIdTributo(): ?Tributos
-    {
-        return $this->idTributo;
-    }
-
-    public function setIdTributo(?Tributos $idTributo): self
-    {
-        $this->idTributo = $idTributo;
 
         return $this;
     }

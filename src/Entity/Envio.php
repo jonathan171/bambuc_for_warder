@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Envio
  *
- * @ORM\Table(name="envio", indexes={@ORM\Index(name="factura_items_id", columns={"factura_items_id"})})
+ * @ORM\Table(name="envio", indexes={@ORM\Index(name="pais_destino", columns={"pais_destino"}), @ORM\Index(name="factura_items_id", columns={"factura_items_id"}), @ORM\Index(name="pais_origen", columns={"pais_origen"})})
  * @ORM\Entity
  */
 class Envio
@@ -38,13 +38,6 @@ class Envio
     /**
      * @var string
      *
-     * @ORM\Column(name="numero_orden", type="string", length=255, nullable=false)
-     */
-    private $numeroOrden;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="descripcion", type="text", length=0, nullable=false)
      */
     private $descripcion;
@@ -52,37 +45,9 @@ class Envio
     /**
      * @var string|null
      *
-     * @ORM\Column(name="total_peso_estimado", type="decimal", precision=20, scale=2, nullable=true)
+     * @ORM\Column(name="total_peso_cobrar", type="decimal", precision=20, scale=2, nullable=true)
      */
-    private $totalPesoEstimado;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="total_peso_real", type="decimal", precision=20, scale=2, nullable=true)
-     */
-    private $totalPesoReal;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="total_dimencional", type="decimal", precision=20, scale=2, nullable=true)
-     */
-    private $totalDimencional;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="total_costo_previsto", type="decimal", precision=20, scale=2, nullable=false, options={"default"="0.00"})
-     */
-    private $totalCostoPrevisto = '0.00';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="total_costo_real", type="decimal", precision=20, scale=2, nullable=false, options={"default"="0.00"})
-     */
-    private $totalCostoReal = '0.00';
+    private $totalPesoCobrar;
 
     /**
      * @var string
@@ -101,23 +66,37 @@ class Envio
     /**
      * @var string
      *
-     * @ORM\Column(name="piezas", type="text", length=0, nullable=false)
-     */
-    private $piezas;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="empresa", type="string", length=255, nullable=false)
      */
     private $empresa;
 
     /**
-     * @var int|null
+     * @var int
      *
-     * @ORM\Column(name="cantidad_piezas", type="integer", nullable=true)
+     * @ORM\Column(name="pais_origen", type="integer", nullable=false)
      */
-    private $cantidadPiezas;
+    private $paisOrigen;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="pais_destino", type="integer", nullable=false)
+     */
+    private $paisDestino;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="quien_envia", type="string", length=255, nullable=false)
+     */
+    private $quienEnvia;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="quien_recibe", type="string", length=255, nullable=false)
+     */
+    private $quienRecibe;
 
     /**
      * @var string|null
@@ -172,18 +151,6 @@ class Envio
         return $this;
     }
 
-    public function getNumeroOrden(): ?string
-    {
-        return $this->numeroOrden;
-    }
-
-    public function setNumeroOrden(string $numeroOrden): self
-    {
-        $this->numeroOrden = $numeroOrden;
-
-        return $this;
-    }
-
     public function getDescripcion(): ?string
     {
         return $this->descripcion;
@@ -196,62 +163,14 @@ class Envio
         return $this;
     }
 
-    public function getTotalPesoEstimado(): ?string
+    public function getTotalPesoCobrar(): ?string
     {
-        return $this->totalPesoEstimado;
+        return $this->totalPesoCobrar;
     }
 
-    public function setTotalPesoEstimado(?string $totalPesoEstimado): self
+    public function setTotalPesoCobrar(?string $totalPesoCobrar): self
     {
-        $this->totalPesoEstimado = $totalPesoEstimado;
-
-        return $this;
-    }
-
-    public function getTotalPesoReal(): ?string
-    {
-        return $this->totalPesoReal;
-    }
-
-    public function setTotalPesoReal(?string $totalPesoReal): self
-    {
-        $this->totalPesoReal = $totalPesoReal;
-
-        return $this;
-    }
-
-    public function getTotalDimencional(): ?string
-    {
-        return $this->totalDimencional;
-    }
-
-    public function setTotalDimencional(?string $totalDimencional): self
-    {
-        $this->totalDimencional = $totalDimencional;
-
-        return $this;
-    }
-
-    public function getTotalCostoPrevisto(): ?string
-    {
-        return $this->totalCostoPrevisto;
-    }
-
-    public function setTotalCostoPrevisto(string $totalCostoPrevisto): self
-    {
-        $this->totalCostoPrevisto = $totalCostoPrevisto;
-
-        return $this;
-    }
-
-    public function getTotalCostoReal(): ?string
-    {
-        return $this->totalCostoReal;
-    }
-
-    public function setTotalCostoReal(string $totalCostoReal): self
-    {
-        $this->totalCostoReal = $totalCostoReal;
+        $this->totalPesoCobrar = $totalPesoCobrar;
 
         return $this;
     }
@@ -280,18 +199,6 @@ class Envio
         return $this;
     }
 
-    public function getPiezas(): ?string
-    {
-        return $this->piezas;
-    }
-
-    public function setPiezas(string $piezas): self
-    {
-        $this->piezas = $piezas;
-
-        return $this;
-    }
-
     public function getEmpresa(): ?string
     {
         return $this->empresa;
@@ -304,14 +211,50 @@ class Envio
         return $this;
     }
 
-    public function getCantidadPiezas(): ?int
+    public function getPaisOrigen(): ?int
     {
-        return $this->cantidadPiezas;
+        return $this->paisOrigen;
     }
 
-    public function setCantidadPiezas(?int $cantidadPiezas): self
+    public function setPaisOrigen(int $paisOrigen): self
     {
-        $this->cantidadPiezas = $cantidadPiezas;
+        $this->paisOrigen = $paisOrigen;
+
+        return $this;
+    }
+
+    public function getPaisDestino(): ?int
+    {
+        return $this->paisDestino;
+    }
+
+    public function setPaisDestino(int $paisDestino): self
+    {
+        $this->paisDestino = $paisDestino;
+
+        return $this;
+    }
+
+    public function getQuienEnvia(): ?string
+    {
+        return $this->quienEnvia;
+    }
+
+    public function setQuienEnvia(string $quienEnvia): self
+    {
+        $this->quienEnvia = $quienEnvia;
+
+        return $this;
+    }
+
+    public function getQuienRecibe(): ?string
+    {
+        return $this->quienRecibe;
+    }
+
+    public function setQuienRecibe(string $quienRecibe): self
+    {
+        $this->quienRecibe = $quienRecibe;
 
         return $this;
     }

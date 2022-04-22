@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Factura
  *
- * @ORM\Table(name="factura", indexes={@ORM\Index(name="id_tributo", columns={"id_tributo"}), @ORM\Index(name="factura_resolucion_id", columns={"factura_resolucion_id"}), @ORM\Index(name="cond_de_pago", columns={"cond_de_pago"}), @ORM\Index(name="id_obligacion", columns={"id_obligacion"}), @ORM\Index(name="cliente_id", columns={"cliente_id"})})
+ * @ORM\Table(name="factura", indexes={@ORM\Index(name="cond_de_pago", columns={"cond_de_pago"}), @ORM\Index(name="id_obligacion", columns={"id_obligacion"}), @ORM\Index(name="cliente_id", columns={"cliente_id"}), @ORM\Index(name="id_tributo", columns={"id_tributo"}), @ORM\Index(name="factura_resolucion_id", columns={"factura_resolucion_id"})})
  * @ORM\Entity
  */
 class Factura
@@ -246,6 +246,16 @@ class Factura
     private $respuestaCorreo;
 
     /**
+     * @var \ObligacionesFiscales
+     *
+     * @ORM\ManyToOne(targetEntity="ObligacionesFiscales")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_obligacion", referencedColumnName="id")
+     * })
+     */
+    private $idObligacion;
+
+    /**
      * @var \CondicionPago
      *
      * @ORM\ManyToOne(targetEntity="CondicionPago")
@@ -274,16 +284,6 @@ class Factura
      * })
      */
     private $cliente;
-
-    /**
-     * @var \ObligacionesFiscales
-     *
-     * @ORM\ManyToOne(targetEntity="ObligacionesFiscales")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_obligacion", referencedColumnName="id")
-     * })
-     */
-    private $idObligacion;
 
     public function getId(): ?string
     {
@@ -674,6 +674,18 @@ class Factura
         return $this;
     }
 
+    public function getIdObligacion(): ?ObligacionesFiscales
+    {
+        return $this->idObligacion;
+    }
+
+    public function setIdObligacion(?ObligacionesFiscales $idObligacion): self
+    {
+        $this->idObligacion = $idObligacion;
+
+        return $this;
+    }
+
     public function getCondDePago(): ?CondicionPago
     {
         return $this->condDePago;
@@ -706,18 +718,6 @@ class Factura
     public function setCliente(?Clientes $cliente): self
     {
         $this->cliente = $cliente;
-
-        return $this;
-    }
-
-    public function getIdObligacion(): ?ObligacionesFiscales
-    {
-        return $this->idObligacion;
-    }
-
-    public function setIdObligacion(?ObligacionesFiscales $idObligacion): self
-    {
-        $this->idObligacion = $idObligacion;
 
         return $this;
     }
