@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Envio;
+use App\Entity\Pais;
 use DateTime;
 use GuzzleHttp;
 
@@ -37,15 +38,15 @@ class IntegracionController extends AbstractController
     {   
         $codigo_barras = $request->request->get('codigo_barras');
         $client = new GuzzleHttp\Client();
-        /*$headers = array('Accept-Language'=>'eng','Authorization' => 'Basic YXBZNWlEMGZRNGpDNXQ6TSQ1elokMmZOQDNvTiM2aA==',
-        'Accept' => 'application/json');
-        $res = $client->request('GET', 'https://express.api.dhl.com/mydhlapi/shipments/'.$codigo_barras.'/tracking?trackingView=all-checkpoints&levelOfDetail=all', ['headers' => $headers]);
-        */
-        //para pruebas 
         $headers = array('Accept-Language'=>'eng','Authorization' => 'Basic YXBZNWlEMGZRNGpDNXQ6TSQ1elokMmZOQDNvTiM2aA==',
         'Accept' => 'application/json');
-        $res = $client->request('GET', 'https://express.api.dhl.com/mydhlapi/test/shipments/'.$codigo_barras.'/tracking?trackingView=all-checkpoints&levelOfDetail=all', ['headers' => $headers]);
+        $res = $client->request('GET', 'https://express.api.dhl.com/mydhlapi/shipments/'.$codigo_barras.'/tracking?trackingView=all-checkpoints&levelOfDetail=all', ['headers' => $headers]);
         
+        //para pruebas 
+       /* $headers = array('Accept-Language'=>'eng','Authorization' => 'Basic YXBZNWlEMGZRNGpDNXQ6TSQ1elokMmZOQDNvTiM2aA==',
+        'Accept' => 'application/json');
+        $res = $client->request('GET', 'https://express.api.dhl.com/mydhlapi/test/shipments/'.$codigo_barras.'/tracking?trackingView=all-checkpoints&levelOfDetail=all', ['headers' => $headers]);
+        */
 
         // 'application/json; charset=utf8'
         $respuestaServer= json_decode($res->getBody(), true);
@@ -53,29 +54,65 @@ class IntegracionController extends AbstractController
             $array_envio = $respuestaServer['shipments'][0];
 
          
-            $envio = $doctrine->getRepository(Envio::class)->findOneBy(['codigo'=> $array_envio['shipmentTrackingNumber'],'empresa'=> 'DHL']);
+            $envio = $doctrine->getRepository(Envio::class)->findOneBy(['numeroEnvio'=> $array_envio['shipmentTrackingNumber'],'empresa'=> 'DHL']);
 
-         //   if(!$envio){
+            if(!$envio){
                 $envio = new Envio();
-           // }
-            $envio->setCodigo($array_envio['shipmentTrackingNumber']);
+            }
+            $envio->setCodigo($array_envio['productCode']);
             $envio->setEstado(1);
-            $envio->setNumeroOrden($array_envio['shipmentTrackingNumber']);
+            $envio->setNumeroEnvio($array_envio['shipmentTrackingNumber']); 
             $envio->setDescripcion($array_envio['description']);
-            $envio->setTotalPesoEstimado($array_envio['totalWeight']);
-            if(array_key_exists('estimatedDeliveryDate', $respuestaServer)){
 
-                $envio->setFechaEstimadaEntrega($array_envio['estimatedDeliveryDate']);
+            //calcular que se cobrara
+            $total_dimension_real = 0;
+            $total_peso_real = 0;
+            $total_dimension = 0;
+            $total_peso = 0;
+            foreach($array_envio['pieces'] as $pieza){
+                $dimension = (($pieza['dimensions']['length']*$pieza['dimensions']['width']*$pieza['dimensions']['height'])/5000);
+                $total_dimension+= $dimension;
+                $total_peso+= $pieza['weight'];
+                //pesos reales de la transportadora
+                $total_peso_real+= $pieza['actualWeight'];
+                $dimension_real = (($pieza['actualDimensions']['length']*$pieza['actualDimensions']['width']*$pieza['actualDimensions']['height'])/5000);
+                $total_dimension_real+= $dimension_real;
+
+            }
+            if($total_dimension>$total_peso){
+                $envio->setTotalPesoCobrar(ceil( $total_dimension));
+                $envio->setPesoEstimado(ceil( $total_dimension));
+            }else{
+                $envio->setTotalPesoCobrar(ceil( $total_peso));
+                $envio->setPesoEstimado(ceil( $total_peso));
+            }
+            
+            if($total_dimension_real>$total_peso_real){
+                $envio->setPesoReal(ceil( $total_dimension_real));
+            }else{
+                $envio->setPesoReal(ceil( $total_peso_real));
+            }
+            
+            $envio->setTotalACobrar(0);
+            
+            if(array_key_exists('estimatedDeliveryDate', $array_envio)){
+                $fecha = new DateTime($array_envio['estimatedDeliveryDate']);
+                $envio->setFechaEstimadaEntrega($fecha);
             }else{
                 $fecha = new DateTime();
                 $envio->setFechaEstimadaEntrega($fecha);
             }
-//$envio->setFechaEstimadaEntrega($array_envio['estimatedDeliveryDate']);
+            $envio->setEmpresa('DHL');
+            $pais_envio = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['shipperDetails']['postalAddress']['countryCode']]);
+            $pais_recibe = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['receiverDetails']['postalAddress']['countryCode']]);
+            
+            $envio->setPaisOrigen($pais_envio);
+            $envio->setPaisDestino($pais_recibe);
+            $envio->setQuienEnvia($array_envio['shipperDetails']['name']);
+            $envio->setQuienRecibe($array_envio['receiverDetails']['name']);
             $envio->setJsonRecibido($res->getBody());
             $envio->setFacturado(0);
-            $envio->setCantidadPiezas($array_envio['numberOfPieces']);
-            $envio->setPiezas(json_encode( $array_envio['pieces'] ));
-            $envio->setEmpresa('DHL');
+            
 
             $entityManager = $doctrine->getManager();
 

@@ -8,22 +8,20 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Codigo</th>
+                
                 <th>Estado</th>
-                <th>NumeroOrden</th>
-                <th>Descripcion</th>
-                <th>TotalPesoEstimado</th>
-                <th>TotalPesoReal</th>
-                <th>TotalDimencional</th>
-                <th>TotalCostoPrevisto</th>
-                <th>TotalCostoReal</th>
-                <th>TotalACobrar</th>
-                <th>FechaEstimadaEntrega</th>
-                <th>Piezas</th>
+                <th>Numero Envio</th>
+                
+                <th>Peso Estimado</th>
+                <th>Peso Real</th>
+                <th>Peso Cobrado</th>
+                <th>valor a cobrar</th>
+                <th>Fecha Estimada Entrega</th>
+                <th>Pais Origen</th>
+                <th>Pais Destino</th>
                 <th>Empresa</th>
-                <th>CantidadPiezas</th>
-                <th>JsonRecibido</th>
+                <th>Envia </th>
+                <th>Recibe</th>
                 <th>Facturado</th>
                 <th>actions</th>
             </tr>
@@ -31,23 +29,21 @@
         <tbody>
         {% for envio in envios %}
             <tr>
-                <td>{{ envio.id }}</td>
-                <td>{{ envio.codigo }}</td>
+                
                 <td>{{ envio.estado }}</td>
-                <td>{{ envio.numeroOrden }}</td>
-                <td>{{ envio.descripcion }}</td>
-                <td>{{ envio.totalPesoEstimado }}</td>
-                <td>{{ envio.totalPesoReal }}</td>
-                <td>{{ envio.totalDimencional }}</td>
-                <td>{{ envio.totalCostoPrevisto }}</td>
-                <td>{{ envio.totalCostoReal }}</td>
+                <td>{{ envio.numeroEnvio }}</td>
+                <td>{{ envio.pesoEstimado }}</td>
+                <td>{{ envio.pesoReal }}</td>
+                <td>{{ envio.totalPesoCobrar }}</td>
                 <td>{{ envio.totalACobrar }}</td>
                 <td>{{ envio.fechaEstimadaEntrega ? envio.fechaEstimadaEntrega|date('Y-m-d') : '' }}</td>
-                <td>{{ envio.piezas }}</td>
+                <td>{{ envio.paisOrigen }}</td>
+                <td>{{ envio.paisDestino }}</td>
                 <td>{{ envio.empresa }}</td>
-                <td>{{ envio.cantidadPiezas }}</td>
-                <td>{{ envio.jsonRecibido }}</td>
-                <td>{{ envio.facturado ? 'Yes' : 'No' }}</td>
+                <td>{{ envio.quienEnvia }}</td>
+               <td>{{ envio.quienRecibe }}</td>
+                
+                <td>{{ envio.facturado ? 'Si' : 'No' }}</td>
                 <td>
                     <a href="{{ path('app_envio_show', {'id': envio.id}) }}">show</a>
                     <a href="{{ path('app_envio_edit', {'id': envio.id}) }}">edit</a>

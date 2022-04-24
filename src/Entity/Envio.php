@@ -50,6 +50,20 @@ class Envio
     private $descripcion;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="peso_estimado", type="decimal", precision=20, scale=2, nullable=false)
+     */
+    private $pesoEstimado;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="peso_real", type="decimal", precision=20, scale=2, nullable=false)
+     */
+    private $pesoReal;
+
+    /**
      * @var string|null
      *
      * @ORM\Column(name="total_peso_cobrar", type="decimal", precision=20, scale=2, nullable=true)
@@ -76,20 +90,6 @@ class Envio
      * @ORM\Column(name="empresa", type="string", length=255, nullable=false)
      */
     private $empresa;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="pais_origen", type="integer", nullable=false)
-     */
-    private $paisOrigen;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="pais_destino", type="integer", nullable=false)
-     */
-    private $paisDestino;
 
     /**
      * @var string
@@ -128,6 +128,26 @@ class Envio
      * })
      */
     private $facturaItems;
+
+    /**
+     * @var \Pais
+     *
+     * @ORM\ManyToOne(targetEntity="Pais")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="pais_origen", referencedColumnName="id")
+     * })
+     */
+    private $paisOrigen;
+
+    /**
+     * @var \Pais
+     *
+     * @ORM\ManyToOne(targetEntity="Pais")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="pais_destino", referencedColumnName="id")
+     * })
+     */
+    private $paisDestino;
 
     public function getId(): ?int
     {
@@ -182,6 +202,30 @@ class Envio
         return $this;
     }
 
+    public function getPesoEstimado(): ?string
+    {
+        return $this->pesoEstimado;
+    }
+
+    public function setPesoEstimado(string $pesoEstimado): self
+    {
+        $this->pesoEstimado = $pesoEstimado;
+
+        return $this;
+    }
+
+    public function getPesoReal(): ?string
+    {
+        return $this->pesoReal;
+    }
+
+    public function setPesoReal(string $pesoReal): self
+    {
+        $this->pesoReal = $pesoReal;
+
+        return $this;
+    }
+
     public function getTotalPesoCobrar(): ?string
     {
         return $this->totalPesoCobrar;
@@ -226,30 +270,6 @@ class Envio
     public function setEmpresa(string $empresa): self
     {
         $this->empresa = $empresa;
-
-        return $this;
-    }
-
-    public function getPaisOrigen(): ?int
-    {
-        return $this->paisOrigen;
-    }
-
-    public function setPaisOrigen(int $paisOrigen): self
-    {
-        $this->paisOrigen = $paisOrigen;
-
-        return $this;
-    }
-
-    public function getPaisDestino(): ?int
-    {
-        return $this->paisDestino;
-    }
-
-    public function setPaisDestino(int $paisDestino): self
-    {
-        $this->paisDestino = $paisDestino;
 
         return $this;
     }
@@ -310,6 +330,30 @@ class Envio
     public function setFacturaItems(?FacturaItems $facturaItems): self
     {
         $this->facturaItems = $facturaItems;
+
+        return $this;
+    }
+
+    public function getPaisOrigen(): ?Pais
+    {
+        return $this->paisOrigen;
+    }
+
+    public function setPaisOrigen(?Pais $paisOrigen): self
+    {
+        $this->paisOrigen = $paisOrigen;
+
+        return $this;
+    }
+
+    public function getPaisDestino(): ?Pais
+    {
+        return $this->paisDestino;
+    }
+
+    public function setPaisDestino(?Pais $paisDestino): self
+    {
+        $this->paisDestino = $paisDestino;
 
         return $this;
     }
