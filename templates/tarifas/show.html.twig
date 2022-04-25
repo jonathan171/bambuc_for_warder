@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tarifas{% endblock %}
+
+{% block body %}
+    <h1>Tarifas</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ tarifa.id }}</td>
+            </tr>
+            <tr>
+                <th>PesoMinimo</th>
+                <td>{{ tarifa.pesoMinimo }}</td>
+            </tr>
+            <tr>
+                <th>PesoMaximo</th>
+                <td>{{ tarifa.pesoMaximo }}</td>
+            </tr>
+            <tr>
+                <th>CostoFlete</th>
+                <td>{{ tarifa.costoFlete }}</td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <td>{{ tarifa.total }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_tarifas_index') }}">back to list</a>
+
+    <a href="{{ path('app_tarifas_edit', {'id': tarifa.id}) }}">edit</a>
+
+    {{ include('tarifas/_delete_form.html.twig') }}
+{% endblock %}

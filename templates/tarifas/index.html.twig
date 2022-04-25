@@ -1,0 +1,60 @@
+
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Tarifas index{% endblock %}
+
+{% block body %}
+    <h1>Listado De Tarifas</h1>
+
+    <table class="table" id="data_table_tarifas">
+        <thead>
+            <tr>
+                
+                <th>Peso Minimo (kg)</th>
+                <th>Peso Maximo (kg)</th>
+                <th>Costo Flete $</th>
+                <th>Zona</th>
+                <th>Total $</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_tarifas_new') }}">Create new</a>
+    <script>
+    
+  $(document).ready(function() {
+   
+      $('#data_table_tarifas').DataTable({
+            serverSide: true,
+            responsive: true,
+            pageLength: 50,
+            sPaginationType: "full_numbers",
+            language: {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+            },
+            ajax: {
+                "url": '/tarifas/table',
+                "type": "POST"
+            },
+            columns: [
+                {data: 'pesoMinimo'},
+                {data: 'pesoMaximo'},
+                {data: 'costoFlete'},
+                {data: 'zona'},
+                {data: 'total'}
+                
+                ],
+            columnDefs: [
+                
+            ],
+            order: [[ 0, "desc" ]]
+        });
+   });
+    
+</script>
+{% endblock %}

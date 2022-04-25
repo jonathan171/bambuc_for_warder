@@ -106,16 +106,6 @@ class FacturaItems
     private $valorDescuento = '0.00';
 
     /**
-     * @var \Factura
-     *
-     * @ORM\ManyToOne(targetEntity="Factura")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="factura_clientes_id", referencedColumnName="id")
-     * })
-     */
-    private $facturaClientes;
-
-    /**
      * @var \UnidadesMedida
      *
      * @ORM\ManyToOne(targetEntity="UnidadesMedida")
@@ -124,6 +114,16 @@ class FacturaItems
      * })
      */
     private $unidad;
+
+    /**
+     * @var \Factura
+     *
+     * @ORM\ManyToOne(targetEntity="Factura")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="factura_clientes_id", referencedColumnName="id")
+     * })
+     */
+    private $facturaClientes;
 
     public function getId(): ?string
     {
@@ -274,18 +274,6 @@ class FacturaItems
         return $this;
     }
 
-    public function getFacturaClientes(): ?Factura
-    {
-        return $this->facturaClientes;
-    }
-
-    public function setFacturaClientes(?Factura $facturaClientes): self
-    {
-        $this->facturaClientes = $facturaClientes;
-
-        return $this;
-    }
-
     public function getUnidad(): ?UnidadesMedida
     {
         return $this->unidad;
@@ -294,6 +282,18 @@ class FacturaItems
     public function setUnidad(?UnidadesMedida $unidad): self
     {
         $this->unidad = $unidad;
+
+        return $this;
+    }
+
+    public function getFacturaClientes(): ?Factura
+    {
+        return $this->facturaClientes;
+    }
+
+    public function setFacturaClientes(?Factura $facturaClientes): self
+    {
+        $this->facturaClientes = $facturaClientes;
 
         return $this;
     }

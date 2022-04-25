@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TarifasConfiguracion{% endblock %}
+
+{% block body %}
+    <h1>Create new TarifasConfiguracion</h1>
+
+    {{ include('tarifas_configuracion/_form.html.twig') }}
+
+    <a href="{{ path('app_tarifas_configuracion_index') }}">back to list</a>
+{% endblock %}

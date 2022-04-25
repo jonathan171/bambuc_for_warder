@@ -120,6 +120,16 @@ class Envio
     private $facturado;
 
     /**
+     * @var \Pais
+     *
+     * @ORM\ManyToOne(targetEntity="Pais")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="pais_destino", referencedColumnName="id")
+     * })
+     */
+    private $paisDestino;
+
+    /**
      * @var \FacturaItems
      *
      * @ORM\ManyToOne(targetEntity="FacturaItems")
@@ -138,16 +148,6 @@ class Envio
      * })
      */
     private $paisOrigen;
-
-    /**
-     * @var \Pais
-     *
-     * @ORM\ManyToOne(targetEntity="Pais")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="pais_destino", referencedColumnName="id")
-     * })
-     */
-    private $paisDestino;
 
     public function getId(): ?int
     {
@@ -322,6 +322,18 @@ class Envio
         return $this;
     }
 
+    public function getPaisDestino(): ?Pais
+    {
+        return $this->paisDestino;
+    }
+
+    public function setPaisDestino(?Pais $paisDestino): self
+    {
+        $this->paisDestino = $paisDestino;
+
+        return $this;
+    }
+
     public function getFacturaItems(): ?FacturaItems
     {
         return $this->facturaItems;
@@ -342,18 +354,6 @@ class Envio
     public function setPaisOrigen(?Pais $paisOrigen): self
     {
         $this->paisOrigen = $paisOrigen;
-
-        return $this;
-    }
-
-    public function getPaisDestino(): ?Pais
-    {
-        return $this->paisDestino;
-    }
-
-    public function setPaisDestino(?Pais $paisDestino): self
-    {
-        $this->paisDestino = $paisDestino;
 
         return $this;
     }
