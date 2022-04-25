@@ -6,8 +6,9 @@
 
 {% block body %}
     <h1>Listado De Tarifas</h1>
-
-    <table class="table" id="data_table_tarifas">
+<div class="table-responsive">
+<div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+    <table class="table table-striped table-bordered text-nowrap dataTable" id="data_table_tarifas">
         <thead>
             <tr>
                 
@@ -23,7 +24,8 @@
 
         </tbody>
     </table>
-
+    </div>
+</div>
     <a href="{{ path('app_tarifas_new') }}">Create new</a>
     <script>
     
