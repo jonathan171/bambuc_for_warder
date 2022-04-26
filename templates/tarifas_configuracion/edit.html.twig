@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit TarifasConfiguracion{% endblock %}
+{% block title %}configuración{% endblock %}
 
 {% block body %}
-    <h1>Edit TarifasConfiguracion</h1>
+    <h1>Editar Variables Tarifas</h1>
 
-    {{ include('tarifas_configuracion/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('tarifas_configuracion/_form.html.twig', {'button_label': 'Actualizar'}) }}
 
-    <a href="{{ path('app_tarifas_configuracion_index') }}">back to list</a>
+   
 
-    {{ include('tarifas_configuracion/_delete_form.html.twig') }}
+  {#  {{ include('tarifas_configuracion/_delete_form.html.twig') }}#}
 {% endblock %}

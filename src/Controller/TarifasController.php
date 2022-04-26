@@ -25,6 +25,18 @@ class TarifasController extends AbstractController
             'tarifas' => $tarifas,
         ]);
     }
+    #[Route('/variables', name: 'app_tarifas_variables', methods: ['GET', 'POST'])]
+    public function variables(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository): Response
+    {
+        $tarifas = $entityManager
+            ->getRepository(Tarifas::class)
+            ->find(1);
+
+        
+       
+      return $this->json($responseData);
+
+    }
     #[Route('/table', name: 'app_tarifas_table', methods: ['GET', 'POST'])]
     public function table(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository): Response
     {

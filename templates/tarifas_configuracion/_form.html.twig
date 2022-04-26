@@ -1,4 +1,35 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+   
+   <div class="card-body">
+        <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Valor Dolar</label>
+            <div class="col-sm-9">
+              {{form_widget(form.valorDolar) }}
+            </div> 
+        </div>
+        <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Tasa Conbustible</label>
+            <div class="col-sm-9">
+              {{form_widget(form.tasaConbustible) }}
+            </div> 
+        </div>
+        <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Tasa Conbustible</label>
+            <div class="col-sm-9">
+              {{form_widget(form.porcentajeGanacia) }}
+            </div> 
+        </div>
+   
+   
+   {{ form_widget(form._token) }}
+   {# {{ form_rest(form) }}#}
+    
+    
+    </div>
+    <div class="p-3">
+        <div class="form-group text-end">
+        <button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
+         <a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_tarifas_configuracion_index') }}">regresar</a>
+        </div>
+    </div>
 {{ form_end(form) }}

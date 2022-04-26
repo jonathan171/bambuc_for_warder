@@ -1,30 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}TarifasConfiguracion index{% endblock %}
+{% block title %}TarifasConfiguracion{% endblock %}
 
 {% block body %}
-    <h1>TarifasConfiguracion index</h1>
+    <h1>Listado de Configuraciones</h1>
 
     <table class="table table-striped table-bordered text-nowrap dataTable">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>ValorDolar</th>
-                <th>TasaConbustible</th>
-                <th>PorcentajeGanacia</th>
-                <th>actions</th>
+               <th>Valor Dolar</th>
+                <th>Tasa Conbustible</th>
+                <th>Porcentaje Ganacia</th>
+                <th>opciones</th>
             </tr>
         </thead>
         <tbody>
         {% for tarifas_configuracion in tarifas_configuracions %}
             <tr>
-                <td>{{ tarifas_configuracion.id }}</td>
+                
                 <td>{{ tarifas_configuracion.valorDolar }}</td>
                 <td>{{ tarifas_configuracion.tasaConbustible }}</td>
                 <td>{{ tarifas_configuracion.porcentajeGanacia }}</td>
                 <td>
-                    <a href="{{ path('app_tarifas_configuracion_show', {'id': tarifas_configuracion.id}) }}">show</a>
-                    <a href="{{ path('app_tarifas_configuracion_edit', {'id': tarifas_configuracion.id}) }}">edit</a>
+                    <a  class="btn waves-effect waves-light btn-info" href="{{ path('app_tarifas_configuracion_edit', {'id': tarifas_configuracion.id}) }}">editar</a>
                 </td>
             </tr>
         {% else %}
@@ -35,5 +33,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_tarifas_configuracion_new') }}">Create new</a>
+   {# <a href="{{ path('app_tarifas_configuracion_new') }}">Nueva Configuracion</a>#}
 {% endblock %}
