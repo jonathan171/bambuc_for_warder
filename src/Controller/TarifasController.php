@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Tarifas;
+use App\Entity\TarifasConfiguracion;
 use App\Form\TarifasType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,47 +26,54 @@ class TarifasController extends AbstractController
             'tarifas' => $tarifas,
         ]);
     }
+
     #[Route('/variables', name: 'app_tarifas_variables', methods: ['GET', 'POST'])]
     public function variables(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository): Response
     {
-        $tarifas = $entityManager
-            ->getRepository(Tarifas::class)
+        $variables = $entityManager
+            ->getRepository(TarifasConfiguracion::class)
             ->find(1);
+        if (!$request->request->get('flete')) {
+            $flete = 0;
+        } else {
+            $flete =  $request->request->get('flete');
+        }
 
-        
-       
-      return $this->json($responseData);
+        $total = (($flete + (($variables->getTasaConbustible() / 100) * $flete)) * $variables->getValorDolar()) / ((100 - $variables->getPorcentajeGanacia()) / 100);
+        $costo = array('costo' => $total, 'total' => round($total, -3));
 
+
+        return $this->json($costo);
     }
+
     #[Route('/table', name: 'app_tarifas_table', methods: ['GET', 'POST'])]
     public function table(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository): Response
     {
         $search =  $request->request->get('search');
         $start = $request->request->get('start');
         $length = $request->request->get('length');
-        
+
         $campos = array(
             "pesoMinimo",
             "pesoMaximo",
             "costoFlete",
             "zona",
             "total"
-            );
-        
-           $data_table  = $tarifasRepository->findByDataTable(['page'=>$start, 'pageSize'=>$length,'search'=>$search['value']]);
-           
-            // Objeto requerido por Datatables
+        );
+
+        $data_table  = $tarifasRepository->findByDataTable(['page' => $start, 'pageSize' => $length, 'search' => $search['value']]);
+
+        // Objeto requerido por Datatables
 
         $responseData = array(
             "draw" => '',
             "recordsTotal" => $data_table['totalRecords'],
-            "recordsFiltered" =>$data_table['totalRecords'],
+            "recordsFiltered" => $data_table['totalRecords'],
             "data" => $data_table['data']
         );
 
-       
-      return $this->json($responseData);
 
+        return $this->json($responseData);
     }
 
     #[Route('/new', name: 'app_tarifas_new', methods: ['GET', 'POST'])]
@@ -117,13 +125,11 @@ class TarifasController extends AbstractController
     #[Route('/{id}', name: 'app_tarifas_delete', methods: ['POST'])]
     public function delete(Request $request, Tarifas $tarifa, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$tarifa->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $tarifa->getId(), $request->request->get('_token'))) {
             $entityManager->remove($tarifa);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_tarifas_index', [], Response::HTTP_SEE_OTHER);
     }
-
-   
 }

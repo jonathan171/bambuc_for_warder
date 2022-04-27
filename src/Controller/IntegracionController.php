@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Envio;
 use App\Entity\Pais;
+use App\Entity\Tarifas;
+use App\Repository\TarifasRepository;
 use DateTime;
 use GuzzleHttp;
 
@@ -34,7 +36,7 @@ class IntegracionController extends AbstractController
     }
 
     #[Route('/envio_dhl', name: 'app_integracion_enviodhl', methods: ['GET', 'POST'])]
-    public function enviodhl(Request $request, ManagerRegistry $doctrine): Response
+    public function enviodhl(Request $request, ManagerRegistry $doctrine, TarifasRepository $tarifasRepository): Response
     {   
         $codigo_barras = $request->request->get('codigo_barras');
         $client = new GuzzleHttp\Client();
@@ -93,7 +95,7 @@ class IntegracionController extends AbstractController
                 $envio->setPesoReal(ceil( $total_peso_real));
             }
             
-            $envio->setTotalACobrar(0);
+            
             
             if(array_key_exists('estimatedDeliveryDate', $array_envio)){
                 $fecha = new DateTime($array_envio['estimatedDeliveryDate']);
@@ -106,6 +108,9 @@ class IntegracionController extends AbstractController
             $pais_envio = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['shipperDetails']['postalAddress']['countryCode']]);
             $pais_recibe = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['receiverDetails']['postalAddress']['countryCode']]);
             
+            $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$pais_recibe->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+            
+            $envio->setTotalACobrar($tarifa[0]['total']);
             $envio->setPaisOrigen($pais_envio);
             $envio->setPaisDestino($pais_recibe);
             $envio->setQuienEnvia($array_envio['shipperDetails']['name']);

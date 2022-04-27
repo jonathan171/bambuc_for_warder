@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\TarifasConfiguracion;
+use App\Entity\Tarifas;
 use App\Form\TarifasConfiguracionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -61,6 +62,23 @@ class TarifasConfiguracionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+
+            $tarifas = $entityManager
+            ->getRepository(Tarifas::class)
+            ->findAll();
+
+            $variables = $entityManager
+            ->getRepository(TarifasConfiguracion::class)
+            ->find(1);
+            foreach($tarifas as $tarifa){
+
+                $total = (($tarifa->getCostoFlete() + (($variables->getTasaConbustible() / 100) * $tarifa->getCostoFlete())) * $variables->getValorDolar()) / ((100 - $variables->getPorcentajeGanacia()) / 100);
+                $tarifa->setTotal(round($total, -3));
+                $entityManager->persist( $tarifa);
+
+                     $entityManager->flush();
+                
+            }
 
             return $this->redirectToRoute('app_tarifas_configuracion_index', [], Response::HTTP_SEE_OTHER);
         }

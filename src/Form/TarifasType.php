@@ -20,32 +20,29 @@ class TarifasType extends AbstractType
                     'class' => 'form-control',
                     'step' => '0.01'
                 ],
-                'html5' => true,
-                'data'=> '0'
+                'html5' => true
             ])
             ->add('pesoMaximo', NumberType::class, [
                 'attr' => [
                     'class' => 'form-control',
                     'step' => '0.01'
                 ],
-                'html5' => true,
-                'data'=> '0'
+                'html5' => true
             ])
             ->add('costoFlete', NumberType::class, [
                 'attr' => [
                     'class' => 'form-control',
-                    'step' => '0.01'
+                    'step' => '0.01',
+                    'onkeyup' => 'calcular_total()'
                 ],
-                'html5' => true,
-                'data'=> '0'
+                'html5' => true
             ])
             ->add('total', NumberType::class, [
                 'attr' => [
                     'class' => 'form-control',
                     'step' => '0.01'
                 ],
-                'html5' => true,
-                'data'=> '0'
+                'html5' => true
             ])
             ->add('tarifasConfiguracion',null, [
                 'attr' => [

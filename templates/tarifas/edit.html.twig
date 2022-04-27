@@ -3,11 +3,10 @@
 {% block title %}Edit Tarifas{% endblock %}
 
 {% block body %}
-    <h1>Edit Tarifas</h1>
+    <h1>Editar Tarifas</h1>
 
-    {{ include('tarifas/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('tarifas/_form.html.twig', {'button_label': 'Actualizar'}) }}
 
-    <a href="{{ path('app_tarifas_index') }}">back to list</a>
 
     {{ include('tarifas/_delete_form.html.twig') }}
 {% endblock %}

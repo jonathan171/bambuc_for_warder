@@ -71,8 +71,15 @@ class TarifasRepository extends ServiceEntityRepository
         $paginator->getQuery()->setFirstResult($pageSize * $currentPage)->setMaxResults($pageSize)->getResult();
         $list = [];
         foreach ($paginator as $item) {
+
+            $actions= '<a  class="btn waves-effect waves-light btn-info" href="/tarifas/'.$item->getId().'/edit">editar</a>';
            
-            $list[] = ['pesoMinimo'=>$item->getPesoMinimo(),'pesoMaximo'=>$item->getPesoMaximo(),'costoFlete'=>$item->getCostoFlete(),'zona'=>$item->getZona()->getNombre(),'total'=>$item->getTotal()];
+            $list[] = ['pesoMinimo'=>$item->getPesoMinimo(),
+                       'pesoMaximo'=>$item->getPesoMaximo(),
+                       'costoFlete'=>$item->getCostoFlete(),
+                       'zona'=>$item->getZona()->getNombre(),
+                       'total'=>$item->getTotal(),
+                       'actions'=> $actions];
            // echo $item->getZona()->getNombre();
         }
         return ['data' => $list, 'totalRecords' => $totalItems];
@@ -81,15 +88,24 @@ class TarifasRepository extends ServiceEntityRepository
     }
     
 
-    /*
-    public function findOneBySomeField($value): ?Tarifas
+    
+    public function findOneByPeso(array $options = [])
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+       
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT * FROM tarifas t
+            WHERE t.zona_id = :val
+            AND t.peso_minimo <= :val2
+            AND t.peso_maximo > :val3
+            ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery(['val'=>$options['zona'],'val2'=>$options['peso'],'val3'=>$options['peso']]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $resultSet->fetchAllAssociative();
     }
-    */
+
 }
