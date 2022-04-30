@@ -53,13 +53,7 @@ class TarifasController extends AbstractController
         $start = $request->request->get('start');
         $length = $request->request->get('length');
 
-        $campos = array(
-            "pesoMinimo",
-            "pesoMaximo",
-            "costoFlete",
-            "zona",
-            "total"
-        );
+        
 
         $data_table  = $tarifasRepository->findByDataTable(['page' => $start, 'pageSize' => $length, 'search' => $search['value']]);
 

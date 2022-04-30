@@ -62,7 +62,7 @@ class IntegracionController extends AbstractController
                 $envio = new Envio();
             }
             $envio->setCodigo($array_envio['productCode']);
-            $envio->setEstado(1);
+            
             $envio->setNumeroEnvio($array_envio['shipmentTrackingNumber']); 
             $envio->setDescripcion($array_envio['description']);
 
@@ -95,16 +95,22 @@ class IntegracionController extends AbstractController
                 $envio->setPesoReal(ceil( $total_peso_real));
             }
             
-            
+            $fecha_envio = new DateTime($array_envio['shipmentTimestamp']);
+            $envio->setFechaEnvio($fecha_envio);
             
             if(array_key_exists('estimatedDeliveryDate', $array_envio)){
                 $fecha = new DateTime($array_envio['estimatedDeliveryDate']);
                 $envio->setFechaEstimadaEntrega($fecha);
+                $envio->setEstado(1);
             }else{
-                $fecha = new DateTime();
+                $ultimo_evento = end($array_envio['events']);
+                
+                $envio->setEstado(3);
+                $fecha = new DateTime($ultimo_evento['date']);
                 $envio->setFechaEstimadaEntrega($fecha);
             }
             $envio->setEmpresa('DHL');
+
             $pais_envio = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['shipperDetails']['postalAddress']['countryCode']]);
             $pais_recibe = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['receiverDetails']['postalAddress']['countryCode']]);
             

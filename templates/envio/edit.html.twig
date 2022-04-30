@@ -3,11 +3,32 @@
 {% block title %}Edit Envio{% endblock %}
 
 {% block body %}
-    <h1>Edit Envio</h1>
+    <h1>Editar Envio</h1>
 
     {{ include('envio/_form.html.twig', {'button_label': 'Actualizar'}) }}
 
    
 
     {{ include('envio/_delete_form.html.twig') }}
+    <script>
+    function CambiarValor(id){
+       $.ajax({
+        url : '/envio/actualizarvalor',
+        data : { id : id},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+        alert('valor actualizado Correctamente');
+        location.reload();
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    }
+
+    </script>
 {% endblock %}

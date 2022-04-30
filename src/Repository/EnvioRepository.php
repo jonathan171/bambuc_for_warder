@@ -3,10 +3,13 @@
 namespace App\Repository;
 
 use App\Entity\Envio;
+use App\Entity\Pais;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 
 /**
  * @method Envio|null find($id, $lockMode = null, $lockVersion = null)
@@ -48,19 +51,47 @@ class EnvioRepository extends ServiceEntityRepository
     // /**
     //  * @return Envio[] Returns an array of Envio objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function findByDataTable(array $options = [])
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        
+        $currentPage = isset($options['page']) ? $options['page'] : 0;
+        $pageSize = isset($options['pageSize']) ? $options['pageSize'] : 10;
+
+        $query = $this->createQueryBuilder('e')
+                      ->innerJoin(Pais::class,'p','p.id = e.pais_destino');
+        if($options['search']){
+            $shearch = '%'.$options['search'].'%';
+            $query ->andWhere('e.numeroEnvio like :val OR e.fechaEnvio like :val2 OR e.empresa like :val3 OR e.quienRecibe like :val4 OR e.quienEnvia like :val5 OR p.nombre like :val6 ')
+            ->setParameters(['val'=>$shearch,'val2'=>$shearch,'val3'=>$shearch,'val4'=>$shearch,'val5'=>$shearch,'val6'=>$shearch]);
+        }
+       
+        $query->getQuery();
+        $paginator = new Paginator($query);
+        $totalItems = $paginator->count();
+        $paginator->getQuery()->setFirstResult($pageSize * $currentPage)->setMaxResults($pageSize)->getResult();
+        $list = [];
+        foreach ($paginator as $item) {
+
+            $actions= '<a  class="btn waves-effect waves-light btn-info" href="/envio/'.$item->getId().'/edit">editar</a>';
+           
+            $list[] = ['numeroEnvio'=>$item->getNumeroEnvio(),
+                       'pesoEstimado'=>$item->getPesoEstimado(),
+                       'pesoReal'=>$item->getPesoReal(),
+                       'totalPesoCobrar'=>$item->getTotalPesoCobrar(),
+                       'fechaEnvio'=>$item->getFechaEnvio()->format('Y-m-d'),
+                       'empresa'=>$item->getEmpresa(),
+                       'quienEnvia'=> $item->getQuienEnvia(),
+                       'quienRecibe'=> $item->getQuienRecibe(),
+                       'paisDestino'=> $item->getPaisDestino()->getNombre(),
+                       'actions'=> $actions];
+           // echo $item->getZona()->getNombre();
+        }
+        return ['data' => $list, 'totalRecords' => $totalItems];
+     
+
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?Envio

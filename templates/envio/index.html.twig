@@ -3,59 +3,71 @@
 {% block title %}Envio index{% endblock %}
 
 {% block body %}
-    <h1>Envio index</h1>
-
-    <table class="table">
+    <h1>Listado De Envios</h1>
+<div class="table-responsive">
+<div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+    <table class="table table-striped table-bordered text-nowrap dataTable" id="data_table_envios">
         <thead>
             <tr>
                 
-                <th>Estado</th>
-                <th>Numero Envio</th>
-                
+                <th>N° Guia</th>
                 <th>Peso Estimado</th>
                 <th>Peso Real</th>
                 <th>Peso Cobrado</th>
-                <th>valor a cobrar</th>
-                <th>Fecha Estimada Entrega</th>
-                <th>Pais Origen</th>
-                <th>Pais Destino</th>
+                <th>Fecha Envio</th>
                 <th>Empresa</th>
-                <th>Envia </th>
-                <th>Recibe</th>
-                <th>Facturado</th>
-                <th>actions</th>
+                <th>Quien Envia</th>
+                <th>Quien Recibe</th>
+                <th>Pais Destino</th>
+                <th>Opciones</th>
+               
             </tr>
         </thead>
         <tbody>
-        {% for envio in envios %}
-            <tr>
-                
-                <td>{{ envio.estado }}</td>
-                <td>{{ envio.numeroEnvio }}</td>
-                <td>{{ envio.pesoEstimado }}</td>
-                <td>{{ envio.pesoReal }}</td>
-                <td>{{ envio.totalPesoCobrar }}</td>
-                <td>{{ envio.totalACobrar }}</td>
-                <td>{{ envio.fechaEstimadaEntrega ? envio.fechaEstimadaEntrega|date('Y-m-d') : '' }}</td>
-                <td>{{ envio.paisOrigen }}</td>
-                <td>{{ envio.paisDestino }}</td>
-                <td>{{ envio.empresa }}</td>
-                <td>{{ envio.quienEnvia }}</td>
-               <td>{{ envio.quienRecibe }}</td>
-                
-                <td>{{ envio.facturado ? 'Si' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_envio_show', {'id': envio.id}) }}">show</a>
-                    <a href="{{ path('app_envio_edit', {'id': envio.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="18">no records found</td>
-            </tr>
-        {% endfor %}
+
         </tbody>
     </table>
-
-    <a href="{{ path('app_envio_new') }}">Create new</a>
+    </div>
+</div>
+<div class="col-lg-2">
+  <a class="justify-content-center w-100 btn btn-success d-flex align-items-center" href="{{ path('app_envio_new') }}">Nuevo Envio</a>
+</div>
+    <script>
+    
+  $(document).ready(function() {
+   
+      $('#data_table_envios').DataTable({
+            serverSide: true,
+            responsive: true,
+            pageLength: 50,
+            sPaginationType: "full_numbers",
+            language: {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+            },
+            ajax: {
+                "url": '/envio/table',
+                "type": "POST"
+            },
+            columns: [
+                {data: 'numeroEnvio'},
+                {data: 'pesoEstimado'},
+                {data: 'pesoReal'},
+                {data: 'totalPesoCobrar'},
+                {data: 'fechaEnvio'},
+                {data: 'empresa'},
+                {data: 'quienEnvia'},
+                {data: 'quienRecibe'},
+                {data: 'paisDestino'},
+                {data: 'actions'}
+                
+                ],
+            columnDefs: [
+                
+            ],
+            order: [[ 0, "desc" ]]
+        });
+   });
+    
+</script>
 {% endblock %}
+

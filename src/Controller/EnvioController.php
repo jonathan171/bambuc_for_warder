@@ -9,6 +9,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\EnvioRepository;
+use App\Repository\TarifasRepository;
+use App\Entity\TarifasConfiguracion;
+use Doctrine\Persistence\ManagerRegistry;
 
 #[Route('/envio')]
 class EnvioController extends AbstractController
@@ -23,6 +27,60 @@ class EnvioController extends AbstractController
         return $this->render('envio/index.html.twig', [
             'envios' => $envios,
         ]);
+    }
+
+    #[Route('/actualizarvalor', name: 'app_envio_actualizarvalor', methods: ['GET', 'POST'])]
+    public function actualizarvalor(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository, ManagerRegistry $doctrine): Response
+    {
+        $variables = $entityManager
+            ->getRepository(TarifasConfiguracion::class)
+            ->find(1);
+         $envio= $entityManager
+            ->getRepository(Envio::class)
+            ->find($request->request->get('id'));
+        
+        $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$envio->getPaisDestino()->getZona()->getId(),'peso'=> $envio->getPesoReal()]);
+        $envio->setTotalPesoCobrar($envio->getPesoReal());
+        $envio->setTotalACobrar($tarifa[0]['total']);
+
+        
+        $costo = array('costo' => $tarifa[0]['total']);
+        $entityManager = $doctrine->getManager();
+
+        $entityManager->persist($envio);
+
+            // actually executes the queries (i.e. the INSERT query)
+        $entityManager->flush();
+
+         
+
+
+        return $this->json($costo);
+    }
+
+
+    #[Route('/table', name: 'app_envio_table', methods: ['GET', 'POST'])]
+    public function table(Request $request, EntityManagerInterface $entityManager, EnvioRepository $envioRepository): Response
+    {
+        $search =  $request->request->get('search');
+        $start = $request->request->get('start');
+        $length = $request->request->get('length');
+
+        
+
+        $data_table  = $envioRepository->findByDataTable(['page' => $start, 'pageSize' => $length, 'search' => $search['value']]);
+
+        // Objeto requerido por Datatables
+
+        $responseData = array(
+            "draw" => '',
+            "recordsTotal" => $data_table['totalRecords'],
+            "recordsFiltered" => $data_table['totalRecords'],
+            "data" => $data_table['data']
+        );
+
+
+        return $this->json($responseData);
     }
 
     #[Route('/new', name: 'app_envio_new', methods: ['GET', 'POST'])]

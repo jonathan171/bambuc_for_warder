@@ -77,6 +77,14 @@ class Envio
      */
     private $totalACobrar = '0.00';
 
+     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_envio", type="date", nullable=false)
+     */
+    private $fechaEnvio;
+
+
     /**
      * @var \DateTime
      *
@@ -246,6 +254,18 @@ class Envio
     public function setTotalACobrar(string $totalACobrar): self
     {
         $this->totalACobrar = $totalACobrar;
+
+        return $this;
+    }
+
+    public function getFechaEnvio(): ?\DateTimeInterface
+    {
+        return $this->fechaEnvio;
+    }
+
+    public function setFechaEnvio(\DateTimeInterface $fechaEnvio): self
+    {
+        $this->fechaEnvio = $fechaEnvio;
 
         return $this;
     }

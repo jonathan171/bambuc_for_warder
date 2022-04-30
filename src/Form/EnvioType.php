@@ -6,6 +6,8 @@ use App\Entity\Envio;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,7 +21,12 @@ class EnvioType extends AbstractType
                     'class' => 'form-control'  
                 ]
             ])
-            ->add('estado', null, [
+            ->add('estado',ChoiceType::class, [
+                'choices'  => [
+                    'Enviado'=>'1' ,
+                    'En proceso'=> '2',
+                    'Entregado' =>'3',
+                ],
                 'attr' => [
                     'class' => 'form-control']
             ])
@@ -61,13 +68,28 @@ class EnvioType extends AbstractType
                 ],
                 'html5' => true
             ])
-            ->add('fechaEstimadaEntrega', null, [
+            ->add('fechaEnvio', null, [
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
                 'attr' => [
                     'class' => 'form-control',
                 ],
                 'html5' => true
             ])
-            ->add('empresa', null, [
+            ->add('fechaEstimadaEntrega', null, [
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'html5' => true
+            ])
+            ->add('empresa',ChoiceType::class, [
+                'choices'  => [
+                    'DHL' => 'DHL',
+                    'FEDEX' => 'FEDEX',
+                    'UPS' => 'UPS',
+                ],
                 'attr' => [
                     'class' => 'form-control',
                 ]

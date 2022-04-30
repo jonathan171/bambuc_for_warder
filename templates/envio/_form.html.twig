@@ -44,6 +44,12 @@
             </div> 
     </div>
     <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">fecha Envio</label>
+            <div class="col-sm-9">
+              {{form_widget(form.fechaEnvio) }}
+            </div> 
+    </div>
+    <div class="form-group mb-3 row pb-3">
             <label  class="col-sm-3 text-end control-label col-form-label">fecha Estimada Entrega</label>
             <div class="col-sm-9">
               {{form_widget(form.fechaEstimadaEntrega) }}
@@ -96,6 +102,9 @@
    
     <div class="p-3">
         <div class="form-group text-end">
+        {% if form.vars.data.id %}
+         <a class="btn waves-effect waves-light btn-rounded btn-success" onclick="CambiarValor({{ form.vars.data.id}})">Cobrar Peso Real</a>
+        {% endif %}
         <button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
          <a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_envio_index') }}">regresar</a>
         </div>
