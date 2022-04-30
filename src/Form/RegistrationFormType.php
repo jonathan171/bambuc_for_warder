@@ -46,6 +46,14 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
+            ])->add('firstName', null, [
+                'attr' => [
+                    'class' => 'form-control',
+                ]
+            ])->add('lastName', null, [
+                'attr' => [
+                    'class' => 'form-control',
+                ]
             ])
         ;
     }
