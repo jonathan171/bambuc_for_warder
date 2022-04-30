@@ -132,8 +132,8 @@ class IntegracionController extends AbstractController
             // actually executes the queries (i.e. the INSERT query)
             $entityManager->flush();
 
-
-       
+            return $this->redirect('/envio/'.$envio->getId().'/edit');
+         
 
         }
        
