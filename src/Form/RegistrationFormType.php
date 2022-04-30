@@ -26,10 +26,7 @@ class RegistrationFormType extends AbstractType
                     new IsTrue([
                         'message' => 'You should agree to our terms.',
                     ]),
-                ],
-                'attr' => [
-                    'class' => 'form-control'
-                ],
+                ]
             ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
