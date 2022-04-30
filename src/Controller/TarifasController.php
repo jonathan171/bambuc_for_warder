@@ -55,7 +55,7 @@ class TarifasController extends AbstractController
 
         
 
-        $data_table  = $tarifasRepository->findByDataTable(['page' => $start, 'pageSize' => $length, 'search' => $search['value']]);
+        $data_table  = $tarifasRepository->findByDataTable(['page' => ($start/$length), 'pageSize' => $length, 'search' => $search['value']]);
 
         // Objeto requerido por Datatables
 

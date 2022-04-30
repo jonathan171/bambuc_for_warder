@@ -68,7 +68,7 @@ class EnvioController extends AbstractController
 
         
 
-        $data_table  = $envioRepository->findByDataTable(['page' => $start, 'pageSize' => $length, 'search' => $search['value']]);
+        $data_table  = $envioRepository->findByDataTable(['page' => ($start/$length), 'pageSize' => $length, 'search' => $search['value']]);
 
         // Objeto requerido por Datatables
 
