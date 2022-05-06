@@ -76,9 +76,16 @@ class IntegracionController extends AbstractController
                 $total_dimension+= $dimension;
                 $total_peso+= $pieza['weight'];
                 //pesos reales de la transportadora
+                if(array_key_exists('actualWeight', $pieza)){
                 $total_peso_real+= $pieza['actualWeight'];
                 $dimension_real = (($pieza['actualDimensions']['length']*$pieza['actualDimensions']['width']*$pieza['actualDimensions']['height'])/5000);
                 $total_dimension_real+= $dimension_real;
+                }else {
+                    $total_peso_real=0;
+                    $total_dimension_real=0;
+
+                }
+                
 
             }
             if($total_dimension>$total_peso){

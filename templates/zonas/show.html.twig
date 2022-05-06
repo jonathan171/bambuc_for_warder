@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Zonas{% endblock %}
+
+{% block body %}
+    <h1>Zonas</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ zona.id }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ zona.nombre }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_zonas_index') }}">back to list</a>
+
+    <a href="{{ path('app_zonas_edit', {'id': zona.id}) }}">edit</a>
+
+    {{ include('zonas/_delete_form.html.twig') }}
+{% endblock %}

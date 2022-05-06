@@ -4,7 +4,9 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -12,12 +14,13 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email',null,['attr' => [
+            ->add('email', null, ['attr' => [
                 'class' => 'form-control'
             ]])
             ->add('agreeTerms', CheckboxType::class, [
@@ -32,9 +35,10 @@ class RegistrationFormType extends AbstractType
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password',
-                           'class' => 'form-control'
-                          ],
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                    'class' => 'form-control'
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a password',
@@ -54,8 +58,45 @@ class RegistrationFormType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                 ]
-            ])
-        ;
+            ])->add('roles', ChoiceType::class, [
+                'required' => true,
+                'multiple' => false,
+                'expanded' => false,
+                'choices'  => [
+                    'Auxiliar' => 'ROLE_AUXILIAR',
+                    'Supervisor' => 'ROLE_SUPERVISOR',
+                    'Administrador' => 'ROLE_ADMIN',
+                ],
+                'attr' => [
+                    'class' => 'form-control',
+                ]
+            ]);
+
+        // Data transformer
+        $builder->get('roles')->addModelTransformer(new CallbackTransformer(
+            function ($rolesArray) {
+                // transform the array to a string
+                return count($rolesArray) ? $rolesArray[0] : null;
+            },
+            function ($rolesString) {
+                // transform the string back to an array
+                return [$rolesString];
+            }
+        ));
+        //en caso de que sea multiple
+        /* $builder->get('roles')
+        ->addModelTransformer(new CallbackTransformer(
+            function($rolesAsArray){
+                $rolesAsArray = array_flip($rolesAsArray);
+                foreach($rolesAsArray as &$role){
+                    $role = true; // I also tried to set key instead of value - true
+                }
+                return $rolesAsArray;
+            },
+            function($rolesAsString){
+                dump($rolesAsString);die;
+            }
+        ));*/
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FacturaResolucion index{% endblock %}
+
+{% block body %}
+    <h1>FacturaResolucion index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>NumeroResolucion</th>
+                <th>FechaHabilitacion</th>
+                <th>InicioConsecutivo</th>
+                <th>FinConsecutivo</th>
+                <th>Prefijo</th>
+                <th>Activo</th>
+                <th>FechaVencimiento</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for factura_resolucion in factura_resolucions %}
+            <tr>
+                <td>{{ factura_resolucion.id }}</td>
+                <td>{{ factura_resolucion.numeroResolucion }}</td>
+                <td>{{ factura_resolucion.fechaHabilitacion ? factura_resolucion.fechaHabilitacion|date('Y-m-d') : '' }}</td>
+                <td>{{ factura_resolucion.inicioConsecutivo }}</td>
+                <td>{{ factura_resolucion.finConsecutivo }}</td>
+                <td>{{ factura_resolucion.prefijo }}</td>
+                <td>{{ factura_resolucion.activo ? 'Yes' : 'No' }}</td>
+                <td>{{ factura_resolucion.fechaVencimiento ? factura_resolucion.fechaVencimiento|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_factura_resolucion_show', {'id': factura_resolucion.id}) }}">show</a>
+                    <a href="{{ path('app_factura_resolucion_edit', {'id': factura_resolucion.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_factura_resolucion_new') }}">Create new</a>
+{% endblock %}
