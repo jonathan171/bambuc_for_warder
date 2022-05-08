@@ -31,6 +31,13 @@ class Zonas
      */
     private $nombre;
 
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo", type="string", length=100, nullable=false)
+     */
+    private $tipo;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -47,6 +54,19 @@ class Zonas
 
         return $this;
     }
+
+    public function getTipo(): ?string
+    {
+        return $this->tipo;
+    }
+
+    public function setTipo(string $tipo): self
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
 
 
 }

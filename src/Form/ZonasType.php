@@ -13,6 +13,17 @@ class ZonasType extends AbstractType
     {
         $builder
             ->add('nombre')
+            ->add('tipo',ChoiceType::class, [
+                'choices'  => [
+                    'Exportación' => 'exportacion',
+                    'Importación' => 'importacion',
+                    'Especial' => 'especial',
+                ],
+                'attr' => [
+                    'class' => 'form-control',
+                ]
+            ])
+            
         ;
     }
 
