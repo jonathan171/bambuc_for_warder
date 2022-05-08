@@ -120,8 +120,13 @@ class IntegracionController extends AbstractController
 
             $pais_envio = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['shipperDetails']['postalAddress']['countryCode']]);
             $pais_recibe = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['receiverDetails']['postalAddress']['countryCode']]);
+            if($array_envio['shipperDetails']['postalAddress']['countryCode']=='CO'){
+                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$pais_recibe->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+            }else {
+                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$pais_envio->getZonaImportacion()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+            }
             
-            $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$pais_recibe->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+            
             
             $envio->setTotalACobrar($tarifa[0]['total']);
             $envio->setPaisOrigen($pais_envio);

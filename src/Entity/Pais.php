@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Pais
  *
- * @ORM\Table(name="pais", indexes={@ORM\Index(name="zona_id", columns={"zona_id"})})
+ * @ORM\Table(name="pais", indexes={@ORM\Index(name="zona_id", columns={"zona_id"}), @ORM\Index(name="zona_importacion", columns={"zona_importacion"})})
  * @ORM\Entity
  */
 class Pais
@@ -48,6 +48,16 @@ class Pais
      */
     private $zona;
 
+    /**
+     * @var \Zonas
+     *
+     * @ORM\ManyToOne(targetEntity="Zonas")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="zona_importacion", referencedColumnName="id")
+     * })
+     */
+    private $zonaImportacion;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -85,6 +95,18 @@ class Pais
     public function setZona(?Zonas $zona): self
     {
         $this->zona = $zona;
+
+        return $this;
+    }
+
+    public function getZonaImportacion(): ?Zonas
+    {
+        return $this->zonaImportacion;
+    }
+
+    public function setZonaImportacion(?Zonas $zonaImportacion): self
+    {
+        $this->zonaImportacion = $zonaImportacion;
 
         return $this;
     }

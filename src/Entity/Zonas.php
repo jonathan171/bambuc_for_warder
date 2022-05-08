@@ -31,12 +31,12 @@ class Zonas
      */
     private $nombre;
 
-     /**
+    /**
      * @var string
      *
-     * @ORM\Column(name="tipo", type="string", length=100, nullable=false)
+     * @ORM\Column(name="tipo", type="string", length=100, nullable=false, options={"default"="exportacion"})
      */
-    private $tipo;
+    private $tipo = 'exportacion';
 
     public function getId(): ?int
     {
@@ -66,7 +66,6 @@ class Zonas
 
         return $this;
     }
-
 
 
 }
