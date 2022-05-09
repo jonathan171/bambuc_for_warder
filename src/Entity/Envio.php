@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Envio
  *
  * @ORM\Table(name="envio", indexes={@ORM\Index(name="pais_destino", columns={"pais_destino"}), @ORM\Index(name="factura_items_id", columns={"factura_items_id"}), @ORM\Index(name="pais_origen", columns={"pais_origen"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\EnvioRepository")
  */
 class Envio
 {

@@ -7,6 +7,7 @@ use App\Entity\Pais;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
@@ -59,11 +60,12 @@ class EnvioRepository extends ServiceEntityRepository
         $pageSize = isset($options['pageSize']) ? $options['pageSize'] : 10;
 
         $query = $this->createQueryBuilder('e')
-                      ->innerJoin(Pais::class,'p','p.id = e.pais_destino');
+                      ->innerJoin(Pais::class,'p', Join::WITH,   'p.id = e.paisDestino')
+                      ->innerJoin(Pais::class,'p1', Join::WITH,  'p1.id = e.paisOrigen');
         if($options['search']){
             $shearch = '%'.$options['search'].'%';
-            $query ->andWhere('e.numeroEnvio like :val OR e.fechaEnvio like :val2 OR e.empresa like :val3 OR e.quienRecibe like :val4 OR e.quienEnvia like :val5 OR p.nombre like :val6 ')
-            ->setParameters(['val'=>$shearch,'val2'=>$shearch,'val3'=>$shearch,'val4'=>$shearch,'val5'=>$shearch,'val6'=>$shearch]);
+            $query ->andWhere('e.numeroEnvio like :val OR e.fechaEnvio like :val2 OR e.empresa like :val3 OR e.quienRecibe like :val4 OR e.quienEnvia like :val5 OR p.nombre like :val6 OR p1.nombre like :val7')
+            ->setParameters(['val'=>$shearch,'val2'=>$shearch,'val3'=>$shearch,'val4'=>$shearch,'val5'=>$shearch,'val6'=>$shearch ,'val7'=>$shearch]);
         }
        
         $query->getQuery();

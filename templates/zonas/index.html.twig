@@ -3,33 +3,38 @@
 {% block title %}Zonas index{% endblock %}
 
 {% block body %}
-    <h1>Zonas index</h1>
-
+    <h1>Listado de Zonas</h1>
+<div class="table-responsive">
+<div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Nombre</th>
+                <th>Tipo</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for zona in zonas %}
             <tr>
-                <td>{{ zona.id }}</td>
                 <td>{{ zona.nombre }}</td>
+                <td>{{ zona.tipo }}</td>
                 <td>
-                    <a href="{{ path('app_zonas_show', {'id': zona.id}) }}">show</a>
-                    <a href="{{ path('app_zonas_edit', {'id': zona.id}) }}">edit</a>
+                   
+                    <a class="btn waves-effect waves-light btn-info" href="{{ path('app_zonas_edit', {'id': zona.id}) }}">editar</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">no records found</td>
+                <td colspan="3">no hay zonas registradas</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_zonas_new') }}">Create new</a>
+    </div>
+</div>
+  
+    <div class="col-lg-2">
+  <a class="justify-content-center w-100 btn btn-success d-flex align-items-center"  href="{{ path('app_zonas_new') }}">Nueva Zona</a>
+</div>
 {% endblock %}

@@ -1,4 +1,26 @@
+<div class="card-body">
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+    
+     <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Nombre</label>
+            <div class="col-sm-9">
+              {{form_widget(form.nombre) }}
+            </div> 
+        </div>
+         <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Tipo</label>
+            <div class="col-sm-9">
+              {{form_widget(form.tipo) }}
+            </div> 
+        </div>
+      
+ 
+
+<div class="p-3">
+        <div class="form-group text-end">
+        <button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
+         <a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_zonas_index') }}">regresar</a>
+        </div>
+</div>
+ {{ form_end(form) }}  
+ </div>

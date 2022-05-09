@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Pais;
 use App\Form\PaisType;
+use App\Repository\PaisRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,30 @@ class PaisController extends AbstractController
         return $this->render('pais/index.html.twig', [
             'pais' => $pais,
         ]);
+    }
+
+    #[Route('/table', name: 'app_pais_table', methods: ['GET', 'POST'])]
+    public function table(Request $request, PaisRepository $paisRepository): Response
+    {
+        $search =  $request->request->get('search');
+        $start = $request->request->get('start');
+        $length = $request->request->get('length');
+
+        
+
+        $data_table  = $paisRepository->findByDataTable(['page' => ($start/$length), 'pageSize' => $length, 'search' => $search['value']]);
+
+        // Objeto requerido por Datatables
+
+        $responseData = array(
+            "draw" => '',
+            "recordsTotal" => $data_table['totalRecords'],
+            "recordsFiltered" => $data_table['totalRecords'],
+            "data" => $data_table['data']
+        );
+
+
+        return $this->json($responseData);
     }
 
     #[Route('/new', name: 'app_pais_new', methods: ['GET', 'POST'])]
