@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Clientes;
 use App\Form\ClientesType;
+use App\Repository\ClientesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,35 @@ class ClientesController extends AbstractController
         return $this->render('clientes/index.html.twig', [
             'clientes' => $clientes,
         ]);
+    }
+
+    #[Route('/table', name: 'app_clientes_table', methods: ['GET', 'POST'])]
+    public function table(Request $request, ClientesRepository $clienteRepository): Response
+    {
+       
+        $search =  $request->request->get('search');
+        $start = $request->request->get('start');
+        $length = $request->request->get('length');
+
+        
+
+        $data_table  = $clienteRepository->findByDataTable([
+                             'page' => ($start /$length),
+                             'pageSize' =>  $length,
+                             'search' =>  $search["value"]
+                            ]);
+
+        // Objeto requerido por Datatables
+
+        $responseData = array(
+            "draw" => '',
+            "recordsTotal" => $data_table['totalRecords'],
+            "recordsFiltered" => $data_table['totalRecords'],
+            "data" => $data_table['data']
+        );
+
+
+        return $this->json($responseData);
     }
 
     #[Route('/new', name: 'app_clientes_new', methods: ['GET', 'POST'])]

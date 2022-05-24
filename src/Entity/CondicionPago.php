@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CondicionPago
 {
+    public function __toString() {
+        return $this->descripcion;
+    }
     /**
      * @var int
      *

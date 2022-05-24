@@ -3,95 +3,34 @@
 {% block title %}Factura index{% endblock %}
 
 {% block body %}
-    <h1>Factura index</h1>
+ <div class="p-3">
+        <div class="form-group ">
+         <a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_new') }}">Nueva Factura</a>
+         <a class="btn waves-effect waves-light btn-success" href="{{ path('app_clientes_index') }}">Clientes</a>
+         <a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_resolucion_index') }}">Resoluciones</a>
+        </div>
+    </div>
+
+    <h1>Listado de Facturas</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>NumeroFactura</th>
-                <th>Estado</th>
+                <th>Numero Factura</th>
+                <th>Prefijo</th>
                 <th>Fecha</th>
-                <th>FechaVencimiento</th>
-                <th>FechaValidacion</th>
-                <th>Total</th>
-                <th>Anulado</th>
-                <th>AnuladoUsuario</th>
-                <th>AnuladoFecha</th>
-                <th>FormaDePago</th>
-                <th>TipoFactura</th>
-                <th>Observaciones</th>
-                <th>FacturaResolucionId</th>
-                <th>Hora</th>
-                <th>Subtotal</th>
-                <th>TotalIva</th>
-                <th>TotalReteIva</th>
-                <th>TotalReteIca</th>
-                <th>TotalReteFuente</th>
-                <th>TotalReteFuenteG</th>
-                <th>ReteFuente</th>
-                <th>ReteIca</th>
-                <th>ReteIva</th>
-                <th>Descuento</th>
-                <th>TipoRegimen</th>
-                <th>RespuestaDian</th>
-                <th>Cufe</th>
-                <th>Pdf</th>
-                <th>Xml</th>
-                <th>CuerpoJsonf</th>
-                <th>CuerpoJsonc</th>
-                <th>RespuestaCorreo</th>
-                <th>actions</th>
+                <th>Cliente</th>
+                
+                <th>Acciones</th>
+               
             </tr>
         </thead>
         <tbody>
-        {% for factura in facturas %}
-            <tr>
-                <td>{{ factura.id }}</td>
-                <td>{{ factura.numeroFactura }}</td>
-                <td>{{ factura.estado }}</td>
-                <td>{{ factura.fecha ? factura.fecha|date('Y-m-d') : '' }}</td>
-                <td>{{ factura.fechaVencimiento ? factura.fechaVencimiento|date('Y-m-d') : '' }}</td>
-                <td>{{ factura.fechaValidacion ? factura.fechaValidacion|date('Y-m-d') : '' }}</td>
-                <td>{{ factura.total }}</td>
-                <td>{{ factura.anulado ? 'Yes' : 'No' }}</td>
-                <td>{{ factura.anuladoUsuario }}</td>
-                <td>{{ factura.anuladoFecha ? factura.anuladoFecha|date('Y-m-d') : '' }}</td>
-                <td>{{ factura.formaDePago }}</td>
-                <td>{{ factura.tipoFactura }}</td>
-                <td>{{ factura.observaciones }}</td>
-                <td>{{ factura.facturaResolucionId }}</td>
-                <td>{{ factura.hora ? factura.hora|date('H:i:s') : '' }}</td>
-                <td>{{ factura.subtotal }}</td>
-                <td>{{ factura.totalIva }}</td>
-                <td>{{ factura.totalReteIva }}</td>
-                <td>{{ factura.totalReteIca }}</td>
-                <td>{{ factura.totalReteFuente }}</td>
-                <td>{{ factura.totalReteFuenteG }}</td>
-                <td>{{ factura.reteFuente }}</td>
-                <td>{{ factura.reteIca }}</td>
-                <td>{{ factura.reteIva }}</td>
-                <td>{{ factura.descuento }}</td>
-                <td>{{ factura.tipoRegimen }}</td>
-                <td>{{ factura.respuestaDian }}</td>
-                <td>{{ factura.cufe }}</td>
-                <td>{{ factura.pdf }}</td>
-                <td>{{ factura.xml }}</td>
-                <td>{{ factura.cuerpoJsonf }}</td>
-                <td>{{ factura.cuerpoJsonc }}</td>
-                <td>{{ factura.respuestaCorreo }}</td>
-                <td>
-                    <a href="{{ path('app_factura_show', {'id': factura.id}) }}">show</a>
-                    <a href="{{ path('app_factura_edit', {'id': factura.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="34">no records found</td>
-            </tr>
-        {% endfor %}
+        
         </tbody>
     </table>
-
-    <a href="{{ path('app_factura_new') }}">Create new</a>
+<div class="col-lg-2">
+  <a class="justify-content-center w-100 btn btn-success d-flex align-items-center" href="{{ path('app_factura_new') }}">Nueva Factura</a>
+</div>
+ 
 {% endblock %}

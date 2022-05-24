@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Clientes
  *
  * @ORM\Table(name="clientes", indexes={@ORM\Index(name="id_tributo", columns={"id_tributo"}), @ORM\Index(name="id_obligacion", columns={"id_obligacion"}), @ORM\Index(name="nit", columns={"nit"}), @ORM\Index(name="municipio_id", columns={"municipio_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ClientesRepository")
  */
 class Clientes
 {
@@ -59,7 +59,7 @@ class Clientes
     /**
      * @var bool
      *
-     * @ORM\Column(name="tipo_receptor", type="boolean", nullable=false)
+     * @ORM\Column(name="tipo_receptor", type="integer", nullable=false)
      */
     private $tipoReceptor;
 

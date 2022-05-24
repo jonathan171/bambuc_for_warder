@@ -1,53 +1,66 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Clientes index{% endblock %}
+{% block title %}Administrador clientes{% endblock %}
 
 {% block body %}
-    <h1>Clientes index</h1>
 
-    <table class="table">
+    <h1>Listado de clientes</h1>
+<div class="table-responsive">
+<div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+    <table class="table table-striped table-bordered text-nowrap dataTable" id="data_table_clientes">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>RazonSocial</th>
-                <th>Nit</th>
-                <th>Direccion</th>
+                <th>Razon Social</th>
+                <th>Tipo documento</th>
+                <th>Número de documento</th>
                 <th>Telefono</th>
                 <th>Correo</th>
-                <th>TipoReceptor</th>
-                <th>TipoDocumento</th>
-                <th>TipoRegimen</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>actions</th>
+                <th>acciones</th>
             </tr>
         </thead>
         <tbody>
-        {% for cliente in clientes %}
-            <tr>
-                <td>{{ cliente.id }}</td>
-                <td>{{ cliente.razonSocial }}</td>
-                <td>{{ cliente.nit }}</td>
-                <td>{{ cliente.direccion }}</td>
-                <td>{{ cliente.telefono }}</td>
-                <td>{{ cliente.correo }}</td>
-                <td>{{ cliente.tipoReceptor ? 'Yes' : 'No' }}</td>
-                <td>{{ cliente.tipoDocumento }}</td>
-                <td>{{ cliente.tipoRegimen }}</td>
-                <td>{{ cliente.nombres }}</td>
-                <td>{{ cliente.apellidos }}</td>
-                <td>
-                    <a href="{{ path('app_clientes_show', {'id': cliente.id}) }}">show</a>
-                    <a href="{{ path('app_clientes_edit', {'id': cliente.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="12">no records found</td>
-            </tr>
-        {% endfor %}
+        
         </tbody>
     </table>
-
-    <a href="{{ path('app_clientes_new') }}">Create new</a>
+ </div>
+</div>
+<div class="col-lg-2">
+  <a class="justify-content-center w-100 btn btn-success d-flex align-items-center" href="{{ path('app_clientes_new') }}">Nuevo Cliente</a>
+</div>
+   
+{% endblock %}
+ {% block javascripts %} 
+<script>
+    
+  $(document).ready(function() {
+   
+      $('#data_table_clientes').DataTable({
+            serverSide: true,
+            responsive: true,
+            pageLength: 50,
+            sPaginationType: "full_numbers",
+            language: {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+            },
+            ajax: {
+                "url": '/clientes/table',
+                "type": "POST"
+            },
+            columns: [
+                {data: 'razonSocial'},
+                {data: 'tipoDocumento'},
+                {data: 'numeroDocumento'},
+                {data: 'telefono'},
+                {data: 'correo'},
+                {data: 'actions'}
+                
+                ],
+            columnDefs: [
+                
+            ],
+            order: [[ 0, "desc" ]]
+        });
+   });
+    
+</script>
 {% endblock %}

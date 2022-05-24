@@ -11,7 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class Tributos
-{
+{   
+    public function __toString() {
+        return $this->nombre;
+    }
     /**
      * @var int
      *

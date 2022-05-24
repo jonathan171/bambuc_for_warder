@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/factura/resolucion')]
+#[Route('/factura_resolucion')]
 class FacturaResolucionController extends AbstractController
 {
     #[Route('/', name: 'app_factura_resolucion_index', methods: ['GET'])]

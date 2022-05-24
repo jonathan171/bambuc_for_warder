@@ -3,11 +3,10 @@
 {% block title %}Edit FacturaResolucion{% endblock %}
 
 {% block body %}
-    <h1>Edit FacturaResolucion</h1>
+    <h1>Editar Rersolución</h1>
 
-    {{ include('factura_resolucion/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('factura_resolucion/_form.html.twig', {'button_label': 'Actualizar'}) }}
 
-    <a href="{{ path('app_factura_resolucion_index') }}">back to list</a>
 
-    {{ include('factura_resolucion/_delete_form.html.twig') }}
+   {# {{ include('factura_resolucion/_delete_form.html.twig') }} #}
 {% endblock %}

@@ -8,13 +8,13 @@
     <meta name="keywords" content="wrappixel, admin dashboard, html css dashboard, web dashboard, bootstrap 5 admin, bootstrap 5, css3 dashboard, bootstrap 5 dashboard, nice admin bootstrap 5 dashboard, frontend, responsive bootstrap 5 admin template, ">
     <meta name="description" content="Nice is powerful and clean admin dashboard template, inpired from Google&#39;s Material Design">
     <meta name="robots" content="noindex,nofollow">
-    <title>Banbuc For Warder</title>
+   <title>{% block title %}{% endblock %} | Bambuc for warder</title>
     <link rel="canonical" href="https://www.wrappixel.com/templates/niceadmin/">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/assets/images/favicon.png">
     <!-- Custom CSS -->
       {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
+           
             <link href="{{ asset('css/style.min.css') }}" rel="stylesheet">
             <link href="{{ asset('css/personal.css') }}" rel="stylesheet">
             <link href="{{ asset('css/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet">
@@ -24,30 +24,7 @@
  
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-       
-    <script src="{{ asset('js/libs/jquery.min.js')}}"></script>
-    <!-- Bootstrap tether Core JavaScript -->
-    <script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
-    <!-- apps -->
-    <script src="{{ asset('js/app.min.js')}}"></script>
-    <script src="{{ asset('js/app.init.js')}}"></script>
-    <script src="{{ asset('js/app-style-switcher.js')}}"></script>
-    <!-- slimscrollbar scrollbar JavaScript -->
-    <script src="{{ asset('js/perfect-scrollbar.jquery.min.js')}}"></script>
-    <script src="{{ asset('js/jquery.sparkline.min.js')}}"></script>
-    <!--Wave Effects -->
-    <script src="{{ asset('js/waves.js')}}"></script>
-    <!--Menu sidebar -->
-    <script src="{{ asset('js/sidebarmenu.js')}}"></script>
-    <!--Custom JavaScript -->
-    <script src="{{ asset('js/feather.min.js')}}"></script>
-    <script src="{{ asset('js/custom.min.js')}}"></script>
-    <script src="{{ asset('js/libs/jquery.datatables.min.js')}}"></script>
-    <script src="{{ asset('js/libs/custom-datatable.js')}}"></script>
-    <script src="{{ asset('js/libs/datatable-basic.init.js')}}"></script>    
-     {% endblock %}
+   
   <style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;box-sizing: content-box;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style></head>
 
   <body>
@@ -684,7 +661,7 @@
                 <span class="hide-menu">Facturación</span>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/app-invoice.html" aria-expanded="false"><i class="mdi mdi-book"></i><span class="hide-menu">Facturas</span></a>
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/factura" aria-expanded="false"><i class="mdi mdi-book"></i><span class="hide-menu">Facturas</span></a>
               </li>
               <li class="sidebar-item">
                 <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
@@ -694,7 +671,7 @@
                 </a>
                 <ul aria-expanded="false" class="collapse first-level">
                   <li class="sidebar-item">
-                    <a href="/tarifas/configuracion" class="sidebar-link">
+                    <a href="/tarifas_configuracion" class="sidebar-link">
                      <i  class="mdi mdi-adjust"></i>
                       <span class="hide-menu"> Variables</span>
                     </a>
@@ -1222,5 +1199,32 @@
     <!-- All Jquery -->
     <!-- ============================================================== -->
      
+           
+       
+    <script src="{{ asset('js/libs/jquery.min.js')}}"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
+    <!-- apps -->
+    <script src="{{ asset('js/app.min.js')}}"></script>
+    <script src="{{ asset('js/app.init.js')}}"></script>
+    <script src="{{ asset('js/app-style-switcher.js')}}"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="{{ asset('js/perfect-scrollbar.jquery.min.js')}}"></script>
+    <script src="{{ asset('js/jquery.sparkline.min.js')}}"></script>
+    <!--Wave Effects -->
+    <script src="{{ asset('js/waves.js')}}"></script>
+    <!--Menu sidebar -->
+    <script src="{{ asset('js/sidebarmenu.js')}}"></script>
+    <!--Custom JavaScript -->
+    <script src="{{ asset('js/feather.min.js')}}"></script>
+    <script src="{{ asset('js/custom.min.js')}}"></script>
+    <script src="{{ asset('js/libs/jquery.datatables.min.js')}}"></script>
+    <script src="{{ asset('js/libs/custom-datatable.js')}}"></script>
+    <script src="{{ asset('js/libs/datatable-basic.init.js')}}"></script>   
+     {% block javascripts %} 
+     
+     {% endblock %}
 
-</body></html>
+</body>
+
+</html>

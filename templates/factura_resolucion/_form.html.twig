@@ -1,4 +1,53 @@
+<div class="card-body">
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+   
+      <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Numero Resolución</label>
+            <div class="col-sm-9">
+              {{form_widget(form.numeroResolucion) }}
+            </div> 
+    </div>
+     <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Fecha habilitación</label>
+            <div class="col-sm-9">
+              {{form_widget(form.fechaHabilitacion) }}
+            </div> 
+    </div>
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Inicio consecutivo</label>
+            <div class="col-sm-9">
+              {{form_widget(form.inicioConsecutivo) }}
+            </div> 
+    </div>
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Fin Consecutivo</label>
+            <div class="col-sm-9">
+              {{form_widget(form.finConsecutivo) }}
+            </div> 
+    </div>
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Activo</label>
+            <div class="col-sm-9">
+              {{form_widget(form.activo) }}
+            </div> 
+    </div>
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Fecha Vencimiento</label>
+            <div class="col-sm-9">
+              {{form_widget(form.fechaVencimiento) }}
+            </div> 
+    </div>
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Prefijo</label>
+            <div class="col-sm-9">
+              {{form_widget(form.prefijo) }}
+            </div> 
+    </div>
+   <div class="p-3">
+        <div class="form-group text-end">
+        <button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
+         <a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_factura_resolucion_index') }}">regresar</a>
+        </div>
+    </div>
 {{ form_end(form) }}
+</div>

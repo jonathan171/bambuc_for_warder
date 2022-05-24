@@ -3,36 +3,36 @@
 {% block title %}FacturaResolucion index{% endblock %}
 
 {% block body %}
-    <h1>FacturaResolucion index</h1>
-
-    <table class="table">
+    <h1>Listado de Resoluciones</h1>
+<div class="table-responsive">
+<div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+    <table class="table table-striped table-bordered text-nowrap dataTable">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>NumeroResolucion</th>
-                <th>FechaHabilitacion</th>
-                <th>InicioConsecutivo</th>
-                <th>FinConsecutivo</th>
+               
+                <th>Numero Resolucion</th>
+                <th>Fecha Habilitacion</th>
+                <th>Inicio Consecutivo</th>
+                <th>Fin Consecutivo</th>
                 <th>Prefijo</th>
                 <th>Activo</th>
-                <th>FechaVencimiento</th>
-                <th>actions</th>
+                <th>Fecha Vencimiento</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
         {% for factura_resolucion in factura_resolucions %}
             <tr>
-                <td>{{ factura_resolucion.id }}</td>
                 <td>{{ factura_resolucion.numeroResolucion }}</td>
                 <td>{{ factura_resolucion.fechaHabilitacion ? factura_resolucion.fechaHabilitacion|date('Y-m-d') : '' }}</td>
                 <td>{{ factura_resolucion.inicioConsecutivo }}</td>
                 <td>{{ factura_resolucion.finConsecutivo }}</td>
                 <td>{{ factura_resolucion.prefijo }}</td>
-                <td>{{ factura_resolucion.activo ? 'Yes' : 'No' }}</td>
+                <td>{{ factura_resolucion.activo ? 'Si' : 'No' }}</td>
                 <td>{{ factura_resolucion.fechaVencimiento ? factura_resolucion.fechaVencimiento|date('Y-m-d') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_factura_resolucion_show', {'id': factura_resolucion.id}) }}">show</a>
-                    <a href="{{ path('app_factura_resolucion_edit', {'id': factura_resolucion.id}) }}">edit</a>
+                  
+                    <a class="btn waves-effect waves-light btn-info" href="{{ path('app_factura_resolucion_edit', {'id': factura_resolucion.id}) }}">editar</a>
                 </td>
             </tr>
         {% else %}
@@ -42,6 +42,10 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_factura_resolucion_new') }}">Create new</a>
+</div>
+</div>
+  
+    <div class="col-lg-2">
+  <a class="justify-content-center w-100 btn btn-success d-flex align-items-center"  href="{{ path('app_factura_resolucion_new') }}">Nueva Resolución</a>
+</div>
 {% endblock %}

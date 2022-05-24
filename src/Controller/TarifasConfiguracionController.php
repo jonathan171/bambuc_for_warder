@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/tarifas/configuracion')]
+#[Route('/tarifas_configuracion')]
 class TarifasConfiguracionController extends AbstractController
 {
     #[Route('/', name: 'app_tarifas_configuracion_index', methods: ['GET'])]
