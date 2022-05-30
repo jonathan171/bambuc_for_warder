@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Clientes
  *
- * @ORM\Table(name="clientes", indexes={@ORM\Index(name="id_tributo", columns={"id_tributo"}), @ORM\Index(name="id_obligacion", columns={"id_obligacion"}), @ORM\Index(name="nit", columns={"nit"}), @ORM\Index(name="municipio_id", columns={"municipio_id"})})
+ * @ORM\Table(name="clientes", indexes={@ORM\Index(name="nit", columns={"nit"}), @ORM\Index(name="municipio_id", columns={"municipio_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\ClientesRepository")
  */
 class Clientes
@@ -59,7 +59,7 @@ class Clientes
     /**
      * @var bool
      *
-     * @ORM\Column(name="tipo_receptor", type="integer", nullable=false)
+     * @ORM\Column(name="tipo_receptor", type="boolean", nullable=false)
      */
     private $tipoReceptor;
 
@@ -71,11 +71,18 @@ class Clientes
     private $tipoDocumento;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="tipo_regimen", type="integer", nullable=false, options={"default"="49"})
+     * @ORM\Column(name="regimen", type="string", length=255, nullable=false, options={"default"="SIMPLE"})
      */
-    private $tipoRegimen = 49;
+    private $regimen = 'SIMPLE';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tax_level_code", type="string", length=255, nullable=false, options={"default"="RESPONSABLE_DE_IVA"})
+     */
+    private $taxLevelCode = 'RESPONSABLE_DE_IVA';
 
     /**
      * @var string|null
@@ -100,26 +107,6 @@ class Clientes
      * })
      */
     private $municipio;
-
-    /**
-     * @var \Tributos
-     *
-     * @ORM\ManyToOne(targetEntity="Tributos")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_tributo", referencedColumnName="id")
-     * })
-     */
-    private $idTributo;
-
-    /**
-     * @var \ObligacionesFiscales
-     *
-     * @ORM\ManyToOne(targetEntity="ObligacionesFiscales")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_obligacion", referencedColumnName="id")
-     * })
-     */
-    private $idObligacion;
 
     public function getId(): ?int
     {
@@ -210,14 +197,26 @@ class Clientes
         return $this;
     }
 
-    public function getTipoRegimen(): ?int
+    public function getRegimen(): ?string
     {
-        return $this->tipoRegimen;
+        return $this->regimen;
     }
 
-    public function setTipoRegimen(int $tipoRegimen): self
+    public function setRegimen(string $regimen): self
     {
-        $this->tipoRegimen = $tipoRegimen;
+        $this->regimen = $regimen;
+
+        return $this;
+    }
+
+    public function getTaxLevelCode(): ?string
+    {
+        return $this->taxLevelCode;
+    }
+
+    public function setTaxLevelCode(string $taxLevelCode): self
+    {
+        $this->taxLevelCode = $taxLevelCode;
 
         return $this;
     }
@@ -254,30 +253,6 @@ class Clientes
     public function setMunicipio(?Municipio $municipio): self
     {
         $this->municipio = $municipio;
-
-        return $this;
-    }
-
-    public function getIdTributo(): ?Tributos
-    {
-        return $this->idTributo;
-    }
-
-    public function setIdTributo(?Tributos $idTributo): self
-    {
-        $this->idTributo = $idTributo;
-
-        return $this;
-    }
-
-    public function getIdObligacion(): ?ObligacionesFiscales
-    {
-        return $this->idObligacion;
-    }
-
-    public function setIdObligacion(?ObligacionesFiscales $idObligacion): self
-    {
-        $this->idObligacion = $idObligacion;
 
         return $this;
     }

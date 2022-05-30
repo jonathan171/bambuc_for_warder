@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Factura
  *
- * @ORM\Table(name="factura", indexes={@ORM\Index(name="cond_de_pago", columns={"cond_de_pago"}), @ORM\Index(name="id_obligacion", columns={"id_obligacion"}), @ORM\Index(name="cliente_id", columns={"cliente_id"}), @ORM\Index(name="id_tributo", columns={"id_tributo"}), @ORM\Index(name="factura_resolucion_id", columns={"factura_resolucion_id"})})
+ * @ORM\Table(name="factura", indexes={@ORM\Index(name="cond_de_pago", columns={"cond_de_pago"}), @ORM\Index(name="cliente_id", columns={"cliente_id"}), @ORM\Index(name="factura_resolucion_id", columns={"factura_resolucion_id"})})
  * @ORM\Entity
  */
 class Factura
@@ -190,11 +190,18 @@ class Factura
     private $descuento = '0.00';
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="tipo_regimen", type="integer", nullable=false, options={"default"="49"})
+     * @ORM\Column(name="tax_level_code", type="string", length=255, nullable=false, options={"default"="NO_RESPONSABLE_DE_IVA"})
      */
-    private $tipoRegimen = 49;
+    private $taxLevelCode = 'NO_RESPONSABLE_DE_IVA';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="regimen", type="string", length=255, nullable=false, options={"default"="SIMPLE"})
+     */
+    private $regimen = 'SIMPLE';
 
     /**
      * @var string|null
@@ -246,26 +253,6 @@ class Factura
     private $respuestaCorreo;
 
     /**
-     * @var \CondicionPago
-     *
-     * @ORM\ManyToOne(targetEntity="CondicionPago")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cond_de_pago", referencedColumnName="id")
-     * })
-     */
-    private $condDePago;
-
-    /**
-     * @var \Tributos
-     *
-     * @ORM\ManyToOne(targetEntity="Tributos")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_tributo", referencedColumnName="id")
-     * })
-     */
-    private $idTributo;
-
-    /**
      * @var \Clientes
      *
      * @ORM\ManyToOne(targetEntity="Clientes")
@@ -276,14 +263,14 @@ class Factura
     private $cliente;
 
     /**
-     * @var \ObligacionesFiscales
+     * @var \CondicionPago
      *
-     * @ORM\ManyToOne(targetEntity="ObligacionesFiscales")
+     * @ORM\ManyToOne(targetEntity="CondicionPago")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_obligacion", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="cond_de_pago", referencedColumnName="id")
      * })
      */
-    private $idObligacion;
+    private $condDePago;
 
     public function getId(): ?string
     {
@@ -578,14 +565,26 @@ class Factura
         return $this;
     }
 
-    public function getTipoRegimen(): ?int
+    public function getTaxLevelCode(): ?string
     {
-        return $this->tipoRegimen;
+        return $this->taxLevelCode;
     }
 
-    public function setTipoRegimen(int $tipoRegimen): self
+    public function setTaxLevelCode(string $taxLevelCode): self
     {
-        $this->tipoRegimen = $tipoRegimen;
+        $this->taxLevelCode = $taxLevelCode;
+
+        return $this;
+    }
+
+    public function getRegimen(): ?string
+    {
+        return $this->regimen;
+    }
+
+    public function setRegimen(string $regimen): self
+    {
+        $this->regimen = $regimen;
 
         return $this;
     }
@@ -674,30 +673,6 @@ class Factura
         return $this;
     }
 
-    public function getCondDePago(): ?CondicionPago
-    {
-        return $this->condDePago;
-    }
-
-    public function setCondDePago(?CondicionPago $condDePago): self
-    {
-        $this->condDePago = $condDePago;
-
-        return $this;
-    }
-
-    public function getIdTributo(): ?Tributos
-    {
-        return $this->idTributo;
-    }
-
-    public function setIdTributo(?Tributos $idTributo): self
-    {
-        $this->idTributo = $idTributo;
-
-        return $this;
-    }
-
     public function getCliente(): ?Clientes
     {
         return $this->cliente;
@@ -710,14 +685,14 @@ class Factura
         return $this;
     }
 
-    public function getIdObligacion(): ?ObligacionesFiscales
+    public function getCondDePago(): ?CondicionPago
     {
-        return $this->idObligacion;
+        return $this->condDePago;
     }
 
-    public function setIdObligacion(?ObligacionesFiscales $idObligacion): self
+    public function setCondDePago(?CondicionPago $condDePago): self
     {
-        $this->idObligacion = $idObligacion;
+        $this->condDePago = $condDePago;
 
         return $this;
     }

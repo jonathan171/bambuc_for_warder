@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Pais
  *
- * @ORM\Table(name="pais", indexes={@ORM\Index(name="zona_id", columns={"zona_id"}), @ORM\Index(name="zona_importacion", columns={"zona_importacion"})})
+ * @ORM\Table(name="pais", indexes={@ORM\Index(name="zona_id", columns={"zona_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\PaisRepository")
  */
 class Pais
@@ -38,26 +38,6 @@ class Pais
      */
     private $nombre;
 
-    /**
-     * @var \Zonas
-     *
-     * @ORM\ManyToOne(targetEntity="Zonas")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="zona_id", referencedColumnName="id")
-     * })
-     */
-    private $zona;
-
-    /**
-     * @var \Zonas
-     *
-     * @ORM\ManyToOne(targetEntity="Zonas")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="zona_importacion", referencedColumnName="id")
-     * })
-     */
-    private $zonaImportacion;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -86,30 +66,5 @@ class Pais
 
         return $this;
     }
-
-    public function getZona(): ?Zonas
-    {
-        return $this->zona;
-    }
-
-    public function setZona(?Zonas $zona): self
-    {
-        $this->zona = $zona;
-
-        return $this;
-    }
-
-    public function getZonaImportacion(): ?Zonas
-    {
-        return $this->zonaImportacion;
-    }
-
-    public function setZonaImportacion(?Zonas $zonaImportacion): self
-    {
-        $this->zonaImportacion = $zonaImportacion;
-
-        return $this;
-    }
-
 
 }

@@ -10,7 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Envio;
 use App\Entity\Pais;
+use App\Entity\PaisZona;
 use App\Entity\Tarifas;
+use App\Repository\PaisZonaRepository;
 use App\Repository\TarifasRepository;
 use DateTime;
 use GuzzleHttp;
@@ -36,7 +38,7 @@ class IntegracionController extends AbstractController
     }
 
     #[Route('/envio_dhl', name: 'app_integracion_enviodhl', methods: ['GET', 'POST'])]
-    public function enviodhl(Request $request, ManagerRegistry $doctrine, TarifasRepository $tarifasRepository): Response
+    public function enviodhl(Request $request, ManagerRegistry $doctrine, TarifasRepository $tarifasRepository, PaisZonaRepository $paisZonaRepository): Response
     {   
         $codigo_barras = $request->request->get('codigo_barras');
         $client = new GuzzleHttp\Client();
@@ -120,10 +122,20 @@ class IntegracionController extends AbstractController
 
             $pais_envio = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['shipperDetails']['postalAddress']['countryCode']]);
             $pais_recibe = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['receiverDetails']['postalAddress']['countryCode']]);
+
+            
+
+           
             if($array_envio['shipperDetails']['postalAddress']['countryCode']=='CO'){
-                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$pais_recibe->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+
+                $zona =$paisZonaRepository->findOneByZona(['pais'=>$pais_recibe->getId(),'tipo'=> 'exportacion']);
+                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+
             }else {
-                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$pais_envio->getZonaImportacion()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+
+                $zona =$paisZonaRepository->findOneByZona(['pais'=>$pais_envio->getId(),'tipo'=> 'importacion']);
+                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+                
             }
             
             

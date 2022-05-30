@@ -54,13 +54,11 @@ class PaisRepository extends ServiceEntityRepository
         $currentPage = isset($options['page']) ? $options['page'] : 0;
         $pageSize = isset($options['pageSize']) ? $options['pageSize'] : 10;
 
-        $query = $this->createQueryBuilder('p')
-                      ->innerJoin(Zonas::class,'z', Join::WITH,   'z.id = p.zona')
-                      ->innerJoin(Zonas::class,'z1', Join::WITH,  'z1.id = p.zonaImportacion');
+        $query = $this->createQueryBuilder('p');
         if($options['search']){
             $shearch = '%'.$options['search'].'%';
-            $query ->andWhere('p.nombre like :val OR z.nombre like :val2 OR z1.nombre like :val3 ')
-            ->setParameters(['val'=>$shearch,'val2'=>$shearch,'val3'=>$shearch]);
+            $query ->andWhere('p.nombre like :val')
+            ->setParameters(['val'=>$shearch]);
         }
        
         $query->getQuery();
@@ -73,8 +71,6 @@ class PaisRepository extends ServiceEntityRepository
             $actions= '<a  class="btn waves-effect waves-light btn-info" href="/pais/'.$item->getId().'/edit">editar</a>';
            
             $list[] = ['nombre'=>$item->getNombre(),
-                       'zonaExportacion'=>$item->getZona()->getNombre(),
-                       'zonaImportacion'=>$item->getZonaImportacion()->getNombre(),
                        'actions'=> $actions];
            // echo $item->getZona()->getNombre();
         }

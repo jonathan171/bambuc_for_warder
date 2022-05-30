@@ -3,9 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Clientes;
+use App\Entity\Municipio;
+use App\Entity\Pais;
+use App\Entity\PaisZona;
 use App\Form\ClientesType;
 use App\Repository\ClientesRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,11 +59,46 @@ class ClientesController extends AbstractController
         return $this->json($responseData);
     }
 
+    #[Route('/actualizar_zona', name: 'app_clientes_actualizar_zona', methods: ['GET', 'POST'])]
+    public function actualizarZona(Request $request, EntityManagerInterface $entityManagers, ManagerRegistry $doctrine): Response
+    {
+        $paises= $entityManagers
+        ->getRepository(Pais::class)
+        ->findAll();
+        $entityManager = $doctrine->getManager();
+        foreach($paises as $pais){
+            $paisZona = new PaisZona ();
+
+            $paisZona->setPais($pais);
+            $paisZona->setZona($pais->getZona());
+           
+
+            $entityManager->persist($paisZona);
+            $entityManager->flush();
+
+        }
+        
+        $responseData = array(
+            "data" => 'terminado'
+        );
+
+
+        return $this->json($responseData);
+    }
+
+
+
     #[Route('/new', name: 'app_clientes_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $cliente = new Clientes();
+
+        $municipio = $entityManager->getRepository(Municipio::class)->find(2);
+       
+        $cliente ->setMunicipio($municipio);
+
         $form = $this->createForm(ClientesType::class, $cliente);
+       
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

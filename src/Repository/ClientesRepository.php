@@ -77,7 +77,7 @@ class ClientesRepository extends ServiceEntityRepository
                        'tipoDocumento'=>$item->getTipoDocumento(),
                        'numeroDocumento'=>$item->getNit(),
                        'telefono'=>$item->getTelefono(),
-                       'correo'=>$item->getTelefono(),
+                       'correo'=>$item->getCorreo(),
                        'actions'=> $actions];
         }
         return ['data' => $list, 'totalRecords' => $totalItems];

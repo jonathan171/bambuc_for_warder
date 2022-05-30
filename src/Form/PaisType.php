@@ -21,18 +21,6 @@ class PaisType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                 ]
-              ])
-            ->add('zona',null, [
-                'attr' => [
-                    'class' => 'form-control',
-                ],
-                'placeholder' => false,
-              ])
-            ->add('zonaImportacion',null, [
-                'attr' => [
-                    'class' => 'form-control',
-                ],
-                'placeholder' => false,
               ]);
     }
 

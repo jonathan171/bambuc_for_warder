@@ -9,7 +9,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ClientesType extends AbstractType
-{
+{    
+   
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -40,8 +41,8 @@ class ClientesType extends AbstractType
               ])
             ->add('tipoReceptor',ChoiceType::class, [
                 'choices'  => [
-                    'Persona Natural' => '2',
-                    'Persona Jurídica' => '1',
+                    'Persona Natural' => 'PERSONA_NATURAL',
+                    'Persona Jurídica' => 'PERSONA_JURIDICA',
                     
                 ],
                 'attr' => [
@@ -63,10 +64,13 @@ class ClientesType extends AbstractType
                     'class' => 'form-control',
                 ]
             ])
-            ->add('tipoRegimen',ChoiceType::class, [
+            ->add('regimen',ChoiceType::class, [
                 'choices'  => [
-                    'No responsable de Iva' => '49',
-                    'Impuesto sobre las ventas - IVA' => '48'
+                    'Simple' => 'SIMPLE',
+                    'Ordinario' => 'ORDINARIO',
+                    'Gran Contribuyente' => 'GRAN_CONTRIBUYENTE',
+                    'Autorretenedor'   => 'AUTORRETENEDOR',
+                    'Agente Retención Iva' => 'AGENTE_RETENCION_IVA'
                 ],
                 'attr' => [
                     'class' => 'form-control',  
@@ -84,20 +88,18 @@ class ClientesType extends AbstractType
               ])
             ->add('municipio',null, [
                 'attr' => [
-                    'class' => 'form-control',  
+                    'class' => 'form-control', 
                 ]
               ])
-            ->add('idTributo',null, [
+            ->add('taxLevelCode',ChoiceType::class, [
+                'choices'  => [
+                    'Responsable De Iva' => 'RESPONSABLE_DE_IVA',
+                    'No Responsable De Iva' => 'NO_RESPONSABLE_DE_IVA'
+                ],
                 'attr' => [
                     'class' => 'form-control',  
                 ]
-              ])
-            ->add('idObligacion',null, [
-                'attr' => [
-                    'class' => 'form-control',  
-                ]
-              ])
-        ;
+              ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
