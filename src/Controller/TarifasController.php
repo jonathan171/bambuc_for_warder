@@ -30,9 +30,22 @@ class TarifasController extends AbstractController
     #[Route('/variables', name: 'app_tarifas_variables', methods: ['GET', 'POST'])]
     public function variables(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository): Response
     {
-        $variables = $entityManager
+        $zona =$entityManager
+        ->getRepository(Zonas::class)
+        ->find($request->request->get('zona_id'));
+        if($zona->getTipo()=='importacion'){
+            $variables = $entityManager
+            ->getRepository(TarifasConfiguracion::class)
+            ->find(2);
+
+        }else{
+            $variables = $entityManager
             ->getRepository(TarifasConfiguracion::class)
             ->find(1);
+        }
+       
+       
+        
         if (!$request->request->get('flete')) {
             $flete = 0;
         } else {

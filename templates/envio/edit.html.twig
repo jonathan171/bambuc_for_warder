@@ -10,7 +10,10 @@
    
 
     {{ include('envio/_delete_form.html.twig') }}
-    <script>
+   
+{% endblock %}
+{% block javascripts %} 
+      <script>
     function CambiarValor(id){
        $.ajax({
         url : '/envio/actualizarvalor',

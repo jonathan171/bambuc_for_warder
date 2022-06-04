@@ -49,8 +49,8 @@
     </div>
     
 {{ form_end(form) }}
-
-<script>
+{% block javascripts %} 
+     <script>
 
 function calcular_total(){
 
@@ -61,7 +61,7 @@ function calcular_total(){
 
     // la información a enviar
     // (también es posible utilizar una cadena de datos)
-    data : { flete : $('#tarifas_costoFlete').val()},
+    data : { flete : $('#tarifas_costoFlete').val(),zona_id:$('#tarifas_zona')},
 
     // especifica si será una petición POST o GET
     type : 'POST',
@@ -92,3 +92,4 @@ function calcular_total(){
 }
 
 </script>
+{% endblock %}

@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Factura
  *
  * @ORM\Table(name="factura", indexes={@ORM\Index(name="cond_de_pago", columns={"cond_de_pago"}), @ORM\Index(name="cliente_id", columns={"cliente_id"}), @ORM\Index(name="factura_resolucion_id", columns={"factura_resolucion_id"})})
- * @ORM\Entity
+* @ORM\Entity(repositoryClass="App\Repository\FacturaRepository")
  */
 class Factura
 {
@@ -24,6 +25,7 @@ class Factura
     /**
      * @var int
      *
+     * @Assert\NotBlank(message="El campo no puede estar vacío XD")
      * @ORM\Column(name="numero_factura", type="bigint", nullable=false)
      */
     private $numeroFactura;
@@ -59,9 +61,9 @@ class Factura
     /**
      * @var string|null
      *
-     * @ORM\Column(name="total", type="decimal", precision=20, scale=2, nullable=true)
+     * @ORM\Column(name="total", type="decimal", precision=20, scale=2, nullable=false, options={"default"="0.00"})
      */
-    private $total;
+    private $total='0.00';
 
     /**
      * @var bool|null
@@ -104,13 +106,6 @@ class Factura
      * @ORM\Column(name="observaciones", type="text", length=65535, nullable=true)
      */
     private $observaciones;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="factura_resolucion_id", type="bigint", nullable=false)
-     */
-    private $facturaResolucionId;
 
     /**
      * @var \DateTime
@@ -253,6 +248,16 @@ class Factura
     private $respuestaCorreo;
 
     /**
+     * @var \CondicionPago
+     *
+     * @ORM\ManyToOne(targetEntity="CondicionPago")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cond_de_pago", referencedColumnName="id")
+     * })
+     */
+    private $condDePago;
+
+    /**
      * @var \Clientes
      *
      * @ORM\ManyToOne(targetEntity="Clientes")
@@ -263,14 +268,14 @@ class Factura
     private $cliente;
 
     /**
-     * @var \CondicionPago
+     * @var \FacturaResolucion
      *
-     * @ORM\ManyToOne(targetEntity="CondicionPago")
+     * @ORM\ManyToOne(targetEntity="FacturaResolucion")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cond_de_pago", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="factura_resolucion_id", referencedColumnName="id")
      * })
      */
-    private $condDePago;
+    private $facturaResolucion;
 
     public function getId(): ?string
     {
@@ -417,18 +422,6 @@ class Factura
     public function setObservaciones(?string $observaciones): self
     {
         $this->observaciones = $observaciones;
-
-        return $this;
-    }
-
-    public function getFacturaResolucionId(): ?string
-    {
-        return $this->facturaResolucionId;
-    }
-
-    public function setFacturaResolucionId(string $facturaResolucionId): self
-    {
-        $this->facturaResolucionId = $facturaResolucionId;
 
         return $this;
     }
@@ -673,6 +666,18 @@ class Factura
         return $this;
     }
 
+    public function getCondDePago(): ?CondicionPago
+    {
+        return $this->condDePago;
+    }
+
+    public function setCondDePago(?CondicionPago $condDePago): self
+    {
+        $this->condDePago = $condDePago;
+
+        return $this;
+    }
+
     public function getCliente(): ?Clientes
     {
         return $this->cliente;
@@ -685,14 +690,14 @@ class Factura
         return $this;
     }
 
-    public function getCondDePago(): ?CondicionPago
+    public function getFacturaResolucion(): ?FacturaResolucion
     {
-        return $this->condDePago;
+        return $this->facturaResolucion;
     }
 
-    public function setCondDePago(?CondicionPago $condDePago): self
+    public function setFacturaResolucion(?FacturaResolucion $facturaResolucion): self
     {
-        $this->condDePago = $condDePago;
+        $this->facturaResolucion = $facturaResolucion;
 
         return $this;
     }

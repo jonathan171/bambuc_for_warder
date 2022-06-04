@@ -30,7 +30,10 @@
 <div class="col-lg-2">
   <a class="justify-content-center w-100 btn btn-success d-flex align-items-center" href="{{ path('app_tarifas_new') }}">Nueva Tarifa</a>
 </div>
-<script>
+
+{% endblock %}
+{% block javascripts %} 
+     <script>
     
   $(document).ready(function() {
    
@@ -62,5 +65,5 @@
         });
    });
     
-</script>
+  </script>
 {% endblock %}

@@ -59,7 +59,7 @@ class Clientes
     /**
      * @var bool
      *
-     * @ORM\Column(name="tipo_receptor", type="boolean", nullable=false)
+     * @ORM\Column(name="tipo_receptor", type="string", length=255, nullable=false)
      */
     private $tipoReceptor;
 
@@ -173,12 +173,12 @@ class Clientes
         return $this;
     }
 
-    public function getTipoReceptor(): ?bool
+    public function getTipoReceptor(): ?string
     {
         return $this->tipoReceptor;
     }
 
-    public function setTipoReceptor(bool $tipoReceptor): self
+    public function setTipoReceptor(string $tipoReceptor): self
     {
         $this->tipoReceptor = $tipoReceptor;
 

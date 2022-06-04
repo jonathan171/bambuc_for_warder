@@ -63,13 +63,14 @@ class TarifasConfiguracionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            $tarifas = $entityManager
-            ->getRepository(Tarifas::class)
-            ->findAll();
+            $tarifas = $entityManager->getRepository(Tarifas::class)->createQueryBuilder('t')
+            ->andWhere('t.tarifasConfiguracion = :val')
+            ->setParameter('val', $tarifasConfiguracion->getId())
+            ->getQuery()->getResult();
 
             $variables = $entityManager
             ->getRepository(TarifasConfiguracion::class)
-            ->find(1);
+            ->find($tarifasConfiguracion->getId());
             foreach($tarifas as $tarifa){
 
                 $total = (($tarifa->getCostoFlete() + (($variables->getTasaConbustible() / 100) * $tarifa->getCostoFlete())) * $variables->getValorDolar()) / ((100 - $variables->getPorcentajeGanacia()) / 100);

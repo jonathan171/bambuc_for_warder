@@ -13,16 +13,14 @@
 
     <h1>Listado de Facturas</h1>
 
-    <table class="table">
+    <table class="table" id="data_table_facturas">
         <thead>
             <tr>
-                <th>Numero Factura</th>
-                <th>Prefijo</th>
                 <th>Fecha</th>
+                <th>N°</th>
                 <th>Cliente</th>
-                
+                <th>Total</th>
                 <th>Acciones</th>
-               
             </tr>
         </thead>
         <tbody>
@@ -33,4 +31,58 @@
   <a class="justify-content-center w-100 btn btn-success d-flex align-items-center" href="{{ path('app_factura_new') }}">Nueva Factura</a>
 </div>
  
+{% endblock %}
+{% block javascripts %} 
+<script>
+    
+  $(document).ready(function() {
+   
+      $('#data_table_facturas').DataTable({
+            serverSide: true,
+            responsive: true,
+            pageLength: 50,
+            sPaginationType: "full_numbers",
+            language: {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+            },
+            ajax: {
+                "url": '/factura/table',
+                "type": "POST"
+            },
+            columns: [
+                {data: 'fecha'},
+                {data: 'numero'},
+                {data: 'cliente'},
+                {data: 'total'},
+                {data: 'actions'}
+                
+                ],
+            columnDefs: [
+                
+            ],
+            order: [[ 1, "desc" ]]
+        });
+   });
+
+   function Reportar(id){
+       $('#reportar'+id).hide();
+       $.ajax({
+        url : '{{ path('app_factura_reportar')}}',
+        data : { id : id},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+         alertify.success('Factura enviada correctamente por favor  verifica la respuesta de la Dian');
+        location.reload();
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    }
+    
+</script>   
 {% endblock %}

@@ -1,4 +1,10 @@
 {
+    "bacon/bacon-qr-code": {
+        "version": "2.0.7"
+    },
+    "dasprid/enum": {
+        "version": "1.0.3"
+    },
     "doctrine/annotations": {
         "version": "1.13",
         "recipe": {
@@ -80,6 +86,9 @@
     "egulias/email-validator": {
         "version": "3.1.2"
     },
+    "endroid/qr-code": {
+        "version": "4.4.9"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.7"
     },
@@ -92,6 +101,12 @@
     "guzzlehttp/psr7": {
         "version": "2.2.1"
     },
+    "knplabs/knp-components": {
+        "version": "v3.5.0"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.8.0"
+    },
     "laminas/laminas-code": {
         "version": "4.5.1"
     },
@@ -100,18 +115,6 @@
     },
     "nikic/php-parser": {
         "version": "v4.13.2"
-    },
-    "omines/datatables-bundle": {
-        "version": "0.7",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "0.1",
-            "ref": "467488ddc00aa190c37a4357f226457d4dd6b339"
-        },
-        "files": [
-            "./config/packages/datatables.yaml"
-        ]
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"

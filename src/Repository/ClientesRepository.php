@@ -84,6 +84,41 @@ class ClientesRepository extends ServiceEntityRepository
      
 
     }
+    public function findByDataShearch(array $options = [])
+    {
+        
+        $currentPage = isset($options['page']) ? $options['page'] : 0;
+        $pageSize = isset($options['pageSize']) ? $options['pageSize'] : 10;
+
+        $query = $this->createQueryBuilder('c');
+        if($options['search']){
+            $shearch = '%'.$options['search'].'%';
+            $query ->andWhere('c.razonSocial like :val OR  OR c.nit like :val')
+            ->setParameters(['val'=>$shearch]);
+        }
+       
+        $query->getQuery();
+        $paginator = new Paginator($query);
+        $totalItems = $paginator->count();
+        $paginator->getQuery()->setFirstResult($pageSize * $currentPage)->setMaxResults($pageSize)->getResult();
+        $list = [];
+        foreach ($paginator as $item) {
+
+           
+           
+
+            
+            $list[] = [
+                'id' => $item->getId(),       
+                'text'=>$item->getRazonSocial(),
+                'tipo_documento'=>$item->getTipoDocumento(),
+                'numero_identificacion'=>$item->getNit()
+            ];
+        }
+        return ['data' => $list, 'totalRecords' => $totalItems];
+     
+
+    }
 
     // /**
     //  * @return Clientes[] Returns an array of Clientes objects

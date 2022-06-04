@@ -27,7 +27,8 @@ class FacturaType extends AbstractType
             ->add('numeroFactura', TextType::class, [
                 'attr' => [
                     'class' => 'form-control'
-                ]
+                ],
+                'required' => true
             ])
             ->add('estado')
             ->add('fecha', null, [
@@ -72,12 +73,15 @@ class FacturaType extends AbstractType
                     'class' => 'form-control',
                 ]
             ])
-            ->add('facturaResolucionId',null,[
+            ->add('facturaResolucion',null,[
                 'attr' => [
                     'class' => 'form-control',
-                ]
+                ],
+                'required'  => true,
             ])
-            ->add('hora')
+            ->add('hora', null, [
+                'widget' => 'single_text',
+                'required' => false])
             ->add('subtotal', NumberType::class, [
                 'attr' => [
                     'class' => 'form-control',

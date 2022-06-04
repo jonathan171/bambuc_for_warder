@@ -12,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FacturaResolucion
 {
+    public function __toString()
+    {
+        return $this->numeroResolucion.'-'.$this->prefijo;
+    }
+
     /**
      * @var int
      *
@@ -158,6 +163,4 @@ class FacturaResolucion
 
         return $this;
     }
-
-
 }

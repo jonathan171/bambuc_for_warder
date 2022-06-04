@@ -82,6 +82,32 @@ class EnvioController extends AbstractController
 
         return $this->json($responseData);
     }
+    //listado de envios sin facturar
+
+    #[Route('/listado_envios', name: 'app_envio_listado_envios', methods: ['GET','POST'])]
+    public function listadoEnvios(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        
+        $query = $entityManager->getRepository(Envio::class)->createQueryBuilder('e');
+        
+        if($request->request->get('fecha_inicio')){
+
+            $query->andWhere('e.fechaEnvio >= :val')
+            ->setParameter('val',$request->request->get('fecha_inicio'))
+            ->andWhere('e.fechaEnvio <= :val1')
+            ->setParameter('val1',$request->request->get('fecha_fin'));
+        }
+         $envios = $query->andWhere('e.facturado = 0')
+                        ->getQuery()->getResult();
+
+         
+
+         return $this->render('envio/listado_envios.html.twig', [
+            'envios'     => $envios,
+            'factura_id' => $request->request->get('factura_id')
+        ]);
+
+    }
 
     #[Route('/new', name: 'app_envio_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -103,7 +129,7 @@ class EnvioController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_envio_show', methods: ['GET'])]
+    #[Route('/{id}/mostrar', name: 'app_envio_show', methods: ['GET'])]
     public function show(Envio $envio): Response
     {
         return $this->render('envio/show.html.twig', [
