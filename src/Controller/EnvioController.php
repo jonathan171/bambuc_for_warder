@@ -12,6 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\EnvioRepository;
 use App\Repository\TarifasRepository;
 use App\Entity\TarifasConfiguracion;
+use App\Repository\PaisRepository;
+use App\Repository\PaisZonaRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 #[Route('/envio')]
@@ -30,16 +32,30 @@ class EnvioController extends AbstractController
     }
 
     #[Route('/actualizarvalor', name: 'app_envio_actualizarvalor', methods: ['GET', 'POST'])]
-    public function actualizarvalor(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository, ManagerRegistry $doctrine): Response
+    public function actualizarvalor(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository, ManagerRegistry $doctrine, PaisZonaRepository $paisZonaRepository): Response
     {
-        $variables = $entityManager
-            ->getRepository(TarifasConfiguracion::class)
-            ->find(1);
+        
          $envio= $entityManager
             ->getRepository(Envio::class)
             ->find($request->request->get('id'));
+
+            
+
+            
+
+           
+            if($envio->getPaisOrigen()->getCode()=='CO' ){
+
+                $zona =$paisZonaRepository->findOneByZona(['pais'=>$envio->getPaisDestino()->getId(),'tipo'=> 'exportacion']);
+                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+
+            }else {
+
+                $zona =$paisZonaRepository->findOneByZona(['pais'=>$envio->getPaisOrigen()->getId(),'tipo'=> 'importacion']);
+                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+                
+            }
         
-        $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$envio->getPaisDestino()->getZona()->getId(),'peso'=> $envio->getPesoReal()]);
         $envio->setTotalPesoCobrar($envio->getPesoReal());
         $envio->setTotalACobrar($tarifa[0]['total']);
 
