@@ -44,8 +44,15 @@ class IntegracionController extends AbstractController
         $client = new GuzzleHttp\Client();
         $headers = array('Accept-Language'=>'eng','Authorization' => 'Basic YXBZNWlEMGZRNGpDNXQ6TSQ1elokMmZOQDNvTiM2aA==',
         'Accept' => 'application/json');
-        $res = $client->request('GET', 'https://express.api.dhl.com/mydhlapi/shipments/'.$codigo_barras.'/tracking?trackingView=all-checkpoints&levelOfDetail=all', ['headers' => $headers]);
-        
+       
+        try {
+            $client = new  GuzzleHttp\Client();
+            $res = $client->get('https://express.api.dhl.com/mydhlapi/shipments/'.$codigo_barras.'/tracking?trackingView=all-checkpoints&levelOfDetail=all', [
+                'headers' => $headers
+            ]);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $res = $e->getResponse();
+        }
         //para pruebas 
        /* $headers = array('Accept-Language'=>'eng','Authorization' => 'Basic YXBZNWlEMGZRNGpDNXQ6TSQ1elokMmZOQDNvTiM2aA==',
         'Accept' => 'application/json');

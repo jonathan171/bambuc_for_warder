@@ -32,7 +32,7 @@ class EnvioController extends AbstractController
     }
 
     #[Route('/actualizarvalor', name: 'app_envio_actualizarvalor', methods: ['GET', 'POST'])]
-    public function actualizarvalor(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository, ManagerRegistry $doctrine, PaisZonaRepository $paisZonaRepository): Response
+    public function actualizarvalor(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository,  PaisZonaRepository $paisZonaRepository): Response
     {
         
          $envio= $entityManager
@@ -47,28 +47,25 @@ class EnvioController extends AbstractController
             if($envio->getPaisOrigen()->getCode()=='CO' ){
 
                 $zona =$paisZonaRepository->findOneByZona(['pais'=>$envio->getPaisDestino()->getId(),'tipo'=> 'exportacion']);
-                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getPesoReal()]);
 
             }else {
 
                 $zona =$paisZonaRepository->findOneByZona(['pais'=>$envio->getPaisOrigen()->getId(),'tipo'=> 'importacion']);
-                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getPesoReal()]);
                 
             }
         
         $envio->setTotalPesoCobrar($envio->getPesoReal());
         $envio->setTotalACobrar($tarifa[0]['total']);
 
-        
-        $costo = array('costo' => $tarifa[0]['total']);
-        $entityManager = $doctrine->getManager();
-
-        $entityManager->persist($envio);
-
-            // actually executes the queries (i.e. the INSERT query)
-        $entityManager->flush();
-
-         
+      
+       
+       
+            $entityManager->persist($envio);
+            $entityManager->flush();
+            
+            $costo = array('costo' => $envio->getTotalACobrar()); 
 
 
         return $this->json($costo);

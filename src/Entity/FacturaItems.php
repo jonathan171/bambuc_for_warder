@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FacturaItems
 {
+
+    public function __toString() {
+        return $this->id;
+    }
     /**
      * @var int
      *

@@ -16,11 +16,13 @@
       <script>
     function CambiarValor(id){
        $.ajax({
-        url : '/envio/actualizarvalor',
+        url : '{{ path('app_envio_actualizarvalor')}}',
         data : { id : id},
         type : 'POST',
         dataType : 'json',
         success : function(json) {
+
+            console.log(json);
 
         alert('valor actualizado Correctamente');
         location.reload();

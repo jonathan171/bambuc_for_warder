@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Envio;
+use App\Form\DataTransformer\FacturaItemsToNumberTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -13,6 +14,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EnvioType extends AbstractType
 {
+
+    private $transformer;
+
+    public function __construct(FacturaItemsToNumberTransformer $transformer)
+    {
+        $this->transformer = $transformer;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -118,11 +127,12 @@ class EnvioType extends AbstractType
             ->add('facturado')
             ->add('facturaItems', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control',
-                ],
-                'required' => false
-            ])
-        ;
+                    'class' => 'form-control'
+                ]
+            ]);
+
+            $builder->get('facturaItems')
+            ->addModelTransformer($this->transformer);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
