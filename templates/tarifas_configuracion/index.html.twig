@@ -11,6 +11,7 @@
                <th>Valor Dolar</th>
                 <th>Tasa Conbustible</th>
                 <th>Porcentaje Ganacia</th>
+                <th>tipo</th>
                 <th>opciones</th>
             </tr>
         </thead>
@@ -21,6 +22,7 @@
                 <td>{{ tarifas_configuracion.valorDolar }}</td>
                 <td>{{ tarifas_configuracion.tasaConbustible }}</td>
                 <td>{{ tarifas_configuracion.porcentajeGanacia }}</td>
+                <td>{{ tarifas_configuracion.tipo }}</td>
                 <td>
                     <a  class="btn waves-effect waves-light btn-info" href="{{ path('app_tarifas_configuracion_edit', {'id': tarifas_configuracion.id}) }}">editar</a>
                 </td>
