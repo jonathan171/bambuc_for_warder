@@ -172,7 +172,8 @@ class EnvioController extends AbstractController
     #[Route('/listado_envios', name: 'app_envio_listado_envios', methods: ['GET','POST'])]
     public function listadoEnvios(Request $request, EntityManagerInterface $entityManager): Response
     {
-        
+
+        $shearch = '%'.$request->request->get('envia').'%';
         $query = $entityManager->getRepository(Envio::class)->createQueryBuilder('e');
         
         if($request->request->get('fecha_inicio')){
@@ -180,9 +181,17 @@ class EnvioController extends AbstractController
             $query->andWhere('e.fechaEnvio >= :val')
             ->setParameter('val',$request->request->get('fecha_inicio'))
             ->andWhere('e.fechaEnvio <= :val1')
-            ->setParameter('val1',$request->request->get('fecha_fin'));
+            ->setParameter('val1',$request->request->get('fecha_fin'))
+            ;
+        }
+
+        if($request->request->get('envia')){
+            $query->andWhere('e.quienEnvia like :val2')
+            ->setParameter('val2',$shearch);   
+
         }
          $envios = $query->andWhere('e.facturado = 0')
+                        ->setMaxResults(200)
                         ->getQuery()->getResult();
 
          

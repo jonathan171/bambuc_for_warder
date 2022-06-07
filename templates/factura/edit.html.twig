@@ -91,16 +91,20 @@
     
  </div>
  <div class="row" style="padding-top:20px;">
-    <div class="col-sm-12 col-lg-4">
+    <div class="col-sm-12 col-lg-2">
         <strong>Fecha inicio</strong>
         <input type="text" id="fecha_inicio" class="form-control border-color">
     </div>
-     <div class="col-sm-12 col-lg-4">
+     <div class="col-sm-12 col-lg-2">
       <strong>Fecha fin</strong>
         <input type="text" id="fecha_fin" class="form-control border-color">
     </div>
+     <div class="col-sm-12 col-lg-4">
+      <strong>Quien envia</strong>
+        <input type="text" id="quien_envia" class="form-control border-color">
+    </div>
     <div class="col-sm-12 col-lg-2">
-         <button class="btn waves-effect waves-light btn-success" type="button"  onclick="autorizaciones();" > Ver Envios</button>
+         <button class="btn waves-effect waves-light btn-success" type="button"  onclick="envios();" > Ver Envios</button>
     </div>
     <div class="col-sm-12 col-lg-2">
          <a  class="btn waves-effect waves-light btn-info" href="/factura/{{factura.id}}/imprimir" title="Imprimir"><span class="fas fa-print"></span></a>
@@ -199,17 +203,18 @@
             BuscarConsecutivo();
     });
 
-  function autorizaciones()
+  function envios()
         {
             var fechaincio = $("#fecha_inicio").val();
             var fechafin = $("#fecha_fin").val();
             var factura_id = '{{factura.id}}';
+            var envia = $("#quien_envia").val();
 
             if (fechaincio != "") {
                 if (fechafin != "") {
                     if (fechafin > fechaincio) {
                         ParaEnvios = '{{ path('app_envio_listado_envios')}}';
-                        $('#divenvios').load( ParaEnvios,{ fecha_inicio: fechaincio, fecha_fin: fechafin, factura_id: factura_id });
+                        $('#divenvios').load( ParaEnvios,{ fecha_inicio: fechaincio, fecha_fin: fechafin, factura_id: factura_id ,envia: envia});
                         $("#envios").dialog({ width: 800, height: 500});
                     } else {
                         alert("La fecha de inicio debe ser menor");
@@ -220,7 +225,7 @@
 
             } else {
                  ParaEnvios = '{{ path('app_envio_listado_envios')}}';
-                 $('#divenvios').load(ParaEnvios,{factura_id: factura_id });
+                 $('#divenvios').load(ParaEnvios,{factura_id: factura_id,envia: envia });
                  $("#envios").dialog({ width: 800, height: 500});
             }
 

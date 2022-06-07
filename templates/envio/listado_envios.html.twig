@@ -11,7 +11,7 @@
           <th>Escoger</th>
           <th>Codigo</th>
           <th>Fecha</th>
-          <th>Valor</th>
+          <th>Envia</th>
         </tr>
       </thead>
       <tbody>
@@ -21,7 +21,7 @@
           <td><input name="envId[]" id="checkBox" value="{{envio.id}}" type="checkbox"></td>
           <td>{{envio.numeroEnvio}}</td>
           <td>{{envio.fechaEnvio|date('Y-m-d')}}</td>        
-          <td>{{envio.totalACobrar|number_format(2,'.',',')}}</td>
+          <td>{{envio.quienEnvia}}</td>
          
 
         </tr>

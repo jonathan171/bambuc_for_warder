@@ -78,8 +78,6 @@ class EnvioRepository extends ServiceEntityRepository
             $actions= '<a  class="btn waves-effect waves-light btn-info" href="/envio/'.$item->getId().'/edit">editar</a>';
            
             $list[] = ['numeroEnvio'=>$item->getNumeroEnvio(),
-                       'pesoEstimado'=>$item->getPesoEstimado(),
-                       'pesoReal'=>$item->getPesoReal(),
                        'totalPesoCobrar'=>$item->getTotalPesoCobrar(),
                        'fechaEnvio'=>$item->getFechaEnvio()->format('Y-m-d'),
                        'empresa'=>$item->getEmpresa(),

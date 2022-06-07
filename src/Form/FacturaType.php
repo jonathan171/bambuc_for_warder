@@ -101,7 +101,13 @@ class FacturaType extends AbstractType
                 ],
                 'html5' => true
             ])
-            ->add('reteIca')
+            ->add('reteIca', NumberType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                    'step' => '0.01'
+                ],
+                'html5' => true
+            ])
             ->add('reteIva')
             ->add('descuento', NumberType::class, [
                 'attr' => [

@@ -6,6 +6,7 @@ use App\Entity\CondicionPago;
 use App\Entity\Envio;
 use App\Entity\Factura;
 use App\Entity\FacturaItems;
+use App\Entity\FacturaResolucion;
 use App\Entity\UnidadesMedida;
 use App\Form\FacturaType;
 use App\Repository\ClientesRepository;
@@ -56,10 +57,30 @@ class FacturaController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $numeroQuery = $entityManager->getRepository(Factura::class)->createQueryBuilder('c')
+                ->andWhere('c.facturaResolucion = :val')
+                ->setParameter('val', $factura->getFacturaResolucion()->getId())
+                ->orderBy('c.numeroFactura', 'DESC')
+                ->setMaxResults(1);
+
+            $facturaResolucion = $entityManager->getRepository(FacturaResolucion::class)->find($factura->getFacturaResolucion()->getId());
+
+            $consulta = $numeroQuery->getQuery()->getOneOrNullResult();
+
+            if ($consulta) {
+               $factura->setNumeroFactura($consulta->getNumeroFactura() + 1);
+            } else {
+                $factura->setNumeroFactura( $facturaResolucion->getInicioConsecutivo());
+            }
+
+
             $entityManager->persist($factura);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_factura_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
+        
+
         }
 
         return $this->renderForm('factura/new.html.twig', [
@@ -105,16 +126,24 @@ class FacturaController extends AbstractController
         EntityManagerInterface $entityManager
     ) {
 
-        $coursesQuery = $entityManager->getRepository(Factura::class)->createQueryBuilder('c')
+        $numeroQuery = $entityManager->getRepository(Factura::class)->createQueryBuilder('c')
             ->andWhere('c.facturaResolucion = :val')
             ->setParameter('val', $request->request->get('resolucion_id'))
             ->orderBy('c.numeroFactura', 'DESC')
             ->setMaxResults(1);
 
-        $consulta = $coursesQuery->getQuery()->getOneOrNullResult();
+        $facturaResolucion = $entityManager->getRepository(FacturaResolucion::class)->find($request->request->get('resolucion_id'));
+
+        $consulta = $numeroQuery->getQuery()->getOneOrNullResult();
+
+        if ($consulta) {
+            $numero = $consulta->getNumeroFactura() + 1;
+        } else {
+            $numero = $facturaResolucion->getInicioConsecutivo();
+        }
 
         $responseData = array(
-            "results" => ($consulta->getNumeroFactura() + 1),
+            "results" => $numero,
         );
         return $this->json($responseData);
     }
@@ -470,8 +499,6 @@ class FacturaController extends AbstractController
             "results" => 'success',
         );
         return $this->json($responseData);
-
-
     }
 
     #[Route('item_delete/{id}', name: 'app_factura_item_delete', methods: ['POST'])]
@@ -543,12 +570,12 @@ class FacturaController extends AbstractController
 
         $respuestaServer =  json_decode($respuesta, true);
 
-        
+
 
 
         $entityManager->persist($factura);
         $entityManager->flush();
-       
+
 
 
         if (array_key_exists('dian_status', $respuestaServer)) {
@@ -577,7 +604,7 @@ class FacturaController extends AbstractController
                         ->labelFont(new NotoSans(20))
                         ->labelAlignment(new LabelAlignmentCenter())
                         ->build();
-                        $result->saveToFile($codesDir.$codeFile);
+                    $result->saveToFile($codesDir . $codeFile);
 
                     $factura->setEstado(1);
                 }
@@ -666,7 +693,7 @@ class FacturaController extends AbstractController
                             ->labelAlignment(new LabelAlignmentCenter())
                             ->build();
 
-                            $result->saveToFile($codesDir.$codeFile);
+                        $result->saveToFile($codesDir . $codeFile);
 
                         $factura->setEstado(1);
                     }
