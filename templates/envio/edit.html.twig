@@ -35,5 +35,66 @@
 
     }
 
+    function CambiarValorEspecial(id){
+       $.ajax({
+        url : '{{ path('app_envio_actualizar_valor_especial')}}',
+        data : { id : id},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+            console.log(json);
+
+        alert('valor actualizado Correctamente');
+        location.reload();
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    }
+    function CambiarValorEspecialReal(id){
+       $.ajax({
+        url : '{{ path('app_envio_actualizar_valor_especial_real')}}',
+        data : { id : id},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+            console.log(json);
+
+        alert('valor actualizado Correctamente');
+        location.reload();
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    }
+    function CambiarValorEspecial(id){
+       $.ajax({
+        url : '{{ path('app_envio_actualizar_valor_especial')}}',
+        data : { id : id},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+            console.log(json);
+
+        alert('valor actualizado Correctamente');
+        location.reload();
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    }
+
     </script>
 {% endblock %}

@@ -104,6 +104,8 @@
         <div class="form-group text-end">
         {% if form.vars.data.id %}
          <a class="btn waves-effect waves-light btn-rounded btn-success" onclick="CambiarValor({{ form.vars.data.id}})">Cobrar Peso Real</a>
+         <a class="btn waves-effect waves-light btn-rounded btn-secondary" onclick="CambiarValorEspecialReal({{ form.vars.data.id}})">Cobrar Peso Real Especial</a>
+         <a class="btn waves-effect waves-light btn-rounded btn-primary" onclick="CambiarValorEspecial({{ form.vars.data.id}})">Tarifa Especial</a>
         {% endif %}
         <button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
          <a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_envio_index') }}">regresar</a>

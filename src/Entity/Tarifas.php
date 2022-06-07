@@ -50,6 +50,13 @@ class Tarifas
     private $total;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="porcentaje", type="decimal", precision=20, scale=2, nullable=false, options={"default"="0.00"})
+     */
+    private $porcentaje = '0.00';
+
+    /**
      * @var \TarifasConfiguracion
      *
      * @ORM\ManyToOne(targetEntity="TarifasConfiguracion")
@@ -118,6 +125,18 @@ class Tarifas
     public function setTotal(string $total): self
     {
         $this->total = $total;
+
+        return $this;
+    }
+
+    public function getPorcentaje(): ?string
+    {
+        return $this->porcentaje;
+    }
+
+    public function setPorcentaje(string $porcentaje): self
+    {
+        $this->porcentaje = $porcentaje;
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Tarifas;
 use App\Entity\TarifasConfiguracion;
+use App\Entity\Zonas;
 use App\Form\TarifasType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,30 +31,64 @@ class TarifasController extends AbstractController
     #[Route('/variables', name: 'app_tarifas_variables', methods: ['GET', 'POST'])]
     public function variables(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository): Response
     {
-        $zona =$entityManager
-        ->getRepository(Zonas::class)
-        ->find($request->request->get('zona_id'));
-        if($zona->getTipo()=='importacion'){
-            $variables = $entityManager
-            ->getRepository(TarifasConfiguracion::class)
-            ->find(2);
+        $zona = $entityManager
+            ->getRepository(Zonas::class)
+            ->find($request->request->get('zona_id'));
 
-        }else{
-            $variables = $entityManager
+        $variables = $entityManager
             ->getRepository(TarifasConfiguracion::class)
-            ->find(1);
-        }
-       
-       
-        
+            ->find($request->request->get('configuracion_id'));
+
         if (!$request->request->get('flete')) {
             $flete = 0;
         } else {
             $flete =  $request->request->get('flete');
         }
+        if (!$request->request->get('peso')) {
+            $peso = 0;
+        } else {
+            $peso =  $request->request->get('peso');
+        }
 
-        $total = (($flete + (($variables->getTasaConbustible() / 100) * $flete)) * $variables->getValorDolar()) / ((100 - $variables->getPorcentajeGanacia()) / 100);
-        $costo = array('costo' => $total, 'total' => round($total, -3));
+        if (!$request->request->get('porcentaje')) {
+            $porcentaje = 0;
+        } else {
+            $porcentaje =  $request->request->get('porcentaje');
+        }
+
+
+        if ($variables->getTipo() == 'exportacion') {
+
+
+
+            $total = (($flete + (($variables->getTasaConbustible() / 100) * $flete)) * $variables->getValorDolar()) / ((100 - $variables->getPorcentajeGanacia()) / 100);
+        } elseif ($variables->getTipo() == 'importacion') {
+
+
+            $total = (($flete + $flete * ($variables->getTasaConbustible() / 100) + $zona->getSituacionEmergencia() * $peso) * $variables->getValorDolar()) / (1 - ($variables->getPorcentajeGanacia() / 100));
+        } elseif ($variables->getTipo() == 'especial_importacion') {
+
+
+
+
+            $total = ((($flete + $flete * ($variables->getTasaConbustible() / 100)) + ($zona->getSituacionEmergencia() * $peso)) * $variables->getValorDolar()) / (1 - ($porcentaje / 100));
+        } elseif ($variables->getTipo() == 'especial_exportacion') {
+
+
+
+            if ($peso() <= 14) {
+
+                $total = ((($flete + $flete * ($variables->getTasaConbustible() / 100)) + ($zona->getSituacionEmergencia() * $peso)) * $variables->getValorDolar()) / (1 - ($porcentaje / 100));
+            } elseif ($peso > 14 && $peso <= 30) {
+                $total = ($flete) / (1 - ($flete / 100));
+            } elseif ($peso > 30) {
+                $total = ($flete * $peso) / (1 - ($porcentaje / 100));
+            }
+        }
+
+
+
+       $costo = array('costo' => $total, 'total' => round($total, -3));
 
 
         return $this->json($costo);
@@ -66,9 +101,9 @@ class TarifasController extends AbstractController
         $start = $request->request->get('start');
         $length = $request->request->get('length');
 
-        
 
-        $data_table  = $tarifasRepository->findByDataTable(['page' => ($start/$length), 'pageSize' => $length, 'search' => $search['value']]);
+
+        $data_table  = $tarifasRepository->findByDataTable(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value']]);
 
         // Objeto requerido por Datatables
 

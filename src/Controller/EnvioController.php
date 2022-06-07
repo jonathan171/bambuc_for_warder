@@ -71,6 +71,78 @@ class EnvioController extends AbstractController
         return $this->json($costo);
     }
 
+    #[Route('/actualizar_valor_especial_real', name: 'app_envio_actualizar_valor_especial_real', methods: ['GET', 'POST'])]
+    public function actualizarvalorEspecialReal(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository,  PaisZonaRepository $paisZonaRepository): Response
+    {
+        
+         $envio= $entityManager
+            ->getRepository(Envio::class)
+            ->find($request->request->get('id'));
+
+           
+            if($envio->getPaisOrigen()->getCode()=='CO' ){
+
+                $zona =$paisZonaRepository->findOneByZona(['pais'=>$envio->getPaisDestino()->getId(),'tipo'=> 'especial_exportacion']);
+                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getPesoReal()]);
+
+            }else {
+
+                $zona =$paisZonaRepository->findOneByZona(['pais'=>$envio->getPaisOrigen()->getId(),'tipo'=> 'especial_importacion']);
+                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getPesoReal()]);
+                
+            }
+        
+        $envio->setTotalPesoCobrar($envio->getPesoReal());
+        $envio->setTotalACobrar($tarifa[0]['total']);
+
+      
+       
+       
+            $entityManager->persist($envio);
+            $entityManager->flush();
+            
+            $costo = array('costo' => $envio->getTotalACobrar()); 
+
+
+        return $this->json($costo);
+    }
+
+    #[Route('/actualizar_valor_especial', name: 'app_envio_actualizar_valor_especial', methods: ['GET', 'POST'])]
+    public function actualizarvalorEspecial(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository,  PaisZonaRepository $paisZonaRepository): Response
+    {
+        
+         $envio= $entityManager
+            ->getRepository(Envio::class)
+            ->find($request->request->get('id'));
+
+           
+            if($envio->getPaisOrigen()->getCode()=='CO' ){
+
+                $zona =$paisZonaRepository->findOneByZona(['pais'=>$envio->getPaisDestino()->getId(),'tipo'=> 'especial_exportacion']);
+                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+
+            }else {
+
+                $zona =$paisZonaRepository->findOneByZona(['pais'=>$envio->getPaisOrigen()->getId(),'tipo'=> 'especial_importacion']);
+                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
+                
+            }
+        
+      
+        $envio->setTotalACobrar($tarifa[0]['total']);
+
+      
+       
+       
+            $entityManager->persist($envio);
+            $entityManager->flush();
+            
+            $costo = array('costo' => $envio->getTotalACobrar()); 
+
+
+        return $this->json($costo);
+    }
+
 
     #[Route('/table', name: 'app_envio_table', methods: ['GET', 'POST'])]
     public function table(Request $request, EntityManagerInterface $entityManager, EnvioRepository $envioRepository): Response

@@ -38,6 +38,13 @@ class Zonas
      */
     private $tipo = 'exportacion';
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="situacion_emergencia", type="decimal", precision=20, scale=2, nullable=false, options={"default"="0.00"})
+     */
+    private $situacionEmergencia = '0.00';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -63,6 +70,18 @@ class Zonas
     public function setTipo(string $tipo): self
     {
         $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    public function getSituacionEmergencia(): ?string
+    {
+        return $this->situacionEmergencia;
+    }
+
+    public function setSituacionEmergencia(string $situacionEmergencia): self
+    {
+        $this->situacionEmergencia = $situacionEmergencia;
 
         return $this;
     }

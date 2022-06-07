@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\TarifasConfiguracion;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -35,6 +36,25 @@ class TarifasConfiguracionType extends AbstractType
                     'step' => '0.01'
                 ],
                 'html5' => true
+            ])->add('empresa',ChoiceType::class, [
+                'choices'  => [
+                    'DHL' => 'DHL',
+                    'FEDEX' => 'FEDEX',
+                    'UPS' => 'UPS',
+                ],
+                'attr' => [
+                    'class' => 'form-control',
+                ]
+            ])->add('tipo',ChoiceType::class, [
+                'choices'  => [
+                    'Exportación' => 'exportacion',
+                    'Importación' => 'importacion',
+                    'Especial Importación' => 'especial_importacion',
+                    'Especial Exportacion' => 'especial_exportacion',
+                ],
+                'attr' => [
+                    'class' => 'form-control',
+                ]
             ]);
     }
 

@@ -14,7 +14,13 @@ class TarifasConfiguracion
 {   
     // para póder usar en las relaciones
     public function __toString() {
-        return $this->id;
+        $tipo_configuracion = array(
+            'exportacion' => 'Exportación',
+            'importacion'  => 'Importación', 
+            'especial_importacion' => 'Especial Importación',
+            'especial_exportacion' => 'Especial Exportacion',
+        );
+        return $this->empresa.'('.$tipo_configuracion[$this->tipo].')';
     }
     /**
      * @var int
@@ -45,6 +51,20 @@ class TarifasConfiguracion
      * @ORM\Column(name="porcentaje_ganacia", type="decimal", precision=20, scale=2, nullable=false)
      */
     private $porcentajeGanacia;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="empresa", type="string", length=255, nullable=false)
+     */
+    private $empresa;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo", type="string", length=100, nullable=false, options={"default"="exportacion"})
+     */
+    private $tipo = 'exportacion';
 
     public function getId(): ?int
     {
@@ -83,6 +103,30 @@ class TarifasConfiguracion
     public function setPorcentajeGanacia(string $porcentajeGanacia): self
     {
         $this->porcentajeGanacia = $porcentajeGanacia;
+
+        return $this;
+    }
+
+    public function getEmpresa(): ?string
+    {
+        return $this->empresa;
+    }
+
+    public function setEmpresa(string $empresa): self
+    {
+        $this->empresa = $empresa;
+
+        return $this;
+    }
+
+    public function getTipo(): ?string
+    {
+        return $this->tipo;
+    }
+
+    public function setTipo(string $tipo): self
+    {
+        $this->tipo = $tipo;
 
         return $this;
     }

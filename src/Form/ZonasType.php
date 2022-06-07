@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Zonas;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -23,14 +24,19 @@ class ZonasType extends AbstractType
                 'choices'  => [
                     'Exportación' => 'exportacion',
                     'Importación' => 'importacion',
-                    'Especial' => 'especial',
+                    'Especial Importación' => 'especial_importacion',
+                    'Especial Exportacion' => 'especial_exportacion',
                 ],
                 'attr' => [
                     'class' => 'form-control',
                 ]
-            ])
-            
-        ;
+            ])->add('situacionEmergencia', NumberType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                    'step' => '0.01'
+                ],
+                'html5' => true
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -37,6 +37,12 @@
               {{form_widget(form.total) }}
             </div> 
         </div>
+        <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Porcentaje Ganancia (solo se usa para las tarifas especiales)</label>
+            <div class="col-sm-9">
+              {{form_widget(form.porcentaje) }}
+            </div> 
+        </div>
    
    
    {{ form_widget(form._token) }}
@@ -61,7 +67,13 @@ function calcular_total(){
 
     // la información a enviar
     // (también es posible utilizar una cadena de datos)
-    data : { flete : $('#tarifas_costoFlete').val(),zona_id:$('#tarifas_zona')},
+    data : { 
+      flete : $('#tarifas_costoFlete').val(),
+      zona_id:$('#tarifas_zona').val(),
+      configuracion_id :$('#tarifas_tarifasConfiguracion').val(),
+      peso: $('#tarifas_pesoMinimo').val(),
+      porcentaje: $('#tarifas_porcentaje').val(),
+      },
 
     // especifica si será una petición POST o GET
     type : 'POST',

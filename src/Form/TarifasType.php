@@ -56,8 +56,13 @@ class TarifasType extends AbstractType
                     'class' => 'form-control',  
                 ],
                 'placeholder' => 'Por favor seleccione uno',
-              ])
-        ;
+              ])->add('porcentaje', NumberType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                    'step' => '0.01'
+                ],
+                'html5' => true
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

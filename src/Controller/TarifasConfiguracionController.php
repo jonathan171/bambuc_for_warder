@@ -64,22 +64,81 @@ class TarifasConfiguracionController extends AbstractController
             $entityManager->flush();
 
             $tarifas = $entityManager->getRepository(Tarifas::class)->createQueryBuilder('t')
-            ->andWhere('t.tarifasConfiguracion = :val')
-            ->setParameter('val', $tarifasConfiguracion->getId())
-            ->getQuery()->getResult();
+                ->andWhere('t.tarifasConfiguracion = :val')
+                ->setParameter('val', $tarifasConfiguracion->getId())
+                ->getQuery()->getResult();
 
             $variables = $entityManager
-            ->getRepository(TarifasConfiguracion::class)
-            ->find($tarifasConfiguracion->getId());
-            foreach($tarifas as $tarifa){
+                ->getRepository(TarifasConfiguracion::class)
+                ->find($tarifasConfiguracion->getId());
 
-                $total = (($tarifa->getCostoFlete() + (($variables->getTasaConbustible() / 100) * $tarifa->getCostoFlete())) * $variables->getValorDolar()) / ((100 - $variables->getPorcentajeGanacia()) / 100);
-                $tarifa->setTotal(round($total, -3));
-                $entityManager->persist( $tarifa);
+            if ($variables->getTipo() == 'exportacion') {
 
-                     $entityManager->flush();
+                foreach ($tarifas as $tarifa) {
+
+                    $total = (($tarifa->getCostoFlete() + (($variables->getTasaConbustible() / 100) * $tarifa->getCostoFlete())) * $variables->getValorDolar()) / ((100 - $variables->getPorcentajeGanacia()) / 100);
+                    $tarifa->setTotal(round($total, -3));
+                    $entityManager->persist($tarifa);
+                    $entityManager->flush();
+                }
+            }elseif($variables->getTipo() == 'importacion'){
+
+                foreach ($tarifas as $tarifa) {
+
+                    $total = (($tarifa->getCostoFlete()+$tarifa->getCostoFlete()*($variables->getTasaConbustible() / 100)+$tarifa->getZona()->getSituacionEmergencia()*$tarifa->getPesoMinimo())* $variables->getValorDolar())/(1-($variables->getPorcentajeGanacia()/100));
+                    $tarifa->setTotal(round($total, -3));
+                    $entityManager->persist($tarifa);
+                    $entityManager->flush();
+                }
+
+            }elseif($variables->getTipo() == 'especial_importacion'){
+
+                foreach ($tarifas as $tarifa) {
+
+                 
+
+                        $total = ((($tarifa->getCostoFlete()+$tarifa->getCostoFlete()*($variables->getTasaConbustible() / 100))+($tarifa->getZona()->getSituacionEmergencia()*$tarifa->getPesoMinimo()))* $variables->getValorDolar())/(1-($tarifa->getPorcentaje()/100));
+                        $tarifa->setTotal(round($total, -3));
+                        $entityManager->persist($tarifa);
+                        $entityManager->flush();
+
+
+                    
+
+                }
+
+                }elseif($variables->getTipo() == 'especial_exportacion'){
+
+                    foreach ($tarifas as $tarifa) {
+
+                        if($tarifa->getPesoMinimo()<=14){
+    
+                            $total = ((($tarifa->getCostoFlete()+$tarifa->getCostoFlete()*($variables->getTasaConbustible() / 100))+($tarifa->getZona()->getSituacionEmergencia()*$tarifa->getPesoMinimo()))* $variables->getValorDolar())/(1-($tarifa->getPorcentaje()/100));
+                            $tarifa->setTotal(round($total, -3));
+                            $entityManager->persist($tarifa);
+                            $entityManager->flush();
+    
+    
+                        }elseif($tarifa->getPesoMinimo()>14 && $tarifa->getPesoMinimo() <=30 ){
+                            $total = ($tarifa->getCostoFlete())/(1-($tarifa->getPorcentaje()/100));
+                            $tarifa->setTotal(round($total, -3));
+                            $entityManager->persist($tarifa);
+                            $entityManager->flush();
+    
+                        }elseif($tarifa->getPesoMinimo()>30 ){
+                            $total = ($tarifa->getCostoFlete()*$tarifa->getPesoMinimo())/(1-($tarifa->getPorcentaje()/100));
+                            $tarifa->setTotal(round($total, -3));
+                            $entityManager->persist($tarifa);
+                            $entityManager->flush();
+    
+                        }
+    
+                    }
+
                 
+
             }
+            
 
             return $this->redirectToRoute('app_tarifas_configuracion_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -93,12 +152,11 @@ class TarifasConfiguracionController extends AbstractController
     #[Route('/{id}', name: 'app_tarifas_configuracion_delete', methods: ['POST'])]
     public function delete(Request $request, TarifasConfiguracion $tarifasConfiguracion, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$tarifasConfiguracion->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $tarifasConfiguracion->getId(), $request->request->get('_token'))) {
             $entityManager->remove($tarifasConfiguracion);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_tarifas_configuracion_index', [], Response::HTTP_SEE_OTHER);
     }
-    
 }
