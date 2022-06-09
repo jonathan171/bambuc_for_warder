@@ -34,7 +34,15 @@
    <a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}"> <i class="fas fa-file-alt"></i> Resoluciones</a>
    </div>
 </div>
- 
+ <div id="erroresDian" title="Errores de la dian" style="display:none;width:800px;height:500px;" >
+
+    <div class="input-group">
+    </div>
+
+    <div id="diverrores" >
+    </div>
+
+</div>
 {% endblock %}
 {% block javascripts %} 
 <script>
@@ -85,6 +93,17 @@
         alert('Disculpe, existió un problema');
        }
           });
+
+    }
+
+    function verErrores(idFactura) {
+
+        ParaError = "{{ path('app_factura_error_dian')}}";
+
+
+        $('#diverrores').load(ParaError, {idFactura: idFactura});
+
+        $("#erroresDian").dialog({ width: 800, height: 500});
 
     }
     

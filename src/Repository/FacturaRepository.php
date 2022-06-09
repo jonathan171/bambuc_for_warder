@@ -87,18 +87,19 @@ class FacturaRepository extends ServiceEntityRepository
             $actions = '';
             $reportar = '';
 
+            $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_factura?id='.$factura->getId().'" title="Imprimir"><span class="fas fa-print"></span></a>';
             if($factura->getCufe()==''|| $factura->getCufe()==null){
                 
                 $reportar ='<button type="button" id="reportar'.$factura->getId().'" class="btn" onclick="Reportar(' . $factura->getId() . ');"title="Reportar Dian"><img src="/assets/images/facturas/dian.png" height="30px" width="30px"></button>';
         
                 $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/factura/'.$factura->getId().'/edit"><span class="fas fa-pencil-alt"></span></a>';
-              
-               // $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/factura/'.$factura->getId().'/imprimir" title="Imprimir"><span class="fas fa-print"></span></a>';
-            }else{
-                $actions .= '<a  class="btn waves-effect waves-light btn-info" href="'.$factura->getRespuestaCorreo().'" title="Imprimir"><span class="fas fa-print"></span></a>';
 
+                if($factura->getRespuestaDian()!='' ||$factura->getRespuestaDian()!=null){
+                    $actions.='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onClick="verErrores('.$factura->getId().');" title="Ver respuesta Dian">
+                         <i class="fas fa-code text-success" ></i>
+                     </a>';
+                }
             }
-
            
            
             $list[] = [

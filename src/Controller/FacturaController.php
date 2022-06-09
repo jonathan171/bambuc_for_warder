@@ -11,6 +11,7 @@ use App\Entity\UnidadesMedida;
 use App\Form\FacturaType;
 use App\Repository\ClientesRepository;
 use App\Repository\FacturaRepository;
+use App\Service\EnviarCorreo;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -69,9 +70,9 @@ class FacturaController extends AbstractController
             $consulta = $numeroQuery->getQuery()->getOneOrNullResult();
 
             if ($consulta) {
-               $factura->setNumeroFactura($consulta->getNumeroFactura() + 1);
+                $factura->setNumeroFactura($consulta->getNumeroFactura() + 1);
             } else {
-                $factura->setNumeroFactura( $facturaResolucion->getInicioConsecutivo());
+                $factura->setNumeroFactura($facturaResolucion->getInicioConsecutivo());
             }
 
 
@@ -79,8 +80,6 @@ class FacturaController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_factura_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
-        
-
         }
 
         return $this->renderForm('factura/new.html.twig', [
@@ -343,7 +342,8 @@ class FacturaController extends AbstractController
     #[Route('/reportar', name: 'app_factura_reportar', methods: ['GET', 'POST'])]
     public function executeReportar(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        EnviarCorreo $enviar
     ) {
         $CuerpoJson =  array();
         $factura = $entityManager->getRepository(Factura::class)->find($request->request->get('id'));
@@ -495,6 +495,12 @@ class FacturaController extends AbstractController
 
         $this->llamarFacturaDataico($CuerpoJson, $factura, $entityManager);
 
+        if ($factura->getCufe() != null && $factura->getCufe() != '') {
+            $enviar->enviar($factura->getId());
+        }
+
+
+
         $responseData = array(
             "results" => 'success',
         );
@@ -526,6 +532,19 @@ class FacturaController extends AbstractController
         }
 
         return $this->redirectToRoute('app_factura_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
+    }
+
+
+    #[Route('/error_dian', name: 'app_factura_error_dian', methods: ['GET', 'POST'])]
+    public function erroresDian(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $factura = $entityManager->getRepository(Factura::class)->find($request->request->get('idFactura'));
+
+        return $this->render('factura/error_dian.html.twig', [
+            'id'     => $factura->getId(),
+            'respuesta'   => html_entity_decode($factura->getRespuestaDian()),
+            'respuestaPdf' => html_entity_decode($factura->getRespuestaCorreo())
+        ]);
     }
 
     #[Route('/{id}', name: 'app_factura_delete', methods: ['POST'])]
@@ -583,7 +602,6 @@ class FacturaController extends AbstractController
                 $factura->setCufe($respuestaServer['cufe']);
 
                 $factura->setPdf($respuestaServer['uuid']);
-                $factura->setRespuestaCorreo($respuestaServer['pdf_url']);
                 $date = new DateTime();
                 $factura->setFechaValidacion($date);
 
@@ -597,8 +615,8 @@ class FacturaController extends AbstractController
                         ->data($respuestaServer['qrcode'])
                         ->encoding(new Encoding('UTF-8'))
                         ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-                        ->size(300)
-                        ->margin(10)
+                        ->size(250)
+                        ->margin(5)
                         ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
                         ->labelText('')
                         ->labelFont(new NotoSans(20))
@@ -672,7 +690,6 @@ class FacturaController extends AbstractController
                     $factura->setCufe($respuestaServerMetodoGet2['invoice']['cufe']);
 
                     $factura->setPdf($respuestaServerMetodoGet2['invoice']['uuid']);
-                    $factura->setRespuestaCorreo($respuestaServerMetodoGet2['invoice']['pdf_url']);
                     $date = new DateTime();
                     $factura->setFechaValidacion($date);
 
