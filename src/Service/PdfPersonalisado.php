@@ -35,7 +35,7 @@ class PdfPersonalisado extends TCPDF {
 			$this->write1DBarcode($barcode, 'C128', '', $cur_y + $line_width, '', (($this->footer_margin / 3) - $line_width), 0.3, $style, '');
 		}
 		
-		$this->writeHTML($this->_cufe, true, false, true, false, 'C');
+		$this->writeHTML($this->_cufe, true, false, true, false, 'L');
 		$this->html = 'Software DATAICO fabricado por Proveedor Tecnológico DATAICO SAS 901223648 ';
         $this->writeHTML($this->html, true, false, true, false, 'C');
 
