@@ -408,6 +408,7 @@ class FacturaController extends AbstractController
             }
 
             if ($item->getIva() > 0) {
+                $itemJ['taxes'] = array();
                 array_push($itemJ['taxes'], array(
                     "tax_category" => "IVA",
                     "tax_rate" => (float) $item->getIva()
