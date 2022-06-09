@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Factura;
 use App\Entity\FacturaItems;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Service\MYPDF;
+use App\Service\PdfPersonalisado;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +28,7 @@ class ImpresionController extends AbstractController
 
         $factura = $entityManager->getRepository(Factura::class)->find($request->query->get('id'));
         // create new PDF document
-        $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = new PdfPersonalisado(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
         // set document information
         $pdf->SetCreator(PDF_CREATOR);

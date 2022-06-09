@@ -4,7 +4,7 @@ namespace App\Service;
 use TCPDF;
 
 // Extend the TCPDF class to create custom Header and Footer
-class MYPDF extends TCPDF {
+class PdfPersonalisado extends TCPDF {
 
     protected $_cufe = null;
 
