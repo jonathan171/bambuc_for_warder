@@ -37,7 +37,7 @@
 
 	<tr>
 		<td colspan="3">
-			<h4>Su envío ha sido procesado por la báscula y se ha obtenido la siguiente relación de peso y medidas.</h4>
+			<h4>Su envío ha sido procesado por el escanner de salida y se ha obtenido la siguiente relación de peso y medidas.</h4>
 		</td>
 	</tr>
 
@@ -63,10 +63,10 @@
 			
 		</tr>
 		<tr>
-			<td style="width:20%;">Peso</td>
+			<td style="width:20%;">Peso Fisico </td>
 			<td style="width:30%; border-right: 2px solid black;">{{pieza.weight}}</td>
 			<td style="width:20%; ">
-				  Peso
+				  Peso Fisico
 			</td>
 			<td style="width:30%;">
 				{% if pieza.actualWeight %}
@@ -108,16 +108,31 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="width:20%; border-bottom: 2px solid gray;">Largo</td>
-			<td style="width:30%; border-right: 2px solid black; border-bottom: 2px solid gray;">
+			<td >Largo</td>
+			<td style="width:30%; border-right: 2px solid black; ">
 				{{pieza.dimensions.length}}
 			</td>
-			<td style="width:20%; border-bottom: 2px solid gray;">
+			<td >
 				  Largo
+			</td>
+			<td >
+				{% if pieza.actualDimensions is defined %}
+					{{pieza.actualDimensions.length}}
+
+				{% endif %}
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%; border-bottom: 2px solid gray;">Peso Volumetrico</td>
+			<td style="width:30%; border-right: 2px solid black; border-bottom: 2px solid gray;">
+				{{((pieza.dimensions.length * pieza.dimensions.width *  pieza.dimensions.height) / 5000)}}
+			</td>
+			<td style="width:20%; border-bottom: 2px solid gray;">
+				  Peso Volumetrico
 			</td>
 			<td style="width:30%; border-bottom: 2px solid gray;">
 				{% if pieza.actualDimensions is defined %}
-					{{pieza.actualDimensions.length}}
+					{{((pieza.actualDimensions.length * pieza.actualDimensions.width *  pieza.actualDimensions.height) / 5000)}}
 
 				{% endif %}
 			</td>
@@ -134,11 +149,11 @@
 	</tr>
 	<tr>
 		<td>
-			<b>PESO CLIENTE</b>
+			<b>PESO FACTURADO</b>
 		</td>
 		<td>{{envio.pesoEstimado}}</td>
 		<td>
-			<b>PESO REAL</b>
+			<b>PESO FACTURADO</b>
 		</td>
 		<td>{{envio.pesoReal}}</td>
 
