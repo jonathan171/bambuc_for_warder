@@ -1,0 +1,147 @@
+<table>
+	<tr>
+		<td style=" text-align:center; width:45%"><img src="{{ asset('assets/images/facturas/logo.jpg')}}" alt="user" width="90"></td>
+		<td style=" width:15%">
+			<dl>
+				<dt>
+					<b>Envio N°</b>
+				</dt>
+				<dt>
+					<b>Fecha:</b>
+				</dt>
+				<dt>
+					<b>Envia:</b>
+				</dt>
+				<dt>
+					<b>Recibe:</b>
+				</dt>
+			</dl>
+		</td>
+		<td>
+			<dl>
+				<dt>
+					{{Json['shipmentTrackingNumber']}}
+				</dt>
+				<dt>
+					{{envio.fechaEnvio|date('Y-m-d') }}
+				</dt>
+				<dt>
+					{{envio.quienEnvia}}
+				</dt>
+				<dt>
+					{{envio.quienrecibe}}
+				</dt>
+			</td>
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="3">
+			<h4>Su envío ha sido procesado por la báscula y se ha obtenido la siguiente relación de peso y medidas.</h4>
+		</td>
+	</tr>
+
+
+</table>
+<br>
+<br>
+<br>
+<br>
+<table>
+	<tr>
+		<td colspan="2" style="width:50%; text-align: center; border-bottom: 2px solid black; border-right: 2px solid black;">
+			<h2>DATOS DEL CLIENTE</h2>
+		</td>
+		<td colspan="2" style="text-align: center; border-bottom: 2px solid black; ">
+			<h2>DATOS DE LA BÁSCULA</h2>
+		</td>
+	</tr>
+	{% for pieza in Json['pieces']%}
+		<tr>
+			<td style="border-bottom: 2px solid gray; text-align:center;" colspan="4">Pieza
+				{{pieza.number}}</td>
+			
+		</tr>
+		<tr>
+			<td style="width:20%;">Peso</td>
+			<td style="width:30%; border-right: 2px solid black;">{{pieza.weight}}</td>
+			<td style="width:20%; ">
+				  Peso
+			</td>
+			<td style="width:30%;">
+				{% if pieza.actualWeight %}
+					{{pieza.actualWeight}}
+
+				{% endif %}
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;">Alto
+			</td>
+			<td style="width:30%; border-right: 2px solid black;">
+				{{pieza.dimensions.height}}
+			</td>
+			<td style="width:20%; ">
+				  Alto
+			</td>
+			<td style="width:30%;">
+				{% if pieza.actualDimensions is defined %}
+					{{pieza.actualDimensions.height}}
+
+				{% endif %}
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%;">Ancho
+			</td>
+			<td style="width:30%; border-right: 2px solid black;">
+				{{pieza.dimensions.width}}
+			</td>
+			<td style="width:20%; ">
+				  Ancho
+			</td>
+			<td style="width:30%;">
+				{% if pieza.actualDimensions is defined  %}
+					{{pieza.actualDimensions.width}}
+
+				{% endif %}
+			</td>
+		</tr>
+		<tr>
+			<td style="width:20%; border-bottom: 2px solid gray;">Largo</td>
+			<td style="width:30%; border-right: 2px solid black; border-bottom: 2px solid gray;">
+				{{pieza.dimensions.length}}
+			</td>
+			<td style="width:20%; border-bottom: 2px solid gray;">
+				  Largo
+			</td>
+			<td style="width:30%; border-bottom: 2px solid gray;">
+				{% if pieza.actualDimensions is defined %}
+					{{pieza.actualDimensions.length}}
+
+				{% endif %}
+			</td>
+		</tr>
+
+	{% endfor %}
+	<tr>
+		<td style="border-top: 2px solid grey;"></td>
+		<td style="border-top: 2px solid grey;"></td>
+		<td style="border-top: 2px solid grey;"></td>
+		<td style="border-top: 2px solid grey;"></td>
+
+
+	</tr>
+	<tr>
+		<td>
+			<b>PESO CLIENTE</b>
+		</td>
+		<td>{{envio.pesoEstimado}}</td>
+		<td>
+			<b>PESO REAL</b>
+		</td>
+		<td>{{envio.pesoReal}}</td>
+
+
+	</tr>
+</table>
