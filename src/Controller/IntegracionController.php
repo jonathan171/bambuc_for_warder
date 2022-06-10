@@ -150,9 +150,13 @@ class IntegracionController extends AbstractController
                 
             }
             
+            if(count( $tarifa )){
+                $envio->setTotalACobrar($tarifa[0]['total']);
+            }else{
+                $envio->setTotalACobrar(0);
+            }
             
-            
-            $envio->setTotalACobrar($tarifa[0]['total']);
+           
             $envio->setPaisOrigen($pais_envio);
             $envio->setPaisDestino($pais_recibe);
             $envio->setQuienEnvia($array_envio['shipperDetails']['name']);
