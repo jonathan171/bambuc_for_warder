@@ -128,7 +128,7 @@ class EnviarCorreo
         // This method has several options, check the source code documentation for more information.
         $pdfCorreo = $pdf->Output('Factura.pdf', 'S');
 
-        $headers = array('Content-Type' => 'application/json', 'auth-token' => 'a4afb1e20e856e8fb031b487efbfd239');
+        $headers = array('Content-Type' => 'application/json', 'auth-token' => '232828f7e45e42e74ac28a0e0dbe4053');
 
         $data = array("actions" => array('send_dian' => false, 'send_email' => true, 'pdf' => base64_encode($pdfCorreo)));
         try {

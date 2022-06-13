@@ -562,10 +562,10 @@ class FacturaController extends AbstractController
     public function llamarFacturaDataico($Json, Factura $factura, EntityManagerInterface $entityManager)
     {
         //lamada a identificarse
-        $prueba = 1;
+        $prueba = 0;
 
-        $Json['invoice']['dataico_account_id'] = '002979c5-7c23-43ab-aa98-3fa7dce6e4d0';
-        $headers = array('Content-Type' => 'application/json', 'auth-token' => 'a4afb1e20e856e8fb031b487efbfd239');
+        $Json['invoice']['dataico_account_id'] = '01814067-cc44-808a-83a1-de850ba1e360';
+        $headers = array('Content-Type' => 'application/json', 'auth-token' => '232828f7e45e42e74ac28a0e0dbe4053');
 
         $Json['invoice']['env'] = 'PRODUCCION';
 
