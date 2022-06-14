@@ -187,6 +187,10 @@ class FacturaController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $factura->setTotalReteIca($factura->getSubtotal() * ($factura->getReteIca() / 100));
+            $factura->setTotalReteFuenteG($factura->getSubtotal() * ($factura->getReteFuente() / 100));
+            $factura->setTotalReteIva($factura->getTotalIva() * ($factura->getReteIva() / 100));
             $entityManager->flush();
 
             return $this->redirectToRoute('app_factura_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
@@ -246,6 +250,12 @@ class FacturaController extends AbstractController
 
             $factura->setSubtotal($factura->getSubtotal() + $item->getSubtotal());
             $factura->setTotal($factura->getTotal() + $item->getTotal());
+            $factura->setTotalIva($factura->getTotalIva() +  $item->getValorIva());
+            $factura->setTotalReteIva($factura->getTotalIva() * ($factura->getReteIva() / 100));
+            $factura->setTotalReteIca(($factura->getReteIca() / 100) * $factura->getSubtotal());
+            $factura->setTotalReteFuenteG(($factura->getReteFuente() / 100) * $factura->getSubtotal());
+            $factura->setTotalReteFuente($factura->getTotalReteFuente() + $item->getValorRetencionFuente());
+
 
             $entityManager->persist($factura);
             $entityManager->flush();
@@ -488,7 +498,7 @@ class FacturaController extends AbstractController
             $CuerpoJson['invoice']['charges'] = array(
                 array(
                     'base_amount' => (float) $factura->getDescuento(),
-                    'reason' => 'copago',
+                    'reason' => 'descuento',
                     'discount' => true
                 )
             );
@@ -516,6 +526,11 @@ class FacturaController extends AbstractController
             $factura = $entityManager->getRepository(Factura::class)->find($item->getFacturaClientes()->getId());
             $factura->setSubtotal($factura->getSubtotal() - $item->getSubtotal());
             $factura->setTotal($factura->getTotal() - $item->getTotal());
+            $factura->setTotalIva($factura->getTotalIva() - $item->getValorIva());
+            $factura->setTotalReteIva($factura->getTotalIva() * ($factura->getReteIva() / 100));
+            $factura->setTotalReteIca(($factura->getReteIca() / 100) * $factura->getSubtotal());
+            $factura->setTotalReteFuenteG(($factura->getReteFuente() / 100) * $factura->getSubtotal());
+            $factura->setTotalReteFuente($factura->getTotalReteFuente() - $item->getValorRetencionFuente());
 
             $entityManager->persist($factura);
             $entityManager->flush();

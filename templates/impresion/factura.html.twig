@@ -353,6 +353,25 @@
 		</tr>
 
 	{% endif %}
+	{% if factura.descuento > 0  %}
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td colspan="2">
+				DESCUENTO
+			</td>
+
+			<td colspan="2">
+				-${{factura.descuento }}
+			</td>
+
+
+		</tr>
+
+	{% endif %}
 	<tr>
 		<td></td>
 		<td></td>
