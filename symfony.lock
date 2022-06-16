@@ -89,6 +89,9 @@
     "endroid/qr-code": {
         "version": "4.4.9"
     },
+    "ezyang/htmlpurifier": {
+        "version": "v4.14.0"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.7"
     },
@@ -110,8 +113,20 @@
     "laminas/laminas-code": {
         "version": "4.5.1"
     },
+    "maennchen/zipstream-php": {
+        "version": "2.2.1"
+    },
+    "markbaker/complex": {
+        "version": "3.0.1"
+    },
+    "markbaker/matrix": {
+        "version": "3.0.0"
+    },
     "monolog/monolog": {
         "version": "2.4.0"
+    },
+    "myclabs/php-enum": {
+        "version": "1.8.3"
     },
     "nikic/php-parser": {
         "version": "v4.13.2"
@@ -124,6 +139,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "1.6.1"
+    },
+    "phpoffice/phpspreadsheet": {
+        "version": "1.23.0"
     },
     "phpstan/phpdoc-parser": {
         "version": "1.4.2"
@@ -151,6 +169,9 @@
     },
     "psr/log": {
         "version": "1.1.4"
+    },
+    "psr/simple-cache": {
+        "version": "2.0.0"
     },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
