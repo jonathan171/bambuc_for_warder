@@ -93,15 +93,16 @@ class EnvioRepository extends ServiceEntityRepository
     }
     
 
-    /*
-    public function findOneBySomeField($value): ?Envio
+    
+    public function findSinEntregar()
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+       $envios =  $this->createQueryBuilder('e')
+        ->andWhere('e.estado != :val')
+        ->andWhere('e.empresa = :val1')
+        ->setParameters(['val'=>'3','val1'=>'DHL'])
+        ->getQuery()->getResult();
+
+        return $envios;
     }
-    */
+    
 }
