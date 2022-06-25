@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Envios Retrasados{% endblock %}
+
+{% block body %}
+    <h1>Listado De Envios Retrasados</h1>
+<div class="table-responsive">
+<div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+    <table class="table table-striped table-bordered text-nowrap dataTable" id="data_table_envios">
+        <thead>
+            <tr>
+                
+                <th>N° Guia</th>
+                <th>Peso Cobrado</th>
+                <th>Fecha Envio</th>
+                <th>Empresa</th>
+                <th>Quien Envia</th>
+                <th>Quien Recibe</th>
+                <th>Pais Destino</th>
+                <th>Opciones</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %} 
+<script>
+    
+  $(document).ready(function() {
+   
+      $('#data_table_envios').DataTable({
+            serverSide: true,
+            responsive: true,
+            pageLength: 50,
+            sPaginationType: "full_numbers",
+            language: {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+            },
+            ajax: {
+                "url": "{{ path('app_envio_table_retrasos') }}",
+                "type": "POST"
+            },
+            columns: [
+                {data: 'numeroEnvio'},
+                {data: 'totalPesoCobrar'},
+                {data: 'fechaEnvio'},
+                {data: 'empresa'},
+                {data: 'quienEnvia'},
+                {data: 'quienRecibe'},
+                {data: 'paisDestino'},
+                {data: 'actions'}
+                
+                ],
+            columnDefs: [
+                
+            ],
+            order: [[ 0, "desc" ]]
+        });
+   });
+    
+</script>   
+{% endblock %}

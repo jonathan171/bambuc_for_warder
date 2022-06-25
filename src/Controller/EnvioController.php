@@ -14,6 +14,7 @@ use App\Repository\TarifasRepository;
 use App\Entity\TarifasConfiguracion;
 use App\Repository\PaisRepository;
 use App\Repository\PaisZonaRepository;
+use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 
 #[Route('/envio')]
@@ -22,12 +23,19 @@ class EnvioController extends AbstractController
     #[Route('/', name: 'app_envio_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
-        $envios = $entityManager
-            ->getRepository(Envio::class)
-            ->findAll();
+     
 
         return $this->render('envio/index.html.twig', [
-            'envios' => $envios,
+
+        ]);
+    }
+    #[Route('/lista_envios_retrasados', name: 'app_envio_index_retrasados', methods: ['GET'])]
+    public function listaRetrasados(EntityManagerInterface $entityManager): Response
+    {
+      
+
+        return $this->render('envio/listado_retrasados.html.twig', [
+
         ]);
     }
 
@@ -156,6 +164,30 @@ class EnvioController extends AbstractController
             "recordsTotal" => $data_table['totalRecords'],
             "recordsFiltered" => $data_table['totalRecords'],
             "data" => $data_table['data']
+        );
+
+
+        return $this->json($responseData);
+    }
+  //envios retrasados
+    #[Route('/table_retrasos', name: 'app_envio_table_retrasos', methods: ['GET', 'POST'])]
+    public function tableRetrasos(Request $request, EntityManagerInterface $entityManager, EnvioRepository $envioRepository): Response
+    {
+        $search =  $request->request->get('search');
+        $start = $request->request->get('start');
+        $length = $request->request->get('length');
+
+        $fecha = new DateTime();
+
+        $data_table  = $envioRepository->findByDataTableRetrasos(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'], "fecha" => $fecha->format('Y-m-d'),]);
+
+        // Objeto requerido por Datatables
+
+        $responseData = array(
+            "draw" => '',
+            "recordsTotal" => $data_table['totalRecords'],
+            "recordsFiltered" => $data_table['totalRecords'],
+            "data" => $data_table['data'],
         );
 
 

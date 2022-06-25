@@ -91,6 +91,47 @@ class EnvioRepository extends ServiceEntityRepository
      
 
     }
+    public function findByDataTableRetrasos(array $options = [])
+    {
+        
+        $currentPage = isset($options['page']) ? $options['page'] : 0;
+        $pageSize = isset($options['pageSize']) ? $options['pageSize'] : 10;
+
+        $query = $this->createQueryBuilder('e')
+                      ->innerJoin(Pais::class,'p', Join::WITH,   'p.id = e.paisDestino')
+                      ->innerJoin(Pais::class,'p1', Join::WITH,  'p1.id = e.paisOrigen')
+                      ->andWhere('e.estado != 3')
+                      ->andWhere('e.fechaEstimadaEntrega < :fecha')
+                      ->setParameter('fecha',$options['fecha']);
+        if($options['search']){
+            $shearch = '%'.$options['search'].'%';
+            $query ->andWhere('e.numeroEnvio like :val OR e.fechaEnvio like :val2 OR e.empresa like :val3 OR e.quienRecibe like :val4 OR e.quienEnvia like :val5 OR p.nombre like :val6 OR p1.nombre like :val7')
+            ->setParameters(['val'=>$shearch,'val2'=>$shearch,'val3'=>$shearch,'val4'=>$shearch,'val5'=>$shearch,'val6'=>$shearch ,'val7'=>$shearch]);
+        }
+       
+        $query->getQuery();
+        $paginator = new Paginator($query);
+        $totalItems = $paginator->count();
+        $paginator->getQuery()->setFirstResult($pageSize * $currentPage)->setMaxResults($pageSize)->getResult();
+        $list = [];
+        foreach ($paginator as $item) {
+
+            $actions= '<a  class="btn waves-effect waves-light btn-info" href="/envio/'.$item->getId().'/edit">editar</a>';
+           
+            $list[] = ['numeroEnvio'=>$item->getNumeroEnvio(),
+                       'totalPesoCobrar'=>$item->getTotalPesoCobrar(),
+                       'fechaEnvio'=>$item->getFechaEnvio()->format('Y-m-d'),
+                       'empresa'=>$item->getEmpresa(),
+                       'quienEnvia'=> $item->getQuienEnvia(),
+                       'quienRecibe'=> $item->getQuienRecibe(),
+                       'paisDestino'=> $item->getPaisDestino()->getNombre(),
+                       'actions'=> $actions];
+           // echo $item->getZona()->getNombre();
+        }
+        return ['data' => $list, 'totalRecords' => $totalItems];
+     
+
+    }
     
 
     

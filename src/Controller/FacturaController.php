@@ -33,12 +33,10 @@ class FacturaController extends AbstractController
     #[Route('/', name: 'app_factura_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
-        $facturas = $entityManager
-            ->getRepository(Factura::class)
-            ->findAll();
+       
 
         return $this->render('factura/index.html.twig', [
-            'facturas' => $facturas,
+            
         ]);
     }
 
