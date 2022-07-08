@@ -713,7 +713,7 @@ class FacturaController extends AbstractController
                         $result = Builder::create()
                             ->writer(new PngWriter())
                             ->writerOptions([])
-                            ->data($respuestaServer['qrcode'])
+                            ->data($respuestaServerMetodoGet2['invoice']['qrcode'])
                             ->encoding(new Encoding('UTF-8'))
                             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
                             ->size(300)
