@@ -179,6 +179,8 @@
             var data = e.params.data;
             
             $('#factura_cliente').val(data.id);
+            $('#factura_regimen').val(data.regimen);
+            $('#factura_taxLevelCode').val(data.obligacion);
             
         }).on('select2:open', function() {
             $('.select2-search input').focus().val(currentQuery).trigger('input');

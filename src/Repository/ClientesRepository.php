@@ -112,7 +112,9 @@ class ClientesRepository extends ServiceEntityRepository
                 'id' => $item->getId(),       
                 'text'=>$item->getRazonSocial(),
                 'tipo_documento'=>$item->getTipoDocumento(),
-                'numero_identificacion'=>$item->getNit()
+                'numero_identificacion'=>$item->getNit(),
+                'regimen' => $item->getRegimen(),
+                'obligacion' => $item->getTaxLevelCode()
             ];
         }
         return ['data' => $list, 'totalRecords' => $totalItems];
