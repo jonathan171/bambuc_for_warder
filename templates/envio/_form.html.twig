@@ -103,7 +103,7 @@
     <div class="p-3">
         <div class="form-group text-end">
         {% if form.vars.data.id %}
-         <a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_dimension_envio?id={{form.vars.data.id}}" title="Imprimir"><span class="fas fa-print"></span></a>
+         <a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_dimension_envio?id={{form.vars.data.id}}" title="Imprimir" target="_blank"><span class="fas fa-print"></span></a>
          <a class="btn waves-effect waves-light btn-rounded btn-success" onclick="CambiarValor({{ form.vars.data.id}})">Cobrar Peso Real</a>
          <a class="btn waves-effect waves-light btn-rounded btn-secondary" onclick="CambiarValorEspecialReal({{ form.vars.data.id}})">Cobrar Peso Real Especial</a>
          <a class="btn waves-effect waves-light btn-rounded btn-primary" onclick="CambiarValorEspecial({{ form.vars.data.id}})">Tarifa Especial</a>  

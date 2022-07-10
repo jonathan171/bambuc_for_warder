@@ -69,6 +69,12 @@ class IntegracionController extends AbstractController
 
             if(!$envio){
                 $envio = new Envio();
+            }else {
+                $this->addFlash(
+                    'notice',
+                    'Este envio ya se encuentra registrado en el sistema por favor verificalo en el listado de envios'
+                );
+                return $this->redirectToRoute('app_integracion_dhl', [], Response::HTTP_SEE_OTHER);
             }
             $envio->setCodigo($array_envio['productCode']);
             
@@ -103,11 +109,29 @@ class IntegracionController extends AbstractController
 
             }
             if($total_dimension>$total_peso){
-                $envio->setTotalPesoCobrar(ceil( $total_dimension));
-                $envio->setPesoEstimado(ceil( $total_dimension));
+                
+                if($array_envio['shipperDetails']['postalAddress']['countryCode']=='CO' && $total_dimension <= 10){
+                    $envio->setPesoEstimado($total_dimension);
+                    $envio->setTotalPesoCobrar($total_dimension);
+                }else {
+                    $envio->setPesoEstimado(ceil( $total_dimension));
+                    $envio->setTotalPesoCobrar(ceil( $total_dimension));
+                }
+
+                
+                
             }else{
-                $envio->setTotalPesoCobrar(ceil( $total_peso));
-                $envio->setPesoEstimado(ceil( $total_peso));
+                
+
+                if($array_envio['shipperDetails']['postalAddress']['countryCode']=='CO' && $total_peso <= 10){
+                    $envio->setTotalPesoCobrar($total_peso);
+                    $envio->setPesoEstimado($total_peso);
+                }else {
+                    $envio->setPesoEstimado(ceil( $total_peso));
+                    $envio->setTotalPesoCobrar(ceil( $total_peso));
+                }
+               
+               
             }
             
             if($total_dimension_real>$total_peso_real){
@@ -172,12 +196,20 @@ class IntegracionController extends AbstractController
             // actually executes the queries (i.e. the INSERT query)
             $entityManager->flush();
 
-            return $this->redirect('/envio/'.$envio->getId().'/edit');
+            $this->addFlash(
+                'notice',
+                'Envío Guardado Correctamente'
+            );
+            return $this->redirectToRoute('app_integracion_dhl', [], Response::HTTP_SEE_OTHER);
          
 
         }
        
-        return $this->redirect('/envio');
+        $this->addFlash(
+            'notice',
+            'No se encontro ningun envío con este numero de guia porfavor verifica los datos '
+        );
+        return $this->redirectToRoute('app_integracion_dhl', [], Response::HTTP_SEE_OTHER);
        
     }
 }

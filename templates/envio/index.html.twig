@@ -11,7 +11,6 @@
             <tr>
                 
                 <th>N° Guia</th>
-                <th>Peso Cobrado</th>
                 <th>Fecha Envio</th>
                 <th>Empresa</th>
                 <th>Quien Envia</th>
@@ -51,7 +50,6 @@
             },
             columns: [
                 {data: 'numeroEnvio'},
-                {data: 'totalPesoCobrar'},
                 {data: 'fechaEnvio'},
                 {data: 'empresa'},
                 {data: 'quienEnvia'},
@@ -63,7 +61,7 @@
             columnDefs: [
                 
             ],
-            order: [[ 0, "desc" ]]
+            order: [[ 1, "desc" ]]
         });
    });
     

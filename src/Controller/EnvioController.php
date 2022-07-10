@@ -152,10 +152,15 @@ class EnvioController extends AbstractController
         $search =  $request->request->get('search');
         $start = $request->request->get('start');
         $length = $request->request->get('length');
+        $columns = $request->request->get('columns');
+        $orderBy = [
+            'column' => $columns[$request->request->get('order')[0]['column']]['data'],
+            'dir' => $request->get('order')[0]['dir'],
+        ];
 
+      
 
-
-        $data_table  = $envioRepository->findByDataTable(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value']]);
+        $data_table  = $envioRepository->findByDataTable(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'],'order' => $orderBy]);
 
         // Objeto requerido por Datatables
 
@@ -177,9 +182,15 @@ class EnvioController extends AbstractController
         $start = $request->request->get('start');
         $length = $request->request->get('length');
 
+        $columns = $request->request->get('columns');
+        $orderBy = [
+            'column' => $columns[$request->request->get('order')[0]['column']]['data'],
+            'dir' => $request->get('order')[0]['dir'],
+        ];
+
         $fecha = new DateTime();
 
-        $data_table  = $envioRepository->findByDataTableRetrasos(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'], "fecha" => $fecha->format('Y-m-d'),]);
+        $data_table  = $envioRepository->findByDataTableRetrasos(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'], "fecha" => $fecha->format('Y-m-d'),'order' => $orderBy]);
 
         // Objeto requerido por Datatables
 
@@ -272,7 +283,7 @@ class EnvioController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_envio_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_envio_delete', methods: ['POST'])]
     public function delete(Request $request, Envio $envio, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $envio->getId(), $request->request->get('_token'))) {

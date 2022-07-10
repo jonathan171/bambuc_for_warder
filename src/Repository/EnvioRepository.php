@@ -67,7 +67,9 @@ class EnvioRepository extends ServiceEntityRepository
             $query ->andWhere('e.numeroEnvio like :val OR e.fechaEnvio like :val2 OR e.empresa like :val3 OR e.quienRecibe like :val4 OR e.quienEnvia like :val5 OR p.nombre like :val6 OR p1.nombre like :val7')
             ->setParameters(['val'=>$shearch,'val2'=>$shearch,'val3'=>$shearch,'val4'=>$shearch,'val5'=>$shearch,'val6'=>$shearch ,'val7'=>$shearch]);
         }
-       
+        if($options['order']['column']){
+            $query->orderBy('e.'.$options['order']['column'], $options['order']['dir']);
+        }
         $query->getQuery();
         $paginator = new Paginator($query);
         $totalItems = $paginator->count();
@@ -76,6 +78,10 @@ class EnvioRepository extends ServiceEntityRepository
         foreach ($paginator as $item) {
 
             $actions= '<a  class="btn waves-effect waves-light btn-info" href="/envio/'.$item->getId().'/edit">editar</a>';
+           /* $actions.= '<form method="post" action="{{ path("app_envio_delete", {"id": '.$item->getId().'}) }}" onsubmit="return confirm("Estas seguro de querer borrar este Envío?");">
+            <input type="hidden" name="_token" value="{{ csrf_token("delete" ~ '.$item->getId().') }}">
+            <button  class="btn waves-effect waves-light btn-danger">Borrar</button>
+        </form>';*/
            
             $list[] = ['numeroEnvio'=>$item->getNumeroEnvio(),
                        'totalPesoCobrar'=>$item->getTotalPesoCobrar(),
@@ -108,6 +114,9 @@ class EnvioRepository extends ServiceEntityRepository
             $query ->andWhere('e.numeroEnvio like :val OR e.fechaEnvio like :val2 OR e.empresa like :val3 OR e.quienRecibe like :val4 OR e.quienEnvia like :val5 OR p.nombre like :val6 OR p1.nombre like :val7')
             ->setParameters(['val'=>$shearch,'val2'=>$shearch,'val3'=>$shearch,'val4'=>$shearch,'val5'=>$shearch,'val6'=>$shearch ,'val7'=>$shearch]);
         }
+        if($options['order']['column']){
+            $query->orderBy('e.'.$options['order']['column'], $options['order']['dir']);
+        }
        
         $query->getQuery();
         $paginator = new Paginator($query);
@@ -119,7 +128,6 @@ class EnvioRepository extends ServiceEntityRepository
             $actions= '<a  class="btn waves-effect waves-light btn-info" href="/envio/'.$item->getId().'/edit">editar</a>';
            
             $list[] = ['numeroEnvio'=>$item->getNumeroEnvio(),
-                       'totalPesoCobrar'=>$item->getTotalPesoCobrar(),
                        'fechaEnvio'=>$item->getFechaEnvio()->format('Y-m-d'),
                        'empresa'=>$item->getEmpresa(),
                        'quienEnvia'=> $item->getQuienEnvia(),
