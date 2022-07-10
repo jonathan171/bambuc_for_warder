@@ -274,7 +274,7 @@ class EnvioController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_envio_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_integracion_dhl', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('envio/edit.html.twig', [
