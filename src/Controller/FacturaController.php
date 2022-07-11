@@ -674,7 +674,7 @@ class FacturaController extends AbstractController
                 }
                
                 $respuestaServerMetodoGet1 = json_decode($guzzleResult->getBody()->getContents(), true);
-                echo $respuestaServerMetodoGet1;
+                var_dump( $respuestaServerMetodoGet1);
                 die();
 
                 if ($respuestaServerMetodoGet1['invoice']['dian_status'] != 'DIAN_ACEPTADO') {
