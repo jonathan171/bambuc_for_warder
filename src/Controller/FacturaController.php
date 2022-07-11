@@ -654,11 +654,12 @@ class FacturaController extends AbstractController
 
               
 
-                $cuerpo = json_decode('{
-                        "send_dian": true,
-                        "send_email": false
-                        
-                    }', true);
+                $cuerpo = '{
+                    "actions": {
+                    "send_dian": true,
+                    "send_email": false
+                    }
+                }';
 
 
 
