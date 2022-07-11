@@ -356,7 +356,7 @@ class FacturaController extends AbstractController
         $CuerpoJson =  array();
         $factura = $entityManager->getRepository(Factura::class)->find($request->request->get('id'));
 
-        $CuerpoJson['actions']['send_dian'] = false;
+        $CuerpoJson['actions']['send_dian'] = true;
         $CuerpoJson['actions']['send_email'] = false;
 
 
@@ -651,6 +651,9 @@ class FacturaController extends AbstractController
             $prefijo = $factura->getFacturaResolucion()->getPrefijo();
             $numero = $factura->getNumeroFactura();
             if ($error['error'] == "Solo puede modificar Factura '" . $prefijo . $numero . "' si esta DIAN rechazada.") {
+
+                echo 'hola';
+                die();
 
                 $cuerpo = json_decode('{
                         "actions": {
