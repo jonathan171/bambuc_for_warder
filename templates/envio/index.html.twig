@@ -4,6 +4,15 @@
 
 {% block body %}
     <h1>Listado De Envios</h1>
+    {% for message in app.flashes('notice') %}
+
+		<div class="alert alert-info alert-dismissible fade show" role="alert">
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+      <strong>
+			{{ message }}
+       </strong>
+		</div>
+	{% endfor %}
 <div class="table-responsive">
 <div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
     <table class="table table-striped table-bordered text-nowrap dataTable" id="data_table_envios">

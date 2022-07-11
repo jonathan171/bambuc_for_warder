@@ -76,12 +76,8 @@ class EnvioRepository extends ServiceEntityRepository
         $paginator->getQuery()->setFirstResult($pageSize * $currentPage)->setMaxResults($pageSize)->getResult();
         $list = [];
         foreach ($paginator as $item) {
-
-            $actions= '<a  class="btn waves-effect waves-light btn-info" href="/envio/'.$item->getId().'/edit">editar</a>';
-           /* $actions.= '<form method="post" action="{{ path("app_envio_delete", {"id": '.$item->getId().'}) }}" onsubmit="return confirm("Estas seguro de querer borrar este Envío?");">
-            <input type="hidden" name="_token" value="{{ csrf_token("delete" ~ '.$item->getId().') }}">
-            <button  class="btn waves-effect waves-light btn-danger">Borrar</button>
-        </form>';*/
+            $actions= '<a  class="btn waves-effect waves-light btn-info" href="/envio/'.$item->getId().'/edit"><i class="fas fa-pencil-alt"></i></a>';
+          $actions.= '<a  class="btn waves-effect waves-light btn-danger" href="/envio/'.$item->getId().'/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')"><i class="fas fa-trash-alt"></i></a>';
            
             $list[] = ['numeroEnvio'=>$item->getNumeroEnvio(),
                        'totalPesoCobrar'=>$item->getTotalPesoCobrar(),

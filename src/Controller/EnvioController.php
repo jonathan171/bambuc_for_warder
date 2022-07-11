@@ -283,15 +283,21 @@ class EnvioController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_envio_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_envio_delete', methods: ['GET'])]
     public function delete(Request $request, Envio $envio, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $envio->getId(), $request->request->get('_token'))) {
+        
+     
             if ($envio->getFacturaItems() == null) {
                 $entityManager->remove($envio);
                 $entityManager->flush();
+            }else{
+                $this->addFlash(
+                    'notice',
+                    'No se puede eliminar este envío porque ya se encuentra facturado'
+                );
             }
-        }
+        
 
         return $this->redirectToRoute('app_envio_index', [], Response::HTTP_SEE_OTHER);
     }
