@@ -652,8 +652,7 @@ class FacturaController extends AbstractController
             $numero = $factura->getNumeroFactura();
             if ($error['error'] == "Solo puede modificar Factura '" . $prefijo . $numero . "' si esta DIAN rechazada.") {
 
-                echo 'hola';
-                die();
+              
 
                 $cuerpo = json_decode('{
                         "actions": {
@@ -669,11 +668,14 @@ class FacturaController extends AbstractController
                     $guzzleResult = $client->get('https://api.dataico.com/direct/dataico_api/v2/invoices?number=' . $prefijo . $numero, [
                         'headers' => $headers
                     ]);
+                    
                 } catch (\GuzzleHttp\Exception\RequestException $e) {
                     $guzzleResult = $e->getResponse();
                 }
-
+               
                 $respuestaServerMetodoGet1 = json_decode($guzzleResult->getBody()->getContents(), true);
+                echo $respuestaServerMetodoGet1;
+                die();
 
                 if ($respuestaServerMetodoGet1['invoice']['dian_status'] != 'DIAN_ACEPTADO') {
                     $uuid = $respuestaServerMetodoGet1['invoice']['uuid'];
