@@ -13,7 +13,7 @@
        </strong>
 		</div>
 	{% endfor %}
-	<form action="{{ path('app_integracion_enviodhl') }}" method="post">
+	<form action="{{ path('app_integracion_enviodhl') }}" method="post" name='buscadorEnvio'>
 		<div class="row">
 
 			<div class="col-md-8">
@@ -29,4 +29,12 @@
 			</div>
 		</div>
 	</form>
+{% endblock %}
+{% block javascripts %} 
+<script>
+window.onload = function () {
+    document.buscadorEnvio.codigo_barras.focus();
+}
+
+</script>
 {% endblock %}
