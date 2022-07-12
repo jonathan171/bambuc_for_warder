@@ -130,8 +130,9 @@ class IntegracionController extends AbstractController
 
                 if( $total_peso < 10){
                     
-                    if(fmod($total_dimension, 1) != 0.5){
+                    if(fmod($total_peso, 1) != 0.5){
                         $envio->setTotalPesoCobrar($this->roundUp($total_peso, 0.5));
+                       
                     }else{
                         $envio->setTotalPesoCobrar($total_peso);
                     }
