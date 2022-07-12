@@ -1,4 +1,2 @@
-<form method="post" action="{{ path('app_envio_delete', {'id': envio.id}) }}" onsubmit="return confirm('Estas seguro de querer borrar este Envío?');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ envio.id) }}">
-    <button  class="btn waves-effect waves-light btn-danger">Borrar</button>
-</form>
+
+<a  class="btn waves-effect waves-light btn-danger" href="{{ path('app_envio_delete', {'id': envio.id}) }}" onclick="return confirm('Estas seguro de borrar este envio')"><i class="fas fa-trash-alt"></i></a>

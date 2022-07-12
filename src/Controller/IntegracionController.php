@@ -135,9 +135,19 @@ class IntegracionController extends AbstractController
             }
             
             if($total_dimension_real>$total_peso_real){
-                $envio->setPesoReal(ceil( $total_dimension_real));
+              
+                if($array_envio['shipperDetails']['postalAddress']['countryCode']=='CO' && $total_peso <= 10){
+                    $envio->setPesoReal( $total_dimension_real);
+                }else {
+                    $envio->setPesoReal(ceil( $total_dimension_real));
+                }
             }else{
-                $envio->setPesoReal(ceil( $total_peso_real));
+                if($array_envio['shipperDetails']['postalAddress']['countryCode']=='CO' && $total_peso <= 10){
+                    $envio->setPesoReal($total_peso_real);
+                }else {
+                    $envio->setPesoReal(ceil( $total_peso_real));
+                }
+                
             }
             
             $fecha_envio = new DateTime($array_envio['shipmentTimestamp']);
