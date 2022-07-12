@@ -23,20 +23,16 @@ class EnvioController extends AbstractController
     #[Route('/', name: 'app_envio_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
-     
 
-        return $this->render('envio/index.html.twig', [
 
-        ]);
+        return $this->render('envio/index.html.twig', []);
     }
     #[Route('/lista_envios_retrasados', name: 'app_envio_index_retrasados', methods: ['GET'])]
     public function listaRetrasados(EntityManagerInterface $entityManager): Response
     {
-      
 
-        return $this->render('envio/listado_retrasados.html.twig', [
 
-        ]);
+        return $this->render('envio/listado_retrasados.html.twig', []);
     }
 
     #[Route('/actualizarvalor', name: 'app_envio_actualizarvalor', methods: ['GET', 'POST'])]
@@ -50,19 +46,23 @@ class EnvioController extends AbstractController
 
 
 
-
+        if ($envio->getPesoReal() < 10) {
+            $peso_real = $this->roundUp($envio->getPesoReal(), 0.5);
+        } else {
+            $peso_real = ceil($envio->getPesoReal());
+        }
 
         if ($envio->getPaisOrigen()->getCode() == 'CO') {
 
             $zona = $paisZonaRepository->findOneByZona(['pais' => $envio->getPaisDestino()->getId(), 'tipo' => 'exportacion']);
-            $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $envio->getPesoReal()]);
+            $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $peso_real]);
         } else {
 
             $zona = $paisZonaRepository->findOneByZona(['pais' => $envio->getPaisOrigen()->getId(), 'tipo' => 'importacion']);
-            $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $envio->getPesoReal()]);
+            $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $peso_real]);
         }
 
-        $envio->setTotalPesoCobrar($envio->getPesoReal());
+        $envio->setTotalPesoCobrar($peso_real);
         $envio->setTotalACobrar($tarifa[0]['total']);
 
 
@@ -85,18 +85,20 @@ class EnvioController extends AbstractController
             ->getRepository(Envio::class)
             ->find($request->request->get('id'));
 
+            $peso_real =  ceil($envio->getPesoReal());
+
 
         if ($envio->getPaisOrigen()->getCode() == 'CO') {
 
             $zona = $paisZonaRepository->findOneByZona(['pais' => $envio->getPaisDestino()->getId(), 'tipo' => 'especial_exportacion']);
-            $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $envio->getPesoReal()]);
+            $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $peso_real]);
         } else {
 
             $zona = $paisZonaRepository->findOneByZona(['pais' => $envio->getPaisOrigen()->getId(), 'tipo' => 'especial_importacion']);
-            $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $envio->getPesoReal()]);
+            $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $peso_real]);
         }
 
-        $envio->setTotalPesoCobrar($envio->getPesoReal());
+        $envio->setTotalPesoCobrar($peso_real);
         $envio->setTotalACobrar($tarifa[0]['total']);
 
 
@@ -119,18 +121,21 @@ class EnvioController extends AbstractController
             ->getRepository(Envio::class)
             ->find($request->request->get('id'));
 
+        $peso_cobrar =  ceil($envio->getTotalPesoCobrar());
+
 
         if ($envio->getPaisOrigen()->getCode() == 'CO') {
 
             $zona = $paisZonaRepository->findOneByZona(['pais' => $envio->getPaisDestino()->getId(), 'tipo' => 'especial_exportacion']);
-            $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $envio->getTotalPesoCobrar()]);
+            $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' =>  $peso_cobrar]);
         } else {
 
             $zona = $paisZonaRepository->findOneByZona(['pais' => $envio->getPaisOrigen()->getId(), 'tipo' => 'especial_importacion']);
-            $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $envio->getTotalPesoCobrar()]);
+            $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' =>  $peso_cobrar]);
         }
 
 
+        $envio->setTotalPesoCobrar( $peso_cobrar);
         $envio->setTotalACobrar($tarifa[0]['total']);
 
 
@@ -158,9 +163,9 @@ class EnvioController extends AbstractController
             'dir' => $request->get('order')[0]['dir'],
         ];
 
-      
 
-        $data_table  = $envioRepository->findByDataTable(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'],'order' => $orderBy]);
+
+        $data_table  = $envioRepository->findByDataTable(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'], 'order' => $orderBy]);
 
         // Objeto requerido por Datatables
 
@@ -174,7 +179,7 @@ class EnvioController extends AbstractController
 
         return $this->json($responseData);
     }
-  //envios retrasados
+    //envios retrasados
     #[Route('/table_retrasos', name: 'app_envio_table_retrasos', methods: ['GET', 'POST'])]
     public function tableRetrasos(Request $request, EntityManagerInterface $entityManager, EnvioRepository $envioRepository): Response
     {
@@ -190,7 +195,7 @@ class EnvioController extends AbstractController
 
         $fecha = new DateTime();
 
-        $data_table  = $envioRepository->findByDataTableRetrasos(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'], "fecha" => $fecha->format('Y-m-d'),'order' => $orderBy]);
+        $data_table  = $envioRepository->findByDataTableRetrasos(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'], "fecha" => $fecha->format('Y-m-d'), 'order' => $orderBy]);
 
         // Objeto requerido por Datatables
 
@@ -286,19 +291,23 @@ class EnvioController extends AbstractController
     #[Route('/{id}/delete', name: 'app_envio_delete', methods: ['GET'])]
     public function delete(Request $request, Envio $envio, EntityManagerInterface $entityManager): Response
     {
-        
-     
-            if ($envio->getFacturaItems() == null) {
-                $entityManager->remove($envio);
-                $entityManager->flush();
-            }else{
-                $this->addFlash(
-                    'notice',
-                    'No se puede eliminar este envío porque ya se encuentra facturado'
-                );
-            }
-        
+
+
+        if ($envio->getFacturaItems() == null) {
+            $entityManager->remove($envio);
+            $entityManager->flush();
+        } else {
+            $this->addFlash(
+                'notice',
+                'No se puede eliminar este envío porque ya se encuentra facturado'
+            );
+        }
+
 
         return $this->redirectToRoute('app_envio_index', [], Response::HTTP_SEE_OTHER);
+    }
+    public function roundUp($number, $nearest)
+    {
+        return $number + ($nearest - fmod($number, $nearest));
     }
 }

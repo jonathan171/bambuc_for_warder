@@ -110,11 +110,11 @@ class IntegracionController extends AbstractController
             }
             if($total_dimension>$total_peso){
                 
-                if($array_envio['shipperDetails']['postalAddress']['countryCode']=='CO' && $total_dimension <= 10){
+                if( $total_dimension < 10){
                     $envio->setPesoEstimado($total_dimension);
-                    $envio->setTotalPesoCobrar($total_dimension);
+                    $envio->setTotalPesoCobrar($this->roundUp($total_dimension, 0.5));
                 }else {
-                    $envio->setPesoEstimado(ceil( $total_dimension));
+                    $envio->setPesoEstimado( $total_dimension);
                     $envio->setTotalPesoCobrar(ceil( $total_dimension));
                 }
 
@@ -123,11 +123,11 @@ class IntegracionController extends AbstractController
             }else{
                 
 
-                if($array_envio['shipperDetails']['postalAddress']['countryCode']=='CO' && $total_peso <= 10){
-                    $envio->setTotalPesoCobrar($total_peso);
+                if( $total_peso < 10){
+                    $envio->setTotalPesoCobrar($this->roundUp($total_peso, 0.5));
                     $envio->setPesoEstimado($total_peso);
                 }else {
-                    $envio->setPesoEstimado(ceil( $total_peso));
+                    $envio->setPesoEstimado($total_peso);
                     $envio->setTotalPesoCobrar(ceil( $total_peso));
                 }
                
@@ -136,17 +136,13 @@ class IntegracionController extends AbstractController
             
             if($total_dimension_real>$total_peso_real){
               
-                if($array_envio['shipperDetails']['postalAddress']['countryCode']=='CO' && $total_peso <= 10){
+                
                     $envio->setPesoReal( $total_dimension_real);
-                }else {
-                    $envio->setPesoReal(ceil( $total_dimension_real));
-                }
+                
             }else{
-                if($array_envio['shipperDetails']['postalAddress']['countryCode']=='CO' && $total_peso <= 10){
+               
                     $envio->setPesoReal($total_peso_real);
-                }else {
-                    $envio->setPesoReal(ceil( $total_peso_real));
-                }
+                
                 
             }
             
@@ -221,5 +217,8 @@ class IntegracionController extends AbstractController
         );
         return $this->redirectToRoute('app_integracion_dhl', [], Response::HTTP_SEE_OTHER);
        
+    }
+    public function roundUp($number, $nearest){
+        return $number + ($nearest - fmod($number, $nearest));
     }
 }

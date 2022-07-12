@@ -92,9 +92,9 @@ class ActualizarEnviosCommand extends Command
                 
                 
                 if($total_dimension_real>$total_peso_real){
-                    $envio->setPesoReal(ceil( $total_dimension_real));
+                    $envio->setPesoReal( $total_dimension_real);
                 }else{
-                    $envio->setPesoReal(ceil( $total_peso_real));
+                    $envio->setPesoReal($total_peso_real);
                 }
                 
                 
