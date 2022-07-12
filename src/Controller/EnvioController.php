@@ -47,7 +47,12 @@ class EnvioController extends AbstractController
 
 
         if ($envio->getPesoReal() < 10) {
-            $peso_real = $this->roundUp($envio->getPesoReal(), 0.5);
+            if(fmod($envio->getPesoReal(), 1) != 0.5){
+                $peso_real = $this->roundUp($envio->getPesoReal(), 0.5);
+            }else{
+                $peso_real = $envio->getPesoReal();
+            }
+           
         } else {
             $peso_real = ceil($envio->getPesoReal());
         }

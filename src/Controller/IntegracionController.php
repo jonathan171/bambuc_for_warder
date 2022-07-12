@@ -112,7 +112,12 @@ class IntegracionController extends AbstractController
                 
                 if( $total_dimension < 10){
                     $envio->setPesoEstimado($total_dimension);
-                    $envio->setTotalPesoCobrar($this->roundUp($total_dimension, 0.5));
+                    if(fmod($total_dimension, 1) != 0.5){
+                        $envio->setTotalPesoCobrar($this->roundUp($total_dimension, 0.5));
+                    }else{
+                        $envio->setTotalPesoCobrar($total_dimension);
+                    }
+                    
                 }else {
                     $envio->setPesoEstimado( $total_dimension);
                     $envio->setTotalPesoCobrar(ceil( $total_dimension));
@@ -124,7 +129,12 @@ class IntegracionController extends AbstractController
                 
 
                 if( $total_peso < 10){
-                    $envio->setTotalPesoCobrar($this->roundUp($total_peso, 0.5));
+                    
+                    if(fmod($total_dimension, 1) != 0.5){
+                        $envio->setTotalPesoCobrar($this->roundUp($total_peso, 0.5));
+                    }else{
+                        $envio->setTotalPesoCobrar($total_peso);
+                    }
                     $envio->setPesoEstimado($total_peso);
                 }else {
                     $envio->setPesoEstimado($total_peso);
