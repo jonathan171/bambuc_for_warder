@@ -32,9 +32,9 @@
 {% endblock %}
 {% block javascripts %} 
 <script>
-window.onload = function () {
-    document.buscadorEnvio.codigo_barras.focus();
-}
 
+$( document ).ready(function() {
+    document.buscadorEnvio.codigo_barras.focus();
+});
 </script>
 {% endblock %}

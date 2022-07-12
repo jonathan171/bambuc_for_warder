@@ -278,6 +278,10 @@ class EnvioController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+            $this->addFlash(
+                'notice',
+                'Envio Actualizado Correctamente'
+            );
 
             return $this->redirectToRoute('app_integracion_dhl', [], Response::HTTP_SEE_OTHER);
         }
