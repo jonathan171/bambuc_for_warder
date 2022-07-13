@@ -44,7 +44,7 @@ class EnvioType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('descripcion', null, [
+            ->add('descripcion',  TextType::class, [
                 'attr' => [
                     'class' => 'form-control'
                 ]
