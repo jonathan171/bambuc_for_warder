@@ -313,7 +313,7 @@ class EnvioController extends AbstractController
         }
 
 
-        return $this->redirectToRoute('app_envio_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_integracion_dhl', [], Response::HTTP_SEE_OTHER);
     }
     public function roundUp($number, $nearest)
     {

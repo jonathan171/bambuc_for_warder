@@ -157,6 +157,15 @@ class Envio
      */
     private $paisOrigen;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="verificado", type="boolean", nullable=false)
+     */
+    private $verificado;
+
+    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -338,6 +347,17 @@ class Envio
     public function setFacturado(bool $facturado): self
     {
         $this->facturado = $facturado;
+
+        return $this;
+    }
+    public function getVerificado(): ?bool
+    {
+        return $this->verificado;
+    }
+
+    public function setVerificado(bool $verificado): self
+    {
+        $this->verificado = $verificado;
 
         return $this;
     }

@@ -86,8 +86,8 @@ class FacturaController extends AbstractController
         ]);
     }
 
-    #[Route('/buscadorAjaxPaciente', name: 'app_factura_buscador_ajax_paciente', methods: ['GET', 'POST'])]
-    public function executeBuscadorAjaxPaciente(
+    #[Route('/buscadorAjaxCliente', name: 'app_factura_buscador_ajax_cliente', methods: ['GET', 'POST'])]
+    public function executeBuscadorAjaxCliente(
         Request $request,
         ClientesRepository $clienteRepository
     ) {
@@ -223,7 +223,7 @@ class FacturaController extends AbstractController
 
             $item = new FacturaItems();
             $item->setCantidad(1);
-            $item->setDescripcion($envio->getDescripcion());
+            $item->setDescripcion('TRANSPORTE COURRIER');
             $item->setValorUnitario($envio->getTotalACobrar());
             $item->setSubtotal($envio->getTotalACobrar());
             $item->setIva(0);

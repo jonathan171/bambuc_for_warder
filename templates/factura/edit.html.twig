@@ -171,7 +171,7 @@
             delay: 200,
             placeholder: "Ingrese un término de búsqueda aquí p. ej. número de identificación",
             ajax: {
-                url: '/factura/buscadorAjaxPaciente',
+                url: '/factura/buscadorAjaxCliente',
                 dataType: 'json'
             },
             templateResult: formatResult
@@ -181,6 +181,7 @@
             $('#factura_cliente').val(data.id);
             $('#factura_regimen').val(data.regimen);
             $('#factura_taxLevelCode').val(data.obligacion);
+            $('#lblcliente').html(data.text);
             
         }).on('select2:open', function() {
             $('.select2-search input').focus().val(currentQuery).trigger('input');

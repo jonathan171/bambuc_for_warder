@@ -125,6 +125,7 @@ class EnvioType extends AbstractType
             ])
             ->add('jsonRecibido')
             ->add('facturado')
+            ->add('verificado')
             ->add('facturaItems', TextType::class, [
                 'required'=> false,
                 'attr' => [
