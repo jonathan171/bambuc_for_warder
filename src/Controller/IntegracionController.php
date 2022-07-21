@@ -172,6 +172,7 @@ class IntegracionController extends AbstractController
                 $envio->setFechaEstimadaEntrega($fecha);
             }
             $envio->setEmpresa('DHL');
+            $envio->setVerificado(0);
 
             $pais_envio = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['shipperDetails']['postalAddress']['countryCode']]);
             $pais_recibe = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['receiverDetails']['postalAddress']['countryCode']]);
