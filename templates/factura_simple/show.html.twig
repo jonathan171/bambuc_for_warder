@@ -1,0 +1,150 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Factura{% endblock %}
+
+{% block body %}
+    <h1>Factura</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ factura.id }}</td>
+            </tr>
+            <tr>
+                <th>NumeroFactura</th>
+                <td>{{ factura.numeroFactura }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ factura.estado }}</td>
+            </tr>
+            <tr>
+                <th>Fecha</th>
+                <td>{{ factura.fecha ? factura.fecha|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>FechaVencimiento</th>
+                <td>{{ factura.fechaVencimiento ? factura.fechaVencimiento|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>FechaValidacion</th>
+                <td>{{ factura.fechaValidacion ? factura.fechaValidacion|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <td>{{ factura.total }}</td>
+            </tr>
+            <tr>
+                <th>Anulado</th>
+                <td>{{ factura.anulado ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>AnuladoUsuario</th>
+                <td>{{ factura.anuladoUsuario }}</td>
+            </tr>
+            <tr>
+                <th>AnuladoFecha</th>
+                <td>{{ factura.anuladoFecha ? factura.anuladoFecha|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>FormaDePago</th>
+                <td>{{ factura.formaDePago }}</td>
+            </tr>
+            <tr>
+                <th>TipoFactura</th>
+                <td>{{ factura.tipoFactura }}</td>
+            </tr>
+            <tr>
+                <th>Observaciones</th>
+                <td>{{ factura.observaciones }}</td>
+            </tr>
+            <tr>
+                <th>Hora</th>
+                <td>{{ factura.hora ? factura.hora|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Subtotal</th>
+                <td>{{ factura.subtotal }}</td>
+            </tr>
+            <tr>
+                <th>TotalIva</th>
+                <td>{{ factura.totalIva }}</td>
+            </tr>
+            <tr>
+                <th>TotalReteIva</th>
+                <td>{{ factura.totalReteIva }}</td>
+            </tr>
+            <tr>
+                <th>TotalReteIca</th>
+                <td>{{ factura.totalReteIca }}</td>
+            </tr>
+            <tr>
+                <th>TotalReteFuente</th>
+                <td>{{ factura.totalReteFuente }}</td>
+            </tr>
+            <tr>
+                <th>TotalReteFuenteG</th>
+                <td>{{ factura.totalReteFuenteG }}</td>
+            </tr>
+            <tr>
+                <th>ReteFuente</th>
+                <td>{{ factura.reteFuente }}</td>
+            </tr>
+            <tr>
+                <th>ReteIca</th>
+                <td>{{ factura.reteIca }}</td>
+            </tr>
+            <tr>
+                <th>ReteIva</th>
+                <td>{{ factura.reteIva }}</td>
+            </tr>
+            <tr>
+                <th>Descuento</th>
+                <td>{{ factura.descuento }}</td>
+            </tr>
+            <tr>
+                <th>TaxLevelCode</th>
+                <td>{{ factura.taxLevelCode }}</td>
+            </tr>
+            <tr>
+                <th>Regimen</th>
+                <td>{{ factura.regimen }}</td>
+            </tr>
+            <tr>
+                <th>RespuestaDian</th>
+                <td>{{ factura.respuestaDian }}</td>
+            </tr>
+            <tr>
+                <th>Cufe</th>
+                <td>{{ factura.cufe }}</td>
+            </tr>
+            <tr>
+                <th>Pdf</th>
+                <td>{{ factura.pdf }}</td>
+            </tr>
+            <tr>
+                <th>Xml</th>
+                <td>{{ factura.xml }}</td>
+            </tr>
+            <tr>
+                <th>CuerpoJsonf</th>
+                <td>{{ factura.cuerpoJsonf }}</td>
+            </tr>
+            <tr>
+                <th>CuerpoJsonc</th>
+                <td>{{ factura.cuerpoJsonc }}</td>
+            </tr>
+            <tr>
+                <th>RespuestaCorreo</th>
+                <td>{{ factura.respuestaCorreo }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_factura_simple_index') }}">back to list</a>
+
+    <a href="{{ path('app_factura_simple_edit', {'id': factura.id}) }}">edit</a>
+
+    {{ include('factura_simple/_delete_form.html.twig') }}
+{% endblock %}

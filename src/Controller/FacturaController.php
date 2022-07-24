@@ -170,7 +170,7 @@ class FacturaController extends AbstractController
         return $this->json($responseData);
     }
 
-    #[Route('/{id}', name: 'app_factura_show', methods: ['GET'])]
+    #[Route('/{id}/show', name: 'app_factura_show', methods: ['GET'])]
     public function show(Factura $factura): Response
     {
         return $this->render('factura/show.html.twig', [
@@ -361,7 +361,7 @@ class FacturaController extends AbstractController
 
 
         $CuerpoJson['invoice']['number'] = $factura->getNumeroFactura();
-        $CuerpoJson['invoice']['invoice_type_code'] = $factura->getTipoFactura();
+        $CuerpoJson['invoice']['invoice_type_code'] = 'FACTURA_VENTA';
         $CuerpoJson['invoice']['payment_means_type'] = $factura->getFormaDePago();
         $CuerpoJson['invoice']['payment_means'] = $factura->getCondDePago()->getDescripcioDataico();
         $CuerpoJson['invoice']['issue_date'] = $factura->getFecha()->format('d/m/Y');
@@ -561,7 +561,7 @@ class FacturaController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_factura_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_factura_delete', methods: ['POST'])]
     public function delete(Request $request, Factura $factura, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $factura->getId(), $request->request->get('_token'))) {

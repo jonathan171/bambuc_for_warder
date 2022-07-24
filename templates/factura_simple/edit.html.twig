@@ -1,0 +1,524 @@
+{% extends 'base.html.twig' %}
+
+{% import "macros/select2.html.twig" as macroselect2 %}
+
+{% block stylesheets %}
+{{ macroselect2.styleSelect2}}
+{% endblock %}
+
+
+{% block title %}Edit Factura{% endblock %}
+
+{% block body %}
+    <h1>Editar Factura</h1>
+
+    {{ include('factura/_form.html.twig', {'button_label': 'Actualizar'}) }}
+
+    <h2> Items de Factura</h2>
+
+
+
+  {% for item in items %} 
+  <div class="row" id="{{item.id}}">
+    <div class="col-sm-12 col-lg-1">
+      <label class="col-sm-12">Codigo</label>
+       <br>
+       <br>
+      {{item.codigo}}
+    </div>
+    <div class="col-sm-12 col-lg-1">
+    <label class="col-sm-12">Cantidad</label>
+       <br>
+       <br>
+        {{item.cantidad}}
+    </div>
+    <div class="col-sm-12 col-lg-2">
+        <label class="col-sm-12">Descripción</label>
+        <br>
+        <br>
+        {{item.descripcion}}
+    </div>
+     <div class="col-sm-12 col-lg-1">
+    <label class="col-sm-12">Valor Unitario</label>
+       <br>
+       <br>
+        {{item.valorUnitario}}
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">Descuento %</label>
+        <br>
+        <br>
+        {{item.tasaDescuento}}
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">subtotal</label>
+        <br>
+        <br>
+        {{item.subtotal}}
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">Rete Fue %</label>
+        <br>
+        <br>
+        {{item.retencionFuente}}
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">Iva %</label>
+        <br>
+        <br>
+        {{item.iva}}
+    </div>
+    <div class="col-sm-12 col-lg-2">
+        <label class="col-sm-12">Total</label>
+        <br>
+        <br>
+        {{item.total}}
+        
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <form method="post" action="{{ path('app_factura_simple_item_delete', {'id': item.id}) }}" onsubmit="return confirm('Estas seguro de borrar este item?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
+            <button class="btn waves-effect waves-light btn-danger"><span class="fas fa-trash-alt"></span></button>
+        </form>
+    </div>
+  </div>
+   {%  endfor %}
+    <form action="{{ path('app_factura_simple_guardar_items') }}" method="post"  id="formItems">
+    <div class="row">
+   
+    <div class="col-sm-12 col-lg-1">
+      <label class="col-sm-12">Codigo</label>
+       <br>
+       <br>
+      <input type="text" name="codigo" id="codigo" value="EN0001" class="form-control">
+    </div>
+    <div class="col-sm-12 col-lg-1">
+    <label class="col-sm-12">Cantidad</label>
+       <br>
+       <br>
+        <input type="number" name="cantidad" id="cantidad" class="form-control"  >
+    </div>
+    <div class="col-sm-12 col-lg-2">
+        <label class="col-sm-12">Descripción</label>
+        <br>
+        <br>
+        <input type="text" name="descripcion" id="descripcion" class="form-control" value="Logística y transporte nacional">
+    </div>
+     <div class="col-sm-12 col-lg-1">
+    <label class="col-sm-12">V. Unitario</label>
+       <br>
+       <br>
+        <input type="number" name="valor_unitario" id="valor_unitario"  value="0"  class="form-control">
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">Descuento %</label>
+        <br>
+        <br>
+        <input type="number" name="descuento" step="0.01" id="descuento"  value="0" min="0" max="100" class="form-control">
+    </div>
+     <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">subtotal</label>
+        <br>
+        <br>
+        <input type="number" name="subtotal" id="subtotal"  class="form-control" value="0" readonly>
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">Rete Fue %</label>
+        <br>
+        <br>
+        <input type="number" name="rete_fuente" id="rete_fuente" step="0.01"  value="0" min="0" max="100" class="form-control">
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">Iva %</label>
+        <br>
+        <br>
+        <input type="number" name="iva" id="iva" class="form-control"  step="0.01" min="0" max="100" value="0">
+    </div>
+    <div class="col-sm-12 col-lg-2">
+        <label class="col-sm-12">Total</label>
+        <br>
+        <br>
+        <input type="text" name="total" id="total" class="form-control" value="0" readonly>
+        
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <br>
+        <br>
+       
+            <button class="btn waves-effect waves-light btn-success" type="button" onclick="validarFormulario()"><span class="fas fa-save"></span></button>
+       
+    </div>
+     <div style="display:none">
+         <input type="number" name="valor_descuento" id="valor_descuento" class="form-control">
+         <input type="number" name="valor_iva" id="valor_iva" class="form-control">
+         <input type="number" name="valor_rete_fuente" id="valor_rete_fuente" class="form-control">
+         <input type="number" name="factura_id" value="{{form.vars.data.id}}" class="form-control">
+     </div>
+   
+  </div>
+ </form>
+ <div class="row" style="padding-top:20px;">
+    <div class="col-sm-12 col-lg-4">
+         
+    </div>
+    <div class="col-sm-12 col-lg-4">
+        <strong>Total Factura</strong>
+    </div>
+     <div class="col-sm-12 col-lg-4">
+         <input class="form-control" type="text" id="totalFactura" value="{{factura.total - (factura.totalReteIca + factura.totalReteIva + factura.totalReteFuenteG + factura.descuento)}}" disabled="disabled"/>
+    </div>
+    
+ </div>
+{% endblock %}
+{% block javascripts %} 
+
+{{ macroselect2.scriptSelect2}}
+<script>
+
+ function BuscarConsecutivo(){
+       $.ajax({
+        url : '/factura/buscarConsecutivo',
+        data : { resolucion_id : $('#factura_facturaResolucion').val()},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+            $('#factura_numeroFactura').val(json.results);
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    };
+
+ $(function () { 
+     
+   
+
+     function formatResult (item) {
+            
+
+            var html = [
+                '<div>',
+                    item.text + " <b>" + " (" + item.tipo_documento + " " + item.numero_identificacion + ")" + "</b>",
+                '</div>'
+            ];
+
+            var $state = $(html.join(""));
+
+            return $state;
+        };
+    
+
+       var currentQuery = "";
+
+        $("#input-buscador-clientes").select2({
+            width: '100%',
+            theme: "bootstrap",
+            minimumInputLength: 2,
+            delay: 200,
+            placeholder: "Ingrese un término de búsqueda aquí p. ej. número de identificación",
+            ajax: {
+                url: '/factura/buscadorAjaxPaciente',
+                dataType: 'json'
+            },
+            templateResult: formatResult
+        }).on('select2:select', function (e) {
+            var data = e.params.data;
+            
+            $('#factura_cliente').val(data.id);
+            $('#factura_regimen').val(data.regimen);
+            $('#factura_taxLevelCode').val(data.obligacion);
+            $('#lblcliente').html(data.text);
+
+        }).on('select2:open', function() {
+            $('.select2-search input').focus().val(currentQuery).trigger('input');
+        }).on('select2:closing', function() {
+            currentQuery = $('.select2-search input').prop('value');
+        });
+
+        
+     
+
+        $("#fecha_inicio" ).datepicker();
+        $("#fecha_fin" ).datepicker();
+
+ });
+
+
+   
+   $('#factura_facturaResolucion').change(function ()
+    {
+            BuscarConsecutivo();
+    });
+
+  function envios()
+        {
+            var fechaincio = $("#fecha_inicio").val();
+            var fechafin = $("#fecha_fin").val();
+            var factura_id = '{{factura.id}}';
+            var envia = $("#quien_envia").val();
+
+            if (fechaincio != "") {
+                if (fechafin != "") {
+                    if (fechafin > fechaincio) {
+                        ParaEnvios = '{{ path('app_envio_listado_envios')}}';
+                        $('#divenvios').load( ParaEnvios,{ fecha_inicio: fechaincio, fecha_fin: fechafin, factura_id: factura_id ,envia: envia});
+                        $("#envios").dialog({ width: 800, height: 500});
+                    } else {
+                        alert("La fecha de inicio debe ser menor");
+                    }
+                } else {
+                    alert("Por favor ingrese la fecha fin");
+                }
+
+            } else {
+                 ParaEnvios = '{{ path('app_envio_listado_envios')}}';
+                 $('#divenvios').load(ParaEnvios,{factura_id: factura_id,envia: envia });
+                 $("#envios").dialog({ width: 800, height: 500});
+            }
+
+
+        }
+//validar campos menores que 100
+function validateMenorCien(item, id)
+    {
+       
+
+        var x = item;
+        if (x.value <= 100) {
+            ActualizarItems(id);
+        } else {
+            alert('por favor ingrese valores menores o iguales a 100');
+            $("#" + x.id).val(0);
+            validateMenorCien(item, id);
+        }
+
+    }
+    function ActualizarItems(item)
+    {
+        ////////////////// obtener los datos de los input ////////////////////
+        var valoresDeMedicamentosTotal = [];
+        var valoresDeMedicamentos = new Array();
+
+        ///////////// trayendo los datos de tipo input /////////////////
+
+        let fila = 0;
+
+
+
+        $("#" + item).find('div').each(function () {
+
+            $(this).find(':input, textarea').each(function () {
+                var elemento = this;
+
+                var datoDeForeach = {nombre: elemento.id, valor: elemento.value, grupo: elemento.getAttribute('data-grupo')};
+
+                valoresDeMedicamentos.push(datoDeForeach);
+
+            });
+
+        });
+        // $("#total"+imprimir).attr({value:'33'});
+        if (valoresDeMedicamentos.length > 0)
+        {
+            valoresDeMedicamentosTotal[fila] = valoresDeMedicamentos;
+        }
+        cargarDatosItems(JSON.stringify(valoresDeMedicamentosTotal),item);
+
+        ///////////// fin trayendo los datos de tipo input ////////////////
+    }
+
+     function cargarDatosItems(datos,id){
+       $.ajax({
+        url : '{{ path('app_factura_cargar_items')}}',
+        data :{datos: datos, id:id} ,
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+            console.log(json[0]);
+
+            $("#total" + json[1]).attr({value: json[0]});
+            $("#totalFactura").attr({value: json[2]});
+
+        
+            },
+            error : function(xhr, status) {
+            alert('Disculpe, existió un problema');
+       }
+          });
+
+    };
+
+     //solo se pueden ingresar numeros
+    function validaNumericos(event) {
+        if (event.charCode >= 48 && event.charCode <= 57) {
+            return true;
+        }
+        return false;
+    }
+    $('#cantidad').keyup(function(){
+        if($('#cantidad').val() != null && $('#cantidad').val() != ''){
+            if($('#valor_unitario').val() != null && $('#valor_unitario').val() != ''){
+                $('#subtotal').val($('#valor_unitario').val()*$('#cantidad').val());
+                $('#total').val($('#subtotal').val());
+
+            
+            if($('#descuento').val() != null && $('#descuento').val() != ''){
+                $('#valor_descuento').val($('#subtotal').val()*($('#descuento').val()/100));
+                $('#subtotal').val(parseFloat($('#subtotal').val())- parseFloat($('#valor_descuento').val()));
+                 $('#total').val($('#subtotal').val());
+            }
+            if($('#iva').val() != null && $('#iva').val() != ''){
+                $('#valor_iva').val($('#subtotal').val()*($('#iva').val()/100));
+                $('#total').val(parseFloat($('#total').val())+ parseFloat($('#valor_iva').val()));
+
+            }
+            if($('#rete_fuente').val() != null && $('#rete_fuente').val() != ''){
+                $('#valor_rete_fuente').val($('#subtotal').val()*($('#rete_fuente').val()/100));
+                $('#total').val((parseFloat($('#total').val())- parseFloat($('#valor_rete_fuente').val())));
+            }
+          } 
+        }
+    });
+
+    $('#valor_unitario').keyup(function(){
+        if($('#cantidad').val() != null && $('#cantidad').val() != ''){
+            if($('#valor_unitario').val() != null && $('#valor_unitario').val() != ''){
+                $('#subtotal').val($('#valor_unitario').val()*$('#cantidad').val());
+                $('#total').val($('#subtotal').val());
+
+            
+            if($('#descuento').val() != null && $('#descuento').val() != ''){
+                $('#valor_descuento').val($('#subtotal').val()*($('#descuento').val()/100));
+                $('#subtotal').val(parseFloat($('#subtotal').val())- parseFloat($('#valor_descuento').val()));
+                 $('#total').val($('#subtotal').val());
+            }
+            if($('#iva').val() != null && $('#iva').val() != ''){
+                $('#valor_iva').val($('#subtotal').val()*($('#iva').val()/100));
+                $('#total').val(parseFloat($('#total').val())+ parseFloat($('#valor_iva').val()));
+
+            }
+            if($('#rete_fuente').val() != null && $('#rete_fuente').val() != ''){
+                $('#valor_rete_fuente').val($('#subtotal').val()*($('#rete_fuente').val()/100));
+                $('#total').val((parseFloat($('#total').val())- parseFloat($('#valor_rete_fuente').val())));
+            }
+          } 
+        }
+    });
+
+    $('#descuento').keyup(function(){
+        if($('#cantidad').val() != null && $('#cantidad').val() != ''){
+            if($('#valor_unitario').val() != null && $('#valor_unitario').val() != ''){
+                $('#subtotal').val($('#valor_unitario').val()*$('#cantidad').val());
+                $('#total').val($('#subtotal').val());
+
+            
+            if($('#descuento').val() != null && $('#descuento').val() != ''){
+                $('#valor_descuento').val($('#subtotal').val()*($('#descuento').val()/100));
+                $('#subtotal').val(parseFloat($('#subtotal').val())- parseFloat($('#valor_descuento').val()));
+                 $('#total').val($('#subtotal').val());
+            }
+            if($('#iva').val() != null && $('#iva').val() != ''){
+                $('#valor_iva').val($('#subtotal').val()*($('#iva').val()/100));
+                $('#total').val(parseFloat($('#total').val())+ parseFloat($('#valor_iva').val()));
+
+            }
+            if($('#rete_fuente').val() != null && $('#rete_fuente').val() != ''){
+                $('#valor_rete_fuente').val($('#subtotal').val()*($('#rete_fuente').val()/100));
+                $('#total').val((parseFloat($('#total').val())- parseFloat($('#valor_rete_fuente').val())));
+            }
+          } 
+        }
+    });
+
+    $('#iva').keyup(function(){
+        if($('#cantidad').val() != null && $('#cantidad').val() != ''){
+            if($('#valor_unitario').val() != null && $('#valor_unitario').val() != ''){
+                $('#subtotal').val($('#valor_unitario').val()*$('#cantidad').val());
+                $('#total').val($('#subtotal').val());
+
+            
+            if($('#descuento').val() != null && $('#descuento').val() != ''){
+                $('#valor_descuento').val($('#subtotal').val()*($('#descuento').val()/100));
+                $('#subtotal').val(parseFloat($('#subtotal').val())- parseFloat($('#valor_descuento').val()));
+                 $('#total').val($('#subtotal').val());
+            }
+            if($('#iva').val() != null && $('#iva').val() != ''){
+                $('#valor_iva').val($('#subtotal').val()*($('#iva').val()/100));
+                $('#total').val(parseFloat($('#total').val())+ parseFloat($('#valor_iva').val()));
+
+            }
+            if($('#rete_fuente').val() != null && $('#rete_fuente').val() != ''){
+                $('#valor_rete_fuente').val($('#subtotal').val()*($('#rete_fuente').val()/100));
+                $('#total').val((parseFloat($('#total').val())- parseFloat($('#valor_rete_fuente').val())));
+            }
+          } 
+        }
+    });
+
+    $('#rete_fuente').keyup(function(){
+        if($('#cantidad').val() != null && $('#cantidad').val() != ''){
+            if($('#valor_unitario').val() != null && $('#valor_unitario').val() != ''){
+                $('#subtotal').val($('#valor_unitario').val()*$('#cantidad').val());
+                $('#total').val($('#subtotal').val());
+
+            
+            if($('#descuento').val() != null && $('#descuento').val() != ''){
+                $('#valor_descuento').val($('#subtotal').val()*($('#descuento').val()/100));
+                $('#subtotal').val(parseFloat($('#subtotal').val())- parseFloat($('#valor_descuento').val()));
+                 $('#total').val($('#subtotal').val());
+            }
+            if($('#iva').val() != null && $('#iva').val() != ''){
+                $('#valor_iva').val($('#subtotal').val()*($('#iva').val()/100));
+                $('#total').val(parseFloat($('#total').val())+ parseFloat($('#valor_iva').val()));
+
+            }
+            if($('#rete_fuente').val() != null && $('#rete_fuente').val() != ''){
+                $('#valor_rete_fuente').val($('#subtotal').val()*($('#rete_fuente').val()/100));
+                $('#total').val((parseFloat($('#total').val())- parseFloat($('#valor_rete_fuente').val())));
+            }
+          } 
+        }
+    });
+
+    function validarFormulario(){
+        if($('#codigo').val() != null && $('#codigo').val() != ''){
+            if($('#cantidad').val() != null && $('#cantidad').val() != ''){
+                if($('#descripcion').val() != null && $('#descripcion').val() != ''){
+                    if($('#valor_unitario').val() != null && $('#valor_unitario').val() != ''){
+                        if($('#descuento').val() != null && $('#descuento').val() != ''  && $('#descuento').val() <= 100){
+                            if($('#rete_fuente').val() != null && $('#rete_fuente').val() != '' && $('#rete_fuente').val() <= 100){
+                                if($('#iva').val() != null && $('#iva').val() != '' && $('#iva').val() <= 100){
+                                    $('#formItems').submit();
+
+                                }else{
+                                    alert('por favor ingresa un iva  válido');
+                                }
+                            }else{
+                                alert('por favor ingresa una rete fuente   válida');
+                            }
+                        }else{
+                            alert('por favor ingresa un descuento  válido');
+                        }
+                    }else{
+                        alert('por favor ingresa un valor unitario  válido');
+                    }
+                }else{
+                    alert('por favor ingresa una descripción válida');
+                }
+            }else{
+                alert('por favor ingresa una cantidad válida');
+            }
+        }else{
+            alert('por favor ingresa un código válido');
+        }
+
+
+    }
+
+</script>
+
+{% endblock %}

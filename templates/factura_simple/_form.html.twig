@@ -1,0 +1,148 @@
+
+<div class="card-body">
+
+{{ form_start(form, {'attr': {'class': 'form_clientesform-horizontal r-separator border-top'}}) }}
+    <div class="row">
+        <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> Cliente </label>
+                     <div class="col-sm-9">
+                       <select class="form-control" id="input-buscador-clientes"></select>
+                      <label id="lblcliente" name="lblcliente"> 
+                         {% if form.vars.data.id %}
+                               
+                                    {{ form.vars.data.cliente.razonSocial }}
+                               
+                         {% endif %}
+                      </label>
+                    </div>
+            </div>
+        </div>
+         <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> N° </label>
+                    <div class="col-sm-9">
+                        {{form_row(form.numeroFactura) }} 
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> Fecha </label>
+                    <div class="col-sm-9">
+                        
+                        {{form_widget(form.fecha) }}
+                    </div>
+            </div>
+        </div>
+         <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> Fecha Vencimiento </label>
+                    <div class="col-sm-9">
+                       {{form_widget(form.fechaVencimiento) }}
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label">Forma de Pago </label>
+                    <div class="col-sm-9">
+                        
+                        {{form_widget(form.formaDePago) }}
+                    </div>
+            </div>
+        </div>
+         <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> Condición de pago </label>
+                    <div class="col-sm-9">
+                       {{form_widget(form.condDePago) }}
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label">Rete Fuente %</label>
+                    <div class="col-sm-9">
+                         {{form_widget(form.reteFuente) }}                  
+                    </div>
+            </div>
+        </div>
+         <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> Resolución </label>
+                    <div class="col-sm-9">
+                        {{form_widget(form.facturaResolucion) }}
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> Rete Ica %</label>
+                    <div class="col-sm-9">
+                        {{form_widget(form.reteIca) }}
+                    </div>
+            </div>
+        </div>
+        
+         <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> Obligación </label>
+                    <div class="col-sm-9">
+                        {{form_widget(form.taxLevelCode) }}
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label">Descuento </label>
+                    <div class="col-sm-9">
+                         {{form_widget(form.descuento) }}                  
+                    </div>
+            </div>
+        </div>
+         <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label">Régimen </label>
+                    <div class="col-sm-9">
+                         {{form_widget(form.regimen) }}                  
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        
+         <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> Observaciones </label>
+                    <div class="col-sm-9">
+                        {{form_widget(form.observaciones) }}
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="hide">
+    {{form_rest(form)}}
+    </div>
+     <div class="p-3">
+        <div class="form-group text-end">
+        
+        <button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
+         <a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_factura_index') }}">regresar</a>
+        </div>
+    </div>
+    
+    
+   
+{{ form_end(form) }}
+</div>

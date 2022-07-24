@@ -91,9 +91,15 @@ class FacturaRepository extends ServiceEntityRepository
             if($factura->getCufe()==''|| $factura->getCufe()==null){
                 
                 $reportar ='<button type="button" id="reportar'.$factura->getId().'" class="btn" onclick="Reportar(' . $factura->getId() . ');"title="Reportar Dian"><img src="/assets/images/facturas/dian.png" height="30px" width="30px"></button>';
-        
-                $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/factura/'.$factura->getId().'/edit"><span class="fas fa-pencil-alt"></span></a>';
+                
+                if($factura->getTipoFactura()=='FACTURA_VENTA'){
 
+                    $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/factura/'.$factura->getId().'/edit"><span class="fas fa-pencil-alt"></span></a>';
+
+                }else{
+                    $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/factura_simple/'.$factura->getId().'/edit"><span class="fas fa-pencil-alt"></span></a>';
+                }
+               
                 if($factura->getRespuestaDian()!='' ||$factura->getRespuestaDian()!=null){
                     $actions.='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onClick="verErrores('.$factura->getId().');" title="Ver respuesta Dian">
                          <i class="fas fa-code text-success" ></i>
