@@ -280,6 +280,12 @@ class EnvioController extends AbstractController
     {
         $form = $this->createForm(EnvioType::class, $envio);
         $form->handleRequest($request);
+        
+        if($request->query->get('url')){
+            $url = $request->query->get('url');
+        }else{
+            $url = 'app_envio_index';
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
@@ -288,12 +294,13 @@ class EnvioController extends AbstractController
                 'Envio Actualizado Correctamente'
             );
 
-            return $this->redirectToRoute('app_integracion_dhl', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute($url, [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('envio/edit.html.twig', [
             'envio' => $envio,
             'form' => $form,
+            'url'  =>$url,
         ]);
     }
 

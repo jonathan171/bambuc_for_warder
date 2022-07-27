@@ -218,7 +218,8 @@ class IntegracionController extends AbstractController
                 'notice',
                 'Envío Guardado Correctamente'
             );
-            return $this->redirect('/envio/'.$envio->getId().'/edit');
+            return $this->redirectToRoute('app_envio_edit', ['id'=>$envio->getId(),'url'=>'app_integracion_dhl'], Response::HTTP_SEE_OTHER);
+            
          
 
         }
