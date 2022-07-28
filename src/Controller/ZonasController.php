@@ -15,7 +15,11 @@ class ZonasController extends AbstractController
 {
     #[Route('/', name: 'app_zonas_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $zonas = $entityManager
             ->getRepository(Zonas::class)
             ->findAll();
@@ -55,7 +59,11 @@ class ZonasController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_zonas_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Zonas $zona, EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $form = $this->createForm(ZonasType::class, $zona);
         $form->handleRequest($request);
 

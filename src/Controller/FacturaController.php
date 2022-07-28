@@ -33,7 +33,9 @@ class FacturaController extends AbstractController
     #[Route('/', name: 'app_factura_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
-       
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         return $this->render('factura/index.html.twig', [
             
@@ -42,7 +44,11 @@ class FacturaController extends AbstractController
 
     #[Route('/new', name: 'app_factura_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $factura = new Factura();
         $condicionPago = $entityManager
             ->getRepository(CondicionPago::class)
@@ -180,7 +186,11 @@ class FacturaController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_factura_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Factura $factura, EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $form = $this->createForm(FacturaType::class, $factura);
         $form->handleRequest($request);
 

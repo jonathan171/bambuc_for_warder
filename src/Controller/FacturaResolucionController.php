@@ -15,7 +15,11 @@ class FacturaResolucionController extends AbstractController
 {
     #[Route('/', name: 'app_factura_resolucion_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $facturaResolucions = $entityManager
             ->getRepository(FacturaResolucion::class)
             ->findAll();
@@ -27,7 +31,11 @@ class FacturaResolucionController extends AbstractController
 
     #[Route('/new', name: 'app_factura_resolucion_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $facturaResolucion = new FacturaResolucion();
         $form = $this->createForm(FacturaResolucionType::class, $facturaResolucion);
         $form->handleRequest($request);
@@ -55,7 +63,11 @@ class FacturaResolucionController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_factura_resolucion_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, FacturaResolucion $facturaResolucion, EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $form = $this->createForm(FacturaResolucionType::class, $facturaResolucion);
         $form->handleRequest($request);
 

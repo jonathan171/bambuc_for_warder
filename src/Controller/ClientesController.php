@@ -21,6 +21,10 @@ class ClientesController extends AbstractController
     #[Route('/', name: 'app_clientes_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $clientes = $entityManager
             ->getRepository(Clientes::class)
             ->findAll();
@@ -91,6 +95,10 @@ class ClientesController extends AbstractController
     #[Route('/new', name: 'app_clientes_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $cliente = new Clientes();
 
         $municipio = $entityManager->getRepository(Municipio::class)->find(2);
@@ -124,7 +132,11 @@ class ClientesController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_clientes_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Clientes $cliente, EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $form = $this->createForm(ClientesType::class, $cliente);
         $form->handleRequest($request);
 

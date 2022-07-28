@@ -22,7 +22,11 @@ class IntegracionController extends AbstractController
 {
     #[Route('/', name: 'app_integracion_index')]
     public function index(Request $request): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         return $this->render('integracion/index.html.twig', [
             'controller_name' => 'IntegracionController',
         ]);
@@ -31,7 +35,10 @@ class IntegracionController extends AbstractController
     #[Route('/dhl', name: 'app_integracion_dhl', methods: ['GET', 'POST'])]
     public function dhl(Request $request, EntityManagerInterface $entityManager): Response
     {
-
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         return $this->render('integracion/dhl.html.twig', [
             'controller_name' => 'IntegracionController',
         ]);

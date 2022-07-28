@@ -16,7 +16,11 @@ class TarifasConfiguracionController extends AbstractController
 {
     #[Route('/', name: 'app_tarifas_configuracion_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $tarifasConfiguracions = $entityManager
             ->getRepository(TarifasConfiguracion::class)
             ->findAll();
@@ -28,7 +32,11 @@ class TarifasConfiguracionController extends AbstractController
 
     #[Route('/new', name: 'app_tarifas_configuracion_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $tarifasConfiguracion = new TarifasConfiguracion();
         $form = $this->createForm(TarifasConfiguracionType::class, $tarifasConfiguracion);
         $form->handleRequest($request);
@@ -56,7 +64,11 @@ class TarifasConfiguracionController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_tarifas_configuracion_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, TarifasConfiguracion $tarifasConfiguracion, EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $form = $this->createForm(TarifasConfiguracionType::class, $tarifasConfiguracion);
         $form->handleRequest($request);
 

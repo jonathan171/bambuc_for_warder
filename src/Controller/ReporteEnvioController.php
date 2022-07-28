@@ -20,7 +20,11 @@ class ReporteEnvioController extends AbstractController
 {
     #[Route('/reporte_envio', name: 'app_reporte_envio')]
     public function index(): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         return $this->render('reporte_envio/index.html.twig', [
             'controller_name' => 'ReporteEnvioController',
         ]);

@@ -23,7 +23,9 @@ class EnvioController extends AbstractController
     #[Route('/', name: 'app_envio_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
-
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         return $this->render('envio/index.html.twig', []);
     }
@@ -219,6 +221,9 @@ class EnvioController extends AbstractController
     #[Route('/listado_envios', name: 'app_envio_listado_envios', methods: ['GET', 'POST'])]
     public function listadoEnvios(Request $request, EntityManagerInterface $entityManager): Response
     {
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $shearch = '%' . $request->request->get('envia') . '%';
         $query = $entityManager->getRepository(Envio::class)->createQueryBuilder('e');
@@ -249,7 +254,11 @@ class EnvioController extends AbstractController
 
     #[Route('/new', name: 'app_envio_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $envio = new Envio();
         $form = $this->createForm(EnvioType::class, $envio);
         $form->handleRequest($request);
@@ -277,7 +286,10 @@ class EnvioController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_envio_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Envio $envio, EntityManagerInterface $entityManager): Response
-    {
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $form = $this->createForm(EnvioType::class, $envio);
         $form->handleRequest($request);
         
