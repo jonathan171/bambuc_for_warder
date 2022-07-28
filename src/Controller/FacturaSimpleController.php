@@ -94,7 +94,7 @@ class FacturaSimpleController extends AbstractController
             $factura->setTotalReteIva($factura->getTotalIva() * ($factura->getReteIva() / 100));
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_factura_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_factura_simple_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
         }
         $items = $entityManager->getRepository(FacturaItems::class)->createQueryBuilder('fi')
             ->andWhere('fi.facturaClientes = :val')
