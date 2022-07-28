@@ -12,7 +12,7 @@
 {% block body %}
     <h1>Editar Factura</h1>
 
-    {{ include('factura/_form.html.twig', {'button_label': 'Actualizar'}) }}
+    {{ include('factura_simple/_form.html.twig', {'button_label': 'Actualizar'}) }}
 
     <h2> Items de Factura</h2>
 
@@ -167,7 +167,10 @@
      <div class="col-sm-12 col-lg-4">
          <input class="form-control" type="text" id="totalFactura" value="{{factura.total - (factura.totalReteIca + factura.totalReteIva + factura.totalReteFuenteG + factura.descuento)}}" disabled="disabled"/>
     </div>
-    
+     <div class="col-sm-12 col-lg-2">
+         <a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_factura?id={{factura.id}}" title="Imprimir"><span class="fas fa-print"></span></a>
+         <a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_factura_index') }}">Terminar</a>
+    </div>
  </div>
 {% endblock %}
 {% block javascripts %} 
