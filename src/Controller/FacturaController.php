@@ -480,7 +480,7 @@ class FacturaController extends AbstractController
 
                 array_push($CuerpoJson['invoice']['retentions'], array(
                     "tax_category" => "RET_FUENTE",
-                    "tax_rate" => $factura->getTotalReteFuente()
+                    "tax_rate" => $factura->getReteFuente()
                 ));
             } else {
 
