@@ -92,6 +92,17 @@ class EnvioController extends AbstractController
             ->getRepository(Envio::class)
             ->find($request->request->get('id'));
 
+            if ($envio->getPesoReal() < 1) {
+                if(fmod($envio->getPesoReal(), 1) != 0.5){
+                    $peso_real = $this->roundUp($envio->getPesoReal(), 0.5);
+                }else{
+                    $peso_real = $envio->getPesoReal();
+                }
+               
+            } else {
+                $peso_real = ceil($envio->getPesoReal());
+            }
+
             $peso_real =  ceil($envio->getPesoReal());
 
 
@@ -127,8 +138,19 @@ class EnvioController extends AbstractController
         $envio = $entityManager
             ->getRepository(Envio::class)
             ->find($request->request->get('id'));
+        
+            if ($envio->getPesoReal() < 1) {
+                if(fmod($envio->getPesoReal(), 1) != 0.5){
+                    $peso_cobrar = $this->roundUp($envio->getPesoReal(), 0.5);
+                }else{
+                    $peso_cobrar = $envio->getTotalPesoCobrar();
+                }
+               
+            } else {
+                $peso_cobrar = ceil($envio->getTotalPesoCobrar());
+            }     
 
-        $peso_cobrar =  ceil($envio->getTotalPesoCobrar());
+       
 
 
         if ($envio->getPaisOrigen()->getCode() == 'CO') {
@@ -262,6 +284,11 @@ class EnvioController extends AbstractController
         $envio = new Envio();
         $form = $this->createForm(EnvioType::class, $envio);
         $form->handleRequest($request);
+        if($request->query->get('url')){
+            $url = $request->query->get('url');
+        }else{
+            $url = 'app_envio_index';
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($envio);
@@ -273,6 +300,7 @@ class EnvioController extends AbstractController
         return $this->renderForm('envio/new.html.twig', [
             'envio' => $envio,
             'form' => $form,
+            'url'  =>$url,
         ]);
     }
 
