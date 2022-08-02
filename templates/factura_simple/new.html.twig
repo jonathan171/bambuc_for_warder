@@ -92,8 +92,7 @@
 
  $( document ).ready(function() {
     function pad(n, width, z) { z = z || '0'; n = n + ''; return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n; }
-     var d = new Date();
-     $("#factura_hora").val(pad(d.getHours(),2)+':'+d.getMinutes());
+    
 });
 
 

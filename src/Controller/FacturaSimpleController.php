@@ -36,6 +36,7 @@ class FacturaSimpleController extends AbstractController
         $hora = new DateTime();
         $factura->setCondDePago($condicionPago);
         $factura->setTipoFactura('FACTURA_VENTA_SIMPLE');
+        $factura->setHora($hora);
 
 
         $form = $this->createForm(FacturaType::class, $factura);
