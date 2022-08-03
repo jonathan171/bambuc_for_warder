@@ -139,9 +139,9 @@ class EnvioController extends AbstractController
             ->getRepository(Envio::class)
             ->find($request->request->get('id'));
         
-            if ($envio->getPesoReal() < 1) {
-                if(fmod($envio->getPesoReal(), 1) != 0.5){
-                    $peso_cobrar = $this->roundUp($envio->getPesoReal(), 0.5);
+            if ($envio->getTotalPesoCobrar() < 1) {
+                if(fmod($envio->getTotalPesoCobrar(), 1) != 0.5){
+                    $peso_cobrar = $this->roundUp($envio->getTotalPesoCobrar(), 0.5);
                 }else{
                     $peso_cobrar = $envio->getTotalPesoCobrar();
                 }
