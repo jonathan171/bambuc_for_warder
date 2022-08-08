@@ -81,6 +81,9 @@ class EnvioRepository extends ServiceEntityRepository
             if ($item->getVerificado()) {
                 $actions .= '<button class="btn btn-success"> <i class="fas fa-check" ></i></button>';
             }
+            if ($item->getFacturado()) {
+                $actions .= '<button class="btn btn-warning"> <i class="fa fa-window-close" ></i></button>';
+            }
             $list[] = [
                 'numeroEnvio' => $item->getNumeroEnvio(),
                 'totalPesoCobrar' => $item->getTotalPesoCobrar(),
@@ -127,6 +130,9 @@ class EnvioRepository extends ServiceEntityRepository
 
             if ($item->getVerificado()) {
                 $actions .= '<button class="btn btn-success"> <i class="fas fa-check" ></i></button>';
+            }
+            if ($item->getFacturado()) {
+                $actions .= '<button class="btn btn-warning"> <i class="fa fa-window-close" ></i></button>';
             }
 
             $list[] = [
