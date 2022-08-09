@@ -688,6 +688,8 @@ class FacturaController extends AbstractController
 
                 if ($respuestaServerMetodoGet1['invoice']['dian_status'] != 'DIAN_ACEPTADO') {
                     $uuid = $respuestaServerMetodoGet1['invoice']['uuid'];
+                    echo 'hola';
+                    die();
 
                     try {
                         $client = new  GuzzleHttp\Client();
