@@ -664,12 +664,10 @@ class FacturaController extends AbstractController
 
               
 
-                $cuerpo = '{
-                    "actions": {
-                    "send_dian": true,
-                    "send_email": false
-                    }
-                }';
+                $cuerpo['actions']['send_dian'] = true;
+                $cuerpo['actions']['send_email'] = false;
+                
+                
 
 
 
@@ -688,14 +686,13 @@ class FacturaController extends AbstractController
 
                 if ($respuestaServerMetodoGet1['invoice']['dian_status'] != 'DIAN_ACEPTADO') {
                     $uuid = $respuestaServerMetodoGet1['invoice']['uuid'];
-                    echo 'hola';
-                    die();
+                    
 
                     try {
                         $client = new  GuzzleHttp\Client();
                         $guzzleResult = $client->put('https://api.dataico.com/direct/dataico_api/v2/invoices/' . $uuid, [
                             'headers' => $headers,
-                            'boby' => $cuerpo,
+                            'boby' => json_encode($cuerpo),
                         ]);
                     } catch (\GuzzleHttp\Exception\RequestException $e) {
                         $guzzleResult = $e->getResponse();
