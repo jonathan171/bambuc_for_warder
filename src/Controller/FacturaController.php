@@ -667,8 +667,7 @@ class FacturaController extends AbstractController
                 $action['actions']['send_dian'] = true;
                 $action['actions']['send_email'] = false;
                 
-                $cuerpo = array();
-                array_push($cuerpo, $action);
+              
 
 
 
@@ -693,7 +692,7 @@ class FacturaController extends AbstractController
                         $client = new  GuzzleHttp\Client();
                         $guzzleResult = $client->put('https://api.dataico.com/direct/dataico_api/v2/invoices/' . $uuid, [
                             'headers' => $headers,
-                            'boby' => json_encode($cuerpo),
+                            'body' => json_encode($cuerpo),
                         ]);
                     } catch (\GuzzleHttp\Exception\RequestException $e) {
                         $guzzleResult = $e->getResponse();
