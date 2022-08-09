@@ -93,8 +93,8 @@ class ClientesRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('c');
         if($options['search']){
             $shearch = '%'.$options['search'].'%';
-            $query ->andWhere('c.razonSocial like :val OR  OR c.nit like :val')
-            ->setParameters(['val'=>$shearch]);
+            $query ->where('c.razonSocial like :val  OR c.nit like :val')
+            ->setParameter('val',$shearch);
         }
        
         $query->getQuery();

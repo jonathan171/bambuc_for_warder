@@ -98,13 +98,12 @@ class FacturaController extends AbstractController
         Request $request,
         ClientesRepository $clienteRepository
     ) {
-        $busqueda = $request->request->get('term');
+        $busqueda = $request->query->get('term');
 
 
 
         $start = 0;
         $length = 20;
-
 
 
         $data_table  = $clienteRepository->findByDataShearch([
