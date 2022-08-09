@@ -9,3 +9,30 @@
 
     
 {% endblock %}
+
+{% block javascripts %} 
+
+<script>
+
+$('#envio_numeroEnvio').keyup(function(){
+        
+         $.ajax({
+            url : '{{ path('app_envio_buscar_codigo')}}',
+            data : { val : $('#envio_numeroEnvio').val()},
+            type : 'POST',
+            dataType : 'json',
+            success : function(json) {
+
+                console.log(json);
+                if(json.envio){
+                     alert('Ya existe un envio con este mismo número de envio');
+                }
+                },
+        error : function(xhr, status) {
+            alert('Disculpe, existió un problema');
+        }
+            });
+        });
+
+</script>
+{% endblock %}

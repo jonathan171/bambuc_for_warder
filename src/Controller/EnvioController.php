@@ -84,6 +84,24 @@ class EnvioController extends AbstractController
         return $this->json($costo);
     }
 
+    #[Route('/buscarCodigo', name: 'app_envio_buscar_codigo', methods: ['GET', 'POST'])]
+    public function buscarCodigo(Request $request, EntityManagerInterface $entityManager): Response
+    {
+
+        $envio =  $entityManager->getRepository(Envio::class)->findOneBy(['numeroEnvio'=> $request->request->get('val')]);
+
+
+        if($envio){
+            $e_envio = array('envio' => $envio->getId());
+
+
+            return $this->json($e_envio);
+        }
+        $e_envio = array('envio' => '');
+
+        
+        return $this->json($e_envio);
+    }
     #[Route('/actualizar_valor_especial_real', name: 'app_envio_actualizar_valor_especial_real', methods: ['GET', 'POST'])]
     public function actualizarvalorEspecialReal(Request $request, EntityManagerInterface $entityManager, TarifasRepository $tarifasRepository,  PaisZonaRepository $paisZonaRepository): Response
     {
