@@ -698,6 +698,8 @@ class FacturaController extends AbstractController
                         $guzzleResult = $e->getResponse();
                     }
                 }
+                echo $guzzleResult->getBody()->getContents();
+                die();
 
                 try {
                     $client = new  GuzzleHttp\Client();
