@@ -664,10 +664,11 @@ class FacturaController extends AbstractController
 
               
 
-                $cuerpo['actions']['send_dian'] = true;
-                $cuerpo['actions']['send_email'] = false;
+                $action['actions']['send_dian'] = true;
+                $action['actions']['send_email'] = false;
                 
-                
+                $cuerpo = array();
+                array_push($cuerpo, $action);
 
 
 
