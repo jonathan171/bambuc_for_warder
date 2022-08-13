@@ -27,6 +27,15 @@
     </table>
     </div>
 </div>
+<div id="verEnvio" title="Envio" style="display:none;width:800px;height:500px;" >
+
+    <div class="input-group">
+    </div>
+
+    <div id="diverEnvio" >
+    </div>
+
+</div>  
 {% endblock %}
 {% block javascripts %} 
 <script>
@@ -62,6 +71,15 @@
             order: [[ 0, "desc" ]]
         });
    });
-    
+    function verEnvio(idEnvio) {
+
+        ParaEnvio = '/envio/'+idEnvio+'/mostrar';
+
+
+        $('#diverEnvio').load(ParaEnvio, {});
+
+        $("#verEnvio").dialog({ width: 800, height: 500});
+
+    }
 </script>   
 {% endblock %}

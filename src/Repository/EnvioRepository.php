@@ -129,8 +129,8 @@ class EnvioRepository extends ServiceEntityRepository
         $list = [];
         foreach ($paginator as $item) {
 
-            $actions = '<a  class="btn waves-effect waves-light btn-info" href="/envio/' . $item->getId() . '/edit">editar</a>';
-
+            $actions = '<a  class="btn waves-effect waves-light btn-info" href="/envio/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
+            $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envio/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')"><i class="fas fa-trash-alt"></i></a>';
             if ($item->getVerificado()) {
                 $actions .= '<button class="btn btn-success"> <i class="fas fa-check" ></i></button>';
             }
@@ -138,7 +138,7 @@ class EnvioRepository extends ServiceEntityRepository
                 $actions .= '<button class="btn btn-warning"> <i class="fa fa-window-close" ></i></button>';
             }
             $actions.='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onClick="verEnvio('.$item->getId().');" title="Ver Envio">
-                         <i class="fas fa-code text-success" ></i>
+                         <i class="fa fa-eye text-success" ></i>
                      </a>';
 
             $list[] = [
