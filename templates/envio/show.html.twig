@@ -1,9 +1,7 @@
-{% extends 'base.html.twig' %}
 
-{% block title %}Envio{% endblock %}
 
 {% block body %}
-    <h1>Envio</h1>
+    <h1>Envio {{ envio.numeroEnvio }}</h1>
 
     <table class="table">
         <tbody>
@@ -20,67 +18,64 @@
                 <td>{{ envio.estado }}</td>
             </tr>
             <tr>
-                <th>NumeroOrden</th>
-                <td>{{ envio.numeroOrden }}</td>
+                <th>Numero Envio</th>
+                <td>{{ envio.numeroEnvio }}</td>
             </tr>
             <tr>
                 <th>Descripcion</th>
                 <td>{{ envio.descripcion }}</td>
             </tr>
             <tr>
-                <th>TotalPesoEstimado</th>
-                <td>{{ envio.totalPesoEstimado }}</td>
+                <th>Peso Estimado</th>
+                <td>{{ envio.pesoEstimado }}</td>
             </tr>
             <tr>
-                <th>TotalPesoReal</th>
-                <td>{{ envio.totalPesoReal }}</td>
+                <th>PesoReal</th>
+                <td>{{ envio.pesoReal }}</td>
+            </tr>
+            
+            <tr>
+                <th>Total Peso Cobrar</th>
+                <td>{{ envio.totalPesoCobrar }}</td>
             </tr>
             <tr>
-                <th>TotalDimencional</th>
-                <td>{{ envio.totalDimencional }}</td>
-            </tr>
-            <tr>
-                <th>TotalCostoPrevisto</th>
-                <td>{{ envio.totalCostoPrevisto }}</td>
-            </tr>
-            <tr>
-                <th>TotalCostoReal</th>
-                <td>{{ envio.totalCostoReal }}</td>
-            </tr>
-            <tr>
-                <th>TotalACobrar</th>
+                <th>Total A Cobrar</th>
                 <td>{{ envio.totalACobrar }}</td>
             </tr>
+             <tr>
+                <th>Pais Origen</th>
+                <td>{{ envio.paisOrigen.nombre }}</td>
+            </tr>
+             <tr>
+                <th>Pais Destino</th>
+                <td>{{ envio.paisDestino.nombre }}</td>
+            </tr>
+             <tr>
+                <th>Quien Envia</th>
+                <td>{{ envio.quienEnvia }}</td>
+            </tr>
+             <tr>
+                <th>Quien Recibe</th>
+                <td>{{ envio.quienRecibe }}</td>
+            </tr>
+
             <tr>
-                <th>FechaEstimadaEntrega</th>
+                <th>Fecha Estimada Entrega</th>
                 <td>{{ envio.fechaEstimadaEntrega ? envio.fechaEstimadaEntrega|date('Y-m-d') : '' }}</td>
             </tr>
-            <tr>
-                <th>Piezas</th>
-                <td>{{ envio.piezas }}</td>
-            </tr>
+           
             <tr>
                 <th>Empresa</th>
                 <td>{{ envio.empresa }}</td>
             </tr>
-            <tr>
-                <th>CantidadPiezas</th>
-                <td>{{ envio.cantidadPiezas }}</td>
-            </tr>
-            <tr>
-                <th>JsonRecibido</th>
-                <td>{{ envio.jsonRecibido }}</td>
-            </tr>
+           
+           
             <tr>
                 <th>Facturado</th>
-                <td>{{ envio.facturado ? 'Yes' : 'No' }}</td>
+                <td>{{ envio.facturado ? 'Si' : 'No' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_envio_index') }}">back to list</a>
-
-    <a href="{{ path('app_envio_edit', {'id': envio.id}) }}">edit</a>
-
-    {{ include('envio/_delete_form.html.twig') }}
+   
 {% endblock %}

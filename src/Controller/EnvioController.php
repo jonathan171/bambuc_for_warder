@@ -322,7 +322,7 @@ class EnvioController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/mostrar', name: 'app_envio_show', methods: ['GET'])]
+    #[Route('/{id}/mostrar', name: 'app_envio_show', methods: ['GET', 'POST'])]
     public function show(Envio $envio): Response
     {
         return $this->render('envio/show.html.twig', [

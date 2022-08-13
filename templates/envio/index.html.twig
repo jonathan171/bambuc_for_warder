@@ -39,7 +39,15 @@
 <div class="col-lg-2">
   <a class="justify-content-center w-100 btn btn-success d-flex align-items-center" href="{{ path('app_envio_new') }}">Nuevo Envio</a>
 </div>
-  
+<div id="verEnvio" title="Envio" style="display:none;width:800px;height:500px;" >
+
+    <div class="input-group">
+    </div>
+
+    <div id="diverEnvio" >
+    </div>
+
+</div>  
 {% endblock %}
 {% block javascripts %} 
 <script>
@@ -74,5 +82,15 @@
         });
    });
     
+    function verEnvio(idEnvio) {
+
+        ParaEnvio = '/envio/'+idEnvio+'/mostrar';
+
+
+        $('#diverEnvio').load(ParaEnvio, {});
+
+        $("#verEnvio").dialog({ width: 800, height: 500});
+
+    }
 </script>   
 {% endblock %}
