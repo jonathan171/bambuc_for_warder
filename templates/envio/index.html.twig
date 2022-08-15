@@ -82,6 +82,7 @@
         });
    });
     
+   
     function verEnvio(idEnvio) {
 
         ParaEnvio = '/envio/'+idEnvio+'/mostrar';
@@ -90,6 +91,13 @@
         $('#diverEnvio').load(ParaEnvio, {});
 
         $("#verEnvio").dialog({ width: 800, height: 500});
+
+    }
+    function ocultarEnvio(idEnvio) {
+
+        
+
+        $("#verEnvio").dialog('close');
 
     }
 </script>   
