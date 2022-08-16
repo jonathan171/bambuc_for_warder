@@ -100,5 +100,24 @@
         $("#verEnvio").dialog('close');
 
     }
+    function verificar(id){
+       $('#verificar'+id).hide();
+       $.ajax({
+        url : '{{ path('app_envio_verificar')}}',
+        data : { id : id},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+         alertify.success('Envio Verificado correctamente');
+        location.reload();
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    }
 </script>   
 {% endblock %}

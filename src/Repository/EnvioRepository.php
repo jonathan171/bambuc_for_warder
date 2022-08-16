@@ -80,6 +80,8 @@ class EnvioRepository extends ServiceEntityRepository
             $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envio/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')"><i class="fas fa-trash-alt"></i></a>';
             if ($item->getVerificado()) {
                 $actions .= '<button class="btn btn-success"> <i class="fas fa-check" ></i></button>';
+            }else {
+                $actions .= '<button class="btn btn-secondary" id="verificar'.$item->getId().'" onClick="verificar('.$item->getId().');"> <i class="fas fa-check" ></i></button>';
             }
             if ($item->getFacturado()) {
                 $actions .= '<button class="btn btn-warning"> <i class="fa fa-window-close" ></i></button>';
