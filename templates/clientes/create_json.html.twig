@@ -1,0 +1,88 @@
+
+<div class="card-body">
+{{ form_start(form,{'attr': {'id': 'form_clientes'}}) }}
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Razon social</label>
+            <div class="col-sm-9">
+              {{form_widget(form.razonSocial) }}
+            </div> 
+    </div>
+     <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Tipo documento</label>
+            <div class="col-sm-9">
+              {{form_widget(form.tipoDocumento) }}
+            </div> 
+    </div>
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">N°</label>
+            <div class="col-sm-9">
+              {{form_widget(form.nit) }}
+            </div> 
+    </div>
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Municipio</label>
+            <div class="col-sm-9">
+              {{form_widget(form.municipio) }}
+            </div> 
+    </div>
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Dirección</label>
+            <div class="col-sm-9">
+              {{form_widget(form.direccion) }}
+            </div> 
+    </div>
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Teléfono</label>
+            <div class="col-sm-9">
+              {{form_widget(form.telefono) }}
+            </div> 
+    </div>
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Correo</label>
+            <div class="col-sm-9">
+              {{form_widget(form.correo) }}
+            </div> 
+    </div>
+     <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Tipo persona</label>
+            <div class="col-sm-9">
+              {{form_widget(form.tipoReceptor) }}
+            </div> 
+    </div>
+     <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Régimen </label>
+            <div class="col-sm-9">
+              {{form_widget(form.regimen) }}
+            </div> 
+    </div>
+     <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Obligación</label>
+            <div class="col-sm-9">
+              {{form_widget(form.taxLevelCode) }}
+            </div> 
+    </div>
+     <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Nombres</label>
+            <div class="col-sm-9">
+              {{form_widget(form.nombres) }}
+            </div> 
+    </div>
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">Apellidos</label>
+            <div class="col-sm-9">
+              {{form_widget(form.apellidos) }}
+            </div> 
+    </div>
+    {{ form_rest(form) }}
+    <div class="p-3">
+            <div class="form-group text-end">
+            <button  type="button" class="btn btn-info rounded-pill px-4 waves-effect waves-light" onclick="validarCliente()">{{ button_label|default('Guardar') }}</button>
+            
+            </div>
+    </div>
+{{ form_end(form) }}
+</div>
+<script>
+     $("#clientes_municipio").select2();
+     
+</script>

@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+{% import "macros/select2.html.twig" as macroselect2 %}
+{% block stylesheets %}
+{{ macroselect2.styleSelect2}}
+{% endblock %}
+{% block title %}Nueva Remision{% endblock %}
+
+{% block body %}
+    <h1>Nueva Remision</h1>
+
+    {{ include('envios_nacionales/_form.html.twig') }}
+
+    
+{% endblock %}
+{% block javascripts %} 
+{{ macroselect2.scriptSelect2}}
+<script>
+  $("#envios_nacionales_municipioOrigen").select2();
+  $("#envios_nacionales_municipioDestino").select2();
+
+ $(function () { 
+
+     function formatResult (item) {
+            
+
+            var html = [
+                '<div>',
+                    item.text + " <b>" + " (" + item.tipo_documento + " " + item.numero_identificacion + ")" + "</b>",
+                '</div>'
+            ];
+
+            var $state = $(html.join(""));
+
+            return $state;
+        };
+    
+
+       var currentQuery = "";
+
+        $("#input-buscador-clientes").select2({
+            width: '100%',
+             //theme: "bootstrap4",
+             minimumInputLength: 2,
+             delay: 200,
+             placeholder: "Ingrese un término de búsqueda aquí p. ej. número de identificación",
+            ajax: {
+                url: '/factura/buscadorAjaxCliente',
+                dataType: 'json'
+            },
+            templateResult: formatResult
+        }).on('select2:select', function (e) {
+            var data = e.params.data;
+            
+            $('#envios_nacionales_cliente').val(data.id);
+            $('#lblcliente').html(data.text);
+            
+        }).on('select2:open', function() {
+            $('.select2-search input').focus().val(currentQuery).trigger('input');
+        }).on('select2:closing', function() {
+            currentQuery = $('.select2-search input').prop('value');
+        });
+     
+ });
+
+   function CrearCliente()
+        {  
+            
+                 ParaClientes = '{{ path('app_clientes_create_json')}}';
+                 $('#divcliente').load(ParaClientes);
+                 $("#clientes").dialog({ width: 800, height: 500});
+            
+
+
+        }
+      function validarCliente(){
+        if($('#clientes_razonSocial').val()!='' && $('#clientes_razonSocial').val()!= null ){
+            if($('#clientes_nit').val()!='' && $('#clientes_nit').val()!= null ){
+                if($('#clientes_direccion').val()!='' && $('#clientes_direccion').val()!= null ){
+                       if($('#clientes_telefono').val()!='' && $('#clientes_telefono').val()!= null ){
+                            if($('#clientes_correo').val()!='' && $('#clientes_correo').val()!= null ){
+                                if($('#clientes_tipoReceptor').val()=='PERSONA_NATURAL'){
+
+                                        if(($('#clientes_nombres').val() ==''|| $('#clientes_nombres').val() ==null) || ($('#clientes_apellidos').val() ==''|| $('#clientes_apellidos').val() ==null)){
+                                            
+                                            alert( "Por favor ingresa los nombres y apellidos del cliente" );
+                                            
+                                        }else{
+                                           
+                                        const formData = new FormData(document.getElementById("form_clientes"));
+                                        const jsonData = Object.fromEntries(formData);
+                                        guardarCliente(jsonData);
+                                        }
+                                }else{
+                                    const formData = new FormData(document.getElementById("form_clientes"));
+                                    const jsonData = JObject.fromEntries(formData);
+                                    guardarCliente(jsonData);
+            
+                                }
+
+                            }else{
+                                     alert( "Por favor ingrese un correo" );
+                                } 
+
+                        }else{
+                            alert( "Por favor ingrese un telefono" );
+                            } 
+
+                    }else{
+                        alert( "Por favor ingrese una dirección" );
+                        }
+
+            }else{
+                         alert( "Por favor ingrese número de documento" );
+                        }
+
+        }else{
+             alert( "Por favor ingrese una Razon social" );
+           }
+
+  
+     }
+ function guardarCliente(form){
+        $.ajax({
+        url : '{{ path('app_envios_nacionales_create_cliente')}}',
+        data : form,
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+            $('#envios_nacionales_cliente').val(json.id);
+            $('#lblcliente').html(json.razon_social);
+            $("#clientes").dialog('close');
+
+        alert('cliente Guardado Correctamente');
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+ }
+      
+</script>
+{% endblock %}

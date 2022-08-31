@@ -1,0 +1,251 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Remision{% endblock %}
+{% import "macros/select2.html.twig" as macroselect2 %}
+{% block stylesheets %}
+{{ macroselect2.styleSelect2}}
+{% endblock %}
+{% block body %}
+    <h1>Editar Remision</h1>
+
+    {{ include('envios_nacionales/_form.html.twig', {'button_label': 'Actualizar'}) }}
+ <h2> Unidades </h2>
+    {% for unidad in unidades %} 
+  <div class="row" id="{{unidad.id}}">
+    <div class="col-sm-12 col-lg-1">
+      <label class="col-sm-12">Peso</label>
+       <br>
+       <br>
+      <input class="form-control" type="number" id="peso{{unidad.id}}" value="{{unidad.peso}}"  onkeyup="ActualizarUnidades({{unidad.id}})" />
+    </div>
+    <div class="col-sm-12 col-lg-2">
+    <label class="col-sm-12">valor declarado</label>
+       <br>
+       <br>
+       <input class="form-control" type="number" id="valor_declarado{{unidad.id}}" value="{{unidad.valorDeclarado}}"  onkeyup="ActualizarUnidades({{unidad.id}})" />
+    </div>
+    <div class="col-sm-12 col-lg-2">
+        <label class="col-sm-12">número Referencia</label>
+        <br>
+        <br>
+        <input class="form-control" type="number" id="numero_referencia{{unidad.id}}" value="{{unidad.numeroReferencia}}" disabled="disabled" />
+    </div>
+     <div class="col-sm-12 col-lg-2">
+    <label class="col-sm-12">largo</label>
+       <br>
+       <br>
+        <input class="form-control" type="number" id="largo{{unidad.id}}" value="{{unidad.largo}}" onkeyup="ActualizarUnidades({{unidad.id}})" />
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">alto</label>
+        <br>
+        <br>
+        <input class="form-control" type="text" id="alto{{unidad.id}}" value="{{unidad.alto}}"  onkeyup="ActualizarUnidades({{unidad.id}})"/>
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">ancho</label>
+        <br>
+        <br>
+        <input class="form-control" type="text" id="ancho{{unidad.id}}" value="{{unidad.ancho}}"  onkeyup="ActualizarUnidades({{unidad.id}})"/>
+    </div>
+    <div class="col-sm-12 col-lg-2">
+        <label class="col-sm-12">N° Guia</label>
+        <br>
+        <br>
+        <input class="form-control" type="text" id="numero_guia{{unidad.id}}" value="{{unidad.numeroGuia}}"  onkeyup="ActualizarUnidades({{unidad.id}})"/>
+    </div>
+    
+    <div class="col-sm-12 col-lg-1">
+        <form method="post" action="{{ path('app_envios_nacionales_item_delete', {'id': unidad.id}) }}" onsubmit="return confirm('Estas seguro de borrar esta factura?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ unidad.id) }}">
+            <button class="btn waves-effect waves-light btn-danger"><span class="fas fa-trash-alt"></span></button>
+        </form>
+    </div>
+  </div>
+   {%  endfor %}
+{% endblock %}
+{% block javascripts %} 
+{{ macroselect2.scriptSelect2}}
+<script>
+  $("#envios_nacionales_municipioOrigen").select2();
+  $("#envios_nacionales_municipioDestino").select2();
+
+ $(function () { 
+
+     function formatResult (item) {
+            
+
+            var html = [
+                '<div>',
+                    item.text + " <b>" + " (" + item.tipo_documento + " " + item.numero_identificacion + ")" + "</b>",
+                '</div>'
+            ];
+
+            var $state = $(html.join(""));
+
+            return $state;
+        };
+    
+
+       var currentQuery = "";
+
+        $("#input-buscador-clientes").select2({
+            width: '100%',
+             //theme: "bootstrap4",
+             minimumInputLength: 2,
+             delay: 200,
+             placeholder: "Ingrese un término de búsqueda aquí p. ej. número de identificación",
+            ajax: {
+                url: '/factura/buscadorAjaxCliente',
+                dataType: 'json'
+            },
+            templateResult: formatResult
+        }).on('select2:select', function (e) {
+            var data = e.params.data;
+            
+            $('#envios_nacionales_cliente').val(data.id);
+            $('#lblcliente').html(data.text);
+            
+        }).on('select2:open', function() {
+            $('.select2-search input').focus().val(currentQuery).trigger('input');
+        }).on('select2:closing', function() {
+            currentQuery = $('.select2-search input').prop('value');
+        });
+     
+ });
+
+   function CrearCliente()
+        {  
+            
+                 ParaClientes = '{{ path('app_clientes_create_json')}}';
+                 $('#divcliente').load(ParaClientes);
+                 $("#clientes").dialog({ width: 800, height: 500});
+            
+
+
+        }
+      function validarCliente(){
+        if($('#clientes_razonSocial').val()!='' && $('#clientes_razonSocial').val()!= null ){
+            if($('#clientes_nit').val()!='' && $('#clientes_nit').val()!= null ){
+                if($('#clientes_direccion').val()!='' && $('#clientes_direccion').val()!= null ){
+                       if($('#clientes_telefono').val()!='' && $('#clientes_telefono').val()!= null ){
+                            if($('#clientes_correo').val()!='' && $('#clientes_correo').val()!= null ){
+                                if($('#clientes_tipoReceptor').val()=='PERSONA_NATURAL'){
+
+                                        if(($('#clientes_nombres').val() ==''|| $('#clientes_nombres').val() ==null) || ($('#clientes_apellidos').val() ==''|| $('#clientes_apellidos').val() ==null)){
+                                            
+                                            alert( "Por favor ingresa los nombres y apellidos del cliente" );
+                                            
+                                        }else{
+                                           
+                                        const formData = new FormData(document.getElementById("form_clientes"));
+                                        const jsonData = Object.fromEntries(formData);
+                                        guardarCliente(jsonData);
+                                        }
+                                }else{
+                                    const formData = new FormData(document.getElementById("form_clientes"));
+                                    const jsonData = JObject.fromEntries(formData);
+                                    guardarCliente(jsonData);
+            
+                                }
+
+                            }else{
+                                     alert( "Por favor ingrese un correo" );
+                                } 
+
+                        }else{
+                            alert( "Por favor ingrese un telefono" );
+                            } 
+
+                    }else{
+                        alert( "Por favor ingrese una dirección" );
+                        }
+
+            }else{
+                         alert( "Por favor ingrese número de documento" );
+                        }
+
+        }else{
+             alert( "Por favor ingrese una Razon social" );
+           }
+
+  
+     }
+ function guardarCliente(form){
+        $.ajax({
+        url : '{{ path('app_envios_nacionales_create_cliente')}}',
+        data : form,
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+            $('#envios_nacionales_cliente').val(json.id);
+            $('#lblcliente').html(json.razon_social);
+            $("#clientes").dialog('close');
+
+        alert('cliente Guardado Correctamente');
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+ }
+ function ActualizarUnidades(item)
+    {
+        ////////////////// obtener los datos de los input ////////////////////
+        var valoresDeUnidadesTotal = [];
+        var valoresDeUnidades = new Array();
+
+        ///////////// trayendo los datos de tipo input /////////////////
+
+        let fila = 0;
+
+
+
+        $("#" + item).find('div').each(function () {
+
+            $(this).find(':input, textarea').each(function () {
+                var elemento = this;
+
+                var datoDeForeach = {nombre: elemento.id, valor: elemento.value};
+
+                valoresDeUnidades.push(datoDeForeach);
+
+            });
+
+        });
+        // $("#total"+imprimir).attr({value:'33'});
+        if (valoresDeUnidades.length > 0)
+        {
+            valoresDeUnidadesTotal[fila] = valoresDeUnidades;
+        }
+        
+        cargarDatosUnidades(JSON.stringify(valoresDeUnidadesTotal),item);
+
+        ///////////// fin trayendo los datos de tipo input ////////////////
+    }
+     function cargarDatosUnidades(datos,id){
+       $.ajax({
+        url : '{{ path('app_envios_nacionales_cargar_items')}}',
+        data :{datos: datos, id:id} ,
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+            
+
+            
+            $("#envios_nacionales_seguro").attr({value: json[1]});
+
+        
+            },
+            error : function(xhr, status) {
+            alert('Disculpe, existió un problema');
+       }
+          });
+
+    };
+      
+</script>
+{% endblock %}

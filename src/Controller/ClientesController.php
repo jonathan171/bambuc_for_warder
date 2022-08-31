@@ -121,6 +121,30 @@ class ClientesController extends AbstractController
             'form' => $form,
         ]);
     }
+    #[Route('/create_json', name: 'app_clientes_create_json', methods: ['GET', 'POST'])]
+    public function createJson(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $cliente = new Clientes();
+
+        $municipio = $entityManager->getRepository(Municipio::class)->find(2);
+       
+        $cliente ->setMunicipio($municipio);
+
+        $form = $this->createForm(ClientesType::class, $cliente);
+       
+        $form->handleRequest($request);
+
+        
+
+        return $this->renderForm('clientes/create_json.html.twig', [
+            'cliente' => $cliente,
+            'form' => $form,
+        ]);
+    }
 
     #[Route('/{id}', name: 'app_clientes_show', methods: ['GET'])]
     public function show(Clientes $cliente): Response
