@@ -67,13 +67,13 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
         $paginator->getQuery()->setFirstResult($pageSize * $currentPage)->setMaxResults($pageSize)->getResult();
         $list = [];
         foreach ($paginator as $item) {
-            $actions = '<a  class="btn waves-effect waves-light btn-info" href="/envios_nacionales/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
+            $actions = '<a  class="btn waves-effect waves-light btn-warning" href="/envios_nacionales/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
            // $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envios_nacionales/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')"><i class="fas fa-trash-alt"></i></a>';
             
-            
-            $actions.='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut ="ocultarEnvio()" title="Ver Envio">
+           $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_remision?id='.$item->getId().'" title="Imprimir"><span class="fas fa-print"></span></a>';
+           /* $actions.='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut ="ocultarEnvio()" title="Ver Envio">
                          <i class="fa fa-eye text-success" ></i>
-                     </a>';
+                     </a>';*/
             $list[] = [
                 'numero' => $item->getNumero(),
                 'valorTotal' => $item->getValorTotal(),
