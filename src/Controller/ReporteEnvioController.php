@@ -54,7 +54,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getCell('F4')->setValue("PESO COBRADO");
         $sheet->getCell('G4')->setValue("DESTINATARIO");
         $sheet->getCell('H4')->setValue("VALOR \n DEL \n ENVÍO");
-        $sheet->getCell('J4')->setValue("FACTURA");
+        $sheet->getCell('I4')->setValue("FACTURA");
 
 
         $styleArray = array(
@@ -71,7 +71,7 @@ class ReporteEnvioController extends AbstractController
                 ),
             ),
         );
-        foreach (range('A', 'H') as $columnID) {
+        foreach (range('A', 'I') as $columnID) {
 
             $sheet->getStyle($columnID . '4')->applyFromArray($styleArray);
         }
@@ -126,7 +126,7 @@ class ReporteEnvioController extends AbstractController
             $sheet->setCellValue("E$cell", $envio->getPaisDestino()->getNombre());
             $sheet->setCellValue("F$cell", $envio->getTotalPesoCobrar());
             $sheet->setCellValue("G$cell", $envio->getQuienRecibe());
-            $sheet->setCellValue("H$cell", $envio->getTotalACobrar());
+            $sheet->setCellValue("I$cell", $envio->getTotalACobrar());
             if($envio->getFacturaItems()){
                 $sheet->setCellValue("J$cell", $envio->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().$envio->getFacturaItems()->getFacturaClientes()->getNumeroFactura());
 
@@ -135,7 +135,7 @@ class ReporteEnvioController extends AbstractController
                 ->getNumberFormat()
                 ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
             $total += $envio->getTotalACobrar();
-            foreach (range('A', 'H') as $columnID) {
+            foreach (range('A', 'I') as $columnID) {
 
                 $sheet->getStyle($columnID . $cell)->applyFromArray($styleArray);
             }
@@ -152,7 +152,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getStyle("A$cell:F$cell")->applyFromArray($styleArray);
         $sheet->getStyle("G$cell")->applyFromArray($styleArray);
         $sheet->getStyle("H$cell")->applyFromArray($styleArray);
-
+        $sheet->getStyle("I$cell")->applyFromArray($styleArray);
 
 
         $sheet->setTitle("Reporte envios");
