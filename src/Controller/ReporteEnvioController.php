@@ -126,9 +126,9 @@ class ReporteEnvioController extends AbstractController
             $sheet->setCellValue("E$cell", $envio->getPaisDestino()->getNombre());
             $sheet->setCellValue("F$cell", $envio->getTotalPesoCobrar());
             $sheet->setCellValue("G$cell", $envio->getQuienRecibe());
-            $sheet->setCellValue("I$cell", $envio->getTotalACobrar());
+            $sheet->setCellValue("H$cell", $envio->getTotalACobrar());
             if($envio->getFacturaItems()){
-                $sheet->setCellValue("J$cell", $envio->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().$envio->getFacturaItems()->getFacturaClientes()->getNumeroFactura());
+                $sheet->setCellValue("I$cell", $envio->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().$envio->getFacturaItems()->getFacturaClientes()->getNumeroFactura());
 
             }
             $sheet->getStyle("H$cell",)
