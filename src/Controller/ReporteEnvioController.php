@@ -54,6 +54,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getCell('F4')->setValue("PESO COBRADO");
         $sheet->getCell('G4')->setValue("DESTINATARIO");
         $sheet->getCell('H4')->setValue("VALOR \n DEL \n ENVÍO");
+        $sheet->getCell('J4')->setValue("FACTURA");
 
 
         $styleArray = array(
@@ -126,6 +127,10 @@ class ReporteEnvioController extends AbstractController
             $sheet->setCellValue("F$cell", $envio->getTotalPesoCobrar());
             $sheet->setCellValue("G$cell", $envio->getQuienRecibe());
             $sheet->setCellValue("H$cell", $envio->getTotalACobrar());
+            if($envio->getFacturaItems()){
+                $sheet->setCellValue("J$cell", $envio->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().$envio->getFacturaItems()->getFacturaClientes()->getNumeroFactura());
+
+            }
             $sheet->getStyle("H$cell",)
                 ->getNumberFormat()
                 ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
