@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Envio;
+use App\Entity\EnviosNacionales;
+use App\Entity\EnviosNacionalesUnidades;
 use App\Entity\Factura;
 use App\Entity\FacturaItems;
 use Doctrine\ORM\EntityManagerInterface;
@@ -221,6 +223,189 @@ class ImpresionController extends AbstractController
         $html = $this->renderView('impresion/medida_envio.html.twig', [
             'Json'  => $jsonEnvio['shipments'][0],
             'envio' => $envio
+        ]);
+
+        // Print text using writeHTMLCell()
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+
+        // ---------------------------------------------------------
+
+        // Close and output PDF document
+        // This method has several options, check the source code documentation for more information.
+        $pdf->Output('medidas_envio.pdf', 'I');
+    }
+
+    #[Route('/impresion_remision', name: 'app_impresion_remision', methods: ['GET'])]
+    public function impresionRemision(Request $request, EntityManagerInterface $entityManager)
+    {
+
+        $remision = $entityManager->getRepository(EnviosNacionales::class)->find($request->query->get('id'));
+
+        // create new PDF document
+        $pdf = new TCPDF('L', PDF_UNIT, 'A5', true, 'UTF-8', false);
+
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Jonathan Cruz');
+        $pdf->SetTitle('Impresion Remisión');
+        $pdf->SetSubject('TCPDF Tutorial');
+        $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+
+        // set default header data
+        // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE . ' 001', PDF_HEADER_STRING, array(0, 64, 255), array(0, 64, 128));
+        $pdf->setFooterData(array(0, 64, 0), array(0, 0, 128));
+
+        // set header and footer fonts
+        $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // set margins
+        $pdf->SetMargins(3, 10, 2);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        // set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+
+
+        // ---------------------------------------------------------
+
+        // set default font subsetting mode
+        $pdf->setFontSubsetting(true);
+
+        // Set font
+        // dejavusans is a UTF-8 Unicode font, if you only need to
+        // print standard ASCII chars, you can use core fonts like
+        // helvetica or times to reduce file size.
+        $pdf->SetFont('Helvetica', '', 9, '', true);
+
+        // Add a page
+        // This method has several options, check the source code documentation for more information.
+        $pdf->SetPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+
+
+        $pdf->AddPage();
+
+        
+
+
+        // set text shadow effect
+        $pdf->setTextShadow(array('enabled' => false, 'depth_w' => 0.2, 'depth_h' => 0.2, 'color' => array(196, 196, 196), 'opacity' => 1, 'blend_mode' => 'Normal'));
+
+        // Set some content to 
+        
+        
+       
+        if($request->query->get('html')){
+
+            return $this->render('impresion/remision.html.twig', [
+                'remision' => $remision,
+            ]);
+        }
+
+        $html = $this->renderView('impresion/remision.html.twig', [
+            'remision' => $remision,
+        ]);
+
+        // Print text using writeHTMLCell()
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+
+        // ---------------------------------------------------------
+
+        // Close and output PDF document
+        // This method has several options, check the source code documentation for more information.
+        $pdf->Output('remision.pdf', 'I');
+    }
+
+    #[Route('/impresion_stiker', name: 'app_impresion_stiker', methods: ['GET'])]
+    public function stiker(Request $request, EntityManagerInterface $entityManager)
+    {
+
+        $unidad = $entityManager->getRepository(EnviosNacionalesUnidades::class)->find($request->query->get('id'));
+        // create new PDF document
+        $pdf = new TCPDF('L', PDF_UNIT, 'A7', true, 'UTF-8', false);
+
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Jonathan Cruz');
+        $pdf->SetTitle('Impresion Stiker');
+        $pdf->SetSubject('TCPDF Tutorial');
+        $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+
+        // set default header data
+        // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE . ' 001', PDF_HEADER_STRING, array(0, 64, 255), array(0, 64, 128));
+        $pdf->setFooterData(array(0, 64, 0), array(0, 0, 128));
+
+        // set header and footer fonts
+        $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // set margins
+        $pdf->SetMargins(2, 2, 2, 0);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        // set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+
+
+        // ---------------------------------------------------------
+
+        // set default font subsetting mode
+        $pdf->setFontSubsetting(true);
+
+        // Set font
+        // dejavusans is a UTF-8 Unicode font, if you only need to
+        // print standard ASCII chars, you can use core fonts like
+        // helvetica or times to reduce file size.
+        $pdf->SetFont('Helvetica', '', 9, '', true);
+
+        // Add a page
+        // This method has several options, check the source code documentation for more information.
+        $pdf->SetPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+
+
+        $pdf->AddPage();
+
+        
+
+
+        // set text shadow effect
+        $pdf->setTextShadow(array('enabled' => false, 'depth_w' => 0.2, 'depth_h' => 0.2, 'color' => array(196, 196, 196), 'opacity' => 1, 'blend_mode' => 'Normal'));
+
+        // Set some content to 
+        
+        
+       
+        if($request->query->get('html')){
+
+            return $this->render('impresion/stiker.html.twig', [
+                'unidad'  => $unidad,
+                'remision' => $unidad->getEnvioNacional()
+            ]);
+        }
+
+        $html = $this->renderView('impresion/stiker.html.twig', [
+            'unidad'  => $unidad,
+            'remision' => $unidad->getEnvioNacional()
         ]);
 
         // Print text using writeHTMLCell()

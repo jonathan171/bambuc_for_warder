@@ -138,6 +138,36 @@ class EnviosNacionalesController extends AbstractController
             'unidades'=> $unidades
         ]);
     }
+
+    #[Route('/{id}/agregar_unidad', name: 'app_envios_nacionales_agregar_unidad', methods: ['GET', 'POST'])]
+    public function agregarUnidad(Request $request, EnviosNacionales $enviosNacionale, EnviosNacionalesRepository $enviosNacionalesRepository,EntityManagerInterface $entityManager): Response
+    {   
+        $numeroQuery = $entityManager->getRepository(EnviosNacionalesUnidades::class)->createQueryBuilder('e')
+                ->orderBy('e.numeroReferencia', 'DESC')
+                ->setMaxResults(1);
+
+            $consulta = $numeroQuery->getQuery()->getOneOrNullResult();
+
+            if ($consulta) {
+                $numero = $consulta->getNumeroReferencia() + 1;
+            } else {
+                $numero = 1;
+            }
+
+        $referenciaUnida = new EnviosNacionalesUnidades();
+        $referenciaUnida->setPeso(0);
+        $referenciaUnida->setValorDeclarado(0);
+        $referenciaUnida->setNumeroReferencia($numero);
+        $referenciaUnida->setLargo(0);
+        $referenciaUnida->setAlto(0);
+        $referenciaUnida->setAncho(0);
+        $referenciaUnida->setNumeroGuia(0);
+        $referenciaUnida->setEnvioNacional($enviosNacionale);
+        $entityManager->persist($referenciaUnida);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_envios_nacionales_edit', ['id' => $enviosNacionale->getId()], Response::HTTP_SEE_OTHER);
+    }
     #[Route('/table', name: 'app_envios_nacionales_table', methods: ['GET', 'POST'])]
     public function table(Request $request, EntityManagerInterface $entityManager, EnviosNacionalesRepository $envioNacionalRepository): Response
     {
@@ -213,7 +243,7 @@ class EnviosNacionalesController extends AbstractController
 
         
         $thearray[0] = $request->request->get('id');
-        $thearray[2] = number_format($total_remision , 2, '.', '');
+        $thearray[1] = number_format($total_remision , 2, '.', '');
 
 
         return $this->json($thearray);

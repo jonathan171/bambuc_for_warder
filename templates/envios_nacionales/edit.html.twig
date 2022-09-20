@@ -10,6 +10,14 @@
 
     {{ include('envios_nacionales/_form.html.twig', {'button_label': 'Actualizar'}) }}
  <h2> Unidades </h2>
+<div class="p-3">
+        <div class="form-group text-end">
+ 
+         <a  class="btn waves-effect waves-light btn-info" href="/envios_nacionales/{{form.vars.data.id}}/agregar_unidad"><i class="fas fa-pencil-alt"></i></a>
+         
+        </div>
+    </div>
+
     {% for unidad in unidades %} 
   <div class="row" id="{{unidad.id}}">
     <div class="col-sm-12 col-lg-1">
@@ -60,6 +68,7 @@
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ unidad.id) }}">
             <button class="btn waves-effect waves-light btn-danger"><span class="fas fa-trash-alt"></span></button>
         </form>
+        <a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_stiker?id={{unidad.id}}" title="Imprimir"><span class="fas fa-print"></span></a>
     </div>
   </div>
    {%  endfor %}
@@ -236,8 +245,7 @@
             
 
             
-            $("#envios_nacionales_seguro").attr({value: json[1]});
-
+            $("#envios_nacionales_seguro").val(json[1]);
         
             },
             error : function(xhr, status) {

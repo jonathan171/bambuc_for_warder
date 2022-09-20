@@ -1,0 +1,113 @@
+<table>
+	<tr>
+		<td style=" text-align:center; width:45%"><img src="{{ asset('assets/images/facturas/logo.jpg')}}" alt="user" width="90"></td>
+		<td style=" width:15%">
+			<dl>
+				<dt>
+					<b>Remisión N°</b>
+				</dt>
+				<dt>
+					<b>Fecha:</b>
+				</dt>
+				
+			</dl>
+		</td>
+		<td>
+			<dl>
+				<dt>
+					{{remision.numero }}
+				</dt>
+				<dt>
+					{{remision.fecha|date('Y-m-d') }}
+				</dt>
+				
+			</dl>
+		</td>
+	</tr>
+</table>
+<br>
+<br>
+<table>
+	<tr>
+		<td colspan="2" style="text-align: center; border-bottom: 2px solid black; border-right: 2px solid black;">
+			<h2>DATOS QUIEN ENVIA</h2>
+		</td>
+		<td colspan="2" style="text-align: center; border-bottom: 2px solid black; ">
+			<h2>DATOS QUIEN RECIBE</h2>
+		</td>
+	</tr>
+	<tr>
+		<td style="width:20%;">Razón Social</td>
+		<td style="width:30%; border-right: 2px solid black;">{{remision.cliente.razonSocial}}</td>
+		<td style="width:20%; ">
+			 Razón Social</td>
+		<td style="width:30%;">{{remision.destinatario}}</td>
+	</tr>
+	<tr>
+		<td style="width:20%;">Origen:</td>
+		<td style="width:30%; border-right: 2px solid black;">{{remision.municipioOrigen.departamento.nombre }}({{remision.municipioOrigen.nombre }})</td>
+		<td style="width:20%; ">
+			 Destino: </td>
+		<td style="width:30%;">{{remision.municipioDestino.departamento.nombre }}({{remision.municipioDestino.nombre }})</td>
+	</tr>
+	<tr>
+		<td style="width:20%;">Dirección:</td>
+		<td style="width:30%; border-right: 2px solid black;">{{remision.direccionOrigen}}</td>
+		<td style="width:20%; ">
+			 Dirección: </td>
+		<td style="width:30%;">{{remision.direccionDestino}}</td>
+	</tr>
+	<tr>
+		<td style="width:20%;">Telefono:</td>
+		<td style="width:30%; border-right: 2px solid black;">{{remision.cliente.telefono}}</td>
+		<td style="width:20%; ">
+			 Télefono: </td>
+		<td style="width:30%;">{{remision.telefonoDestinatario}}</td>
+	</tr>
+</table>
+<br>
+<br>
+<table>
+	<tr>
+		<td style="width:20%; border-top: 2px solid gra; border-bottom: 2px solid gray; ">
+			<b>Unidades:</b>
+		</td>
+		<td style="width:30%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			{{remision.unidades}}
+		</td>
+		<td style="width:20%; border-top: 2px solid gra; border-bottom: 2px solid gray; ">
+			<b>Peso:</b>
+		</td>
+		<td style="width:30%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			{{remision.peso}}
+		</td>
+	</tr>
+	<tr>
+		<td style="width:20%; border-top: 2px solid gra; border-bottom: 2px solid gray; ">
+			<b>Seguro:</b>
+		</td>
+		<td style="width:30%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			${{remision.seguro|number_format(2, '.', ',')}}
+		</td>
+		<td style="width:20%; border-top: 2px solid gra; border-bottom: 2px solid gray; ">
+			<b>Descripcion:</b>
+		</td>
+		<td style="width:30%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			{{remision.descripcion}}
+		</td>
+	</tr>
+	<tr>
+		<td style="width:20%; border-top: 2px solid gra; border-bottom: 2px solid gray; ">
+			<b>Total:</b>
+		</td>
+		<td style="width:30%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			${{remision.valorTotal|number_format(2, '.', ',')}}
+		</td>
+		<td style="width:20%; border-top: 2px solid gra; border-bottom: 2px solid gray; ">
+			<b>Forma de Pago:</b>
+		</td>
+		<td style="width:30%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			{{remision.formaPago}}
+		</td>
+	</tr>
+</table>

@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+{% import "macros/select2.html.twig" as macroselect2 %}
+{% block stylesheets %}
+{{ macroselect2.styleSelect2}}
+{% endblock %}
+{% block title %}exportar 472
+{% endblock %}
+
+{% block body %}
+	<h1>Exportar Envios 472</h1>
+	<div class="card-body">
+		<form action="{{ path('app_migracion_exportar_envio_excel') }}" method="post">
+
+			<div class="form-group mb-3 row pb-3">
+				<label class="col-sm-3 text-end control-label col-form-label">Fecha Inicio</label>
+				<div class="col-sm-9">
+					<input class="form-control" id="fecha_inicio" type="text" name="fecha_inicio">
+				</div>
+			</div>
+			<div class="form-group mb-3 row pb-3">
+				<label class="col-sm-3 text-end control-label col-form-label">Fecha Fin</label>
+				<div class="col-sm-9">
+					<input class="form-control" id="fecha_fin" type="text" name="fecha_fin">
+				</div>
+			</div>
+			<div class="form-group mb-3 row pb-3">
+				<label class="col-sm-3 text-end control-label col-form-label">Quien Envia</label>
+				<div class="col-sm-9">
+				    <select class="form-control" id="input-buscador-clientes"></select>
+					<input class="form-control" id="quien_envia" type="text" name="quien_envia" style="display:none;">
+				</div>
+			</div>
+			<div class="p-3">
+				<div class="form-group text-end">
+					<input type="submit" value="Generar" class="btn btn-info  font-weight-medium rounded-pill px-4">
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}
+{% block javascripts %}
+{{ macroselect2.scriptSelect2}}
+	<script>
+		$(function () {
+
+$("#fecha_inicio").datepicker({dateFormat: 'yy-mm-dd'});
+$("#fecha_fin").datepicker({dateFormat: 'yy-mm-dd'});
+  
+  function formatResult (item) {
+            
+
+            var html = [
+                '<div>',
+                    item.text + " <b>" + " (" + item.tipo_documento + " " + item.numero_identificacion + ")" + "</b>",
+                '</div>'
+            ];
+
+            var $state = $(html.join(""));
+
+            return $state;
+        };
+    
+
+       var currentQuery = "";
+
+  $("#input-buscador-clientes").select2({
+            width: '100%',
+             //theme: "bootstrap4",
+             minimumInputLength: 2,
+             delay: 200,
+             placeholder: "Ingrese un término de búsqueda aquí p. ej. número de identificación",
+            ajax: {
+                url: '/factura/buscadorAjaxCliente',
+                dataType: 'json'
+            },
+            templateResult: formatResult
+        }).on('select2:select', function (e) {
+            var data = e.params.data;
+            
+            $('#quien_envia').val(data.id);
+            
+            
+        }).on('select2:open', function() {
+            $('.select2-search input').focus().val(currentQuery).trigger('input');
+        }).on('select2:closing', function() {
+            currentQuery = $('.select2-search input').prop('value');
+        });
+     
+
+});
+
+       
+
+	</script>
+{% endblock %}
