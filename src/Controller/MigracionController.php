@@ -122,7 +122,7 @@ class MigracionController extends AbstractController
             $sheet->setCellValue("H$cell", $unidad->getAlto());
             $sheet->setCellValue("I$cell", $unidad->getAncho());
             $sheet->setCellValue("J$cell", $envio->getCliente()->getRazonSocial().'['.$unidad->getNumeroReferencia().']');
-            $sheet->setCellValue("K$cell", 'LLAMAR AL REMITENTE ANTES DE REALIZAR LA DEVOLUCION');
+            $sheet->setCellValue("K$cell", $envio->getObservacion());
 
            
 

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit NotaCredito{% endblock %}
+
+{% block body %}
+    <h1>Edit NotaCredito</h1>
+
+    {{ include('nota_credito/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_nota_credito_index') }}">back to list</a>
+
+    {{ include('nota_credito/_delete_form.html.twig') }}
+{% endblock %}

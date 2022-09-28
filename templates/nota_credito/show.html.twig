@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NotaCredito{% endblock %}
+
+{% block body %}
+    <h1>NotaCredito</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ nota_credito.id }}</td>
+            </tr>
+            <tr>
+                <th>Fecha</th>
+                <td>{{ nota_credito.fecha ? nota_credito.fecha|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Hora</th>
+                <td>{{ nota_credito.hora ? nota_credito.hora|date('H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>NumeroNota</th>
+                <td>{{ nota_credito.numeroNota }}</td>
+            </tr>
+            <tr>
+                <th>Subtotal</th>
+                <td>{{ nota_credito.subtotal }}</td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <td>{{ nota_credito.total }}</td>
+            </tr>
+            <tr>
+                <th>TotalIva</th>
+                <td>{{ nota_credito.totalIva }}</td>
+            </tr>
+            <tr>
+                <th>ReteFuente</th>
+                <td>{{ nota_credito.reteFuente }}</td>
+            </tr>
+            <tr>
+                <th>TotalReteFuenteG</th>
+                <td>{{ nota_credito.totalReteFuenteG }}</td>
+            </tr>
+            <tr>
+                <th>Observaciones</th>
+                <td>{{ nota_credito.observaciones }}</td>
+            </tr>
+            <tr>
+                <th>Tipo</th>
+                <td>{{ nota_credito.tipo }}</td>
+            </tr>
+            <tr>
+                <th>ConceptoDebito</th>
+                <td>{{ nota_credito.conceptoDebito }}</td>
+            </tr>
+            <tr>
+                <th>ConceptoCredito</th>
+                <td>{{ nota_credito.conceptoCredito }}</td>
+            </tr>
+            <tr>
+                <th>RespuestaDian</th>
+                <td>{{ nota_credito.respuestaDian }}</td>
+            </tr>
+            <tr>
+                <th>Cufe</th>
+                <td>{{ nota_credito.cufe }}</td>
+            </tr>
+            <tr>
+                <th>CuerpoJsonf</th>
+                <td>{{ nota_credito.cuerpoJsonf }}</td>
+            </tr>
+            <tr>
+                <th>CuerpoJsonc</th>
+                <td>{{ nota_credito.cuerpoJsonc }}</td>
+            </tr>
+            <tr>
+                <th>RespuestaCorreo</th>
+                <td>{{ nota_credito.respuestaCorreo }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_nota_credito_index') }}">back to list</a>
+
+    <a href="{{ path('app_nota_credito_edit', {'id': nota_credito.id}) }}">edit</a>
+
+    {{ include('nota_credito/_delete_form.html.twig') }}
+{% endblock %}

@@ -94,6 +94,11 @@ class EnviosNacionalesType extends AbstractType
                     'class' => 'form-control',
                 ]
             ])
+            ->add('observacion',null,[
+                'attr' => [
+                    'class' => 'form-control',
+                ]
+            ])
             ->add('seguro', NumberType::class, [
                 'attr' => [
                     'class' => 'form-control',

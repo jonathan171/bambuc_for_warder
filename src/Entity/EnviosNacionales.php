@@ -83,6 +83,12 @@ class EnviosNacionales
      * @ORM\Column(name="descripcion", type="text", length=65535, nullable=true)
      */
     private $descripcion;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="observacion", type="text", length=65535, nullable=true)
+     */
+    private $observacion;
 
     /**
      * @var string
@@ -251,6 +257,18 @@ class EnviosNacionales
     public function setDescripcion(?string $descripcion): self
     {
         $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    public function getObservacion(): ?string
+    {
+        return $this->observacion;
+    }
+
+    public function setObservacion(?string $observacion): self
+    {
+        $this->observacion = $observacion;
 
         return $this;
     }

@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use TCPDF;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 #[Route('/impresion')]
 class ImpresionController extends AbstractController
@@ -331,8 +332,15 @@ class ImpresionController extends AbstractController
     {
 
         $unidad = $entityManager->getRepository(EnviosNacionalesUnidades::class)->find($request->query->get('id'));
+
+        $items = $entityManager->getRepository(EnviosNacionalesUnidades::class)->createQueryBuilder('fi')
+        ->andWhere('fi.envioNacional = :val')
+        ->setParameter('val', $unidad->getEnvioNacional()->getId())
+        ->getQuery()->getArrayResult();
+        $found_key = array_search($unidad->getId(), array_column($items, 'id'));
+        $totalItem = count($items);
         // create new PDF document
-        $pdf = new TCPDF('L', PDF_UNIT, 'A7', true, 'UTF-8', false);
+        $pdf = new TCPDF('P', PDF_UNIT, 'A7', true, 'UTF-8', false);
 
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
@@ -353,12 +361,12 @@ class ImpresionController extends AbstractController
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
         // set margins
-        $pdf->SetMargins(2, 2, 2, 0);
+        $pdf->SetMargins(2, 4, 2, 0);
         $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $pdf->SetFooterMargin(0);
 
         // set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $pdf->SetAutoPageBreak(TRUE,0);
 
         // set image scale factor
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
@@ -393,23 +401,33 @@ class ImpresionController extends AbstractController
 
         // Set some content to 
         
+        $generator = new BarcodeGeneratorPNG();
+        $base_64='data:image/png;base64,';
+        $base_64 .= base64_encode($generator->getBarcode($unidad->getNumeroGuia(), $generator::TYPE_CODE_128));
         
-       
+        $imageContent = file_get_contents($base_64);
+        $path = tempnam(sys_get_temp_dir(), 'prefix');
+
+        file_put_contents ($path, $imageContent);
         if($request->query->get('html')){
 
             return $this->render('impresion/stiker.html.twig', [
                 'unidad'  => $unidad,
-                'remision' => $unidad->getEnvioNacional()
-            ]);
+                'remision' => $unidad->getEnvioNacional(),
+                'base_64'  => $path,
+                'key' => $found_key+1,
+            ]); 
         }
 
         $html = $this->renderView('impresion/stiker.html.twig', [
             'unidad'  => $unidad,
-            'remision' => $unidad->getEnvioNacional()
+            'remision' => $unidad->getEnvioNacional(),
+            'base_64'  => $path,
+            'key' => ($found_key+1).'/'.$totalItem,
         ]);
 
         // Print text using writeHTMLCell()
-        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 1, 1, 0, true, '', true);
 
         // ---------------------------------------------------------
 

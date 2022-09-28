@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New NotaCredito{% endblock %}
+
+{% block body %}
+    <h1>Create new NotaCredito</h1>
+
+    {{ include('nota_credito/_form.html.twig') }}
+
+    <a href="{{ path('app_nota_credito_index') }}">back to list</a>
+{% endblock %}

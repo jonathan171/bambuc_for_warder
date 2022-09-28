@@ -36,7 +36,7 @@
    <a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}"> <i class="fas fa-file-alt"></i> Resoluciones</a>
    </div>
 </div>
- <div id="erroresDian" title="Errores de la dian" style="display:none;width:800px;height:500px;" >
+<div id="erroresDian" title="Errores de la dian" style="display:none;width:800px;height:500px;" >
 
     <div class="input-group">
     </div>
@@ -44,6 +44,18 @@
     <div id="diverrores" >
     </div>
 
+</div>
+<div id="notascredito" title="Notas credito" style="display:none;width:800px;height:500px;z-index: auto !important;" >
+
+    <div id="divnotascredito" >
+
+    </div>
+</div>
+<div id="notasdebito" title="Notas debito" style="display:none;width:800px;height:500px;z-index: auto !important;" >
+
+    <div id="divnotasdebito" >
+
+    </div>
 </div>
 {% endblock %}
 {% block javascripts %} 
@@ -108,6 +120,21 @@
         $("#erroresDian").dialog({ width: 800, height: 500});
 
     }
+
+     function mostrarNotasDebito(factura_id)
+    {
+        Paratarifas = '{{ path('app_nota_credito_index')}}';
+        jQuery('#divnotasdebito').load(Paratarifas,{factura_id: factura_id });
+        $("#notasdebito").dialog({ width: 800, height: 500});
+
+    }
     
+    function mostrarNotasCredito(factura_id)
+    {
+        Paratarifas = '{{ path('app_nota_credito_index')}}';
+        jQuery('#divnotascredito').load(Paratarifas,{factura_id: factura_id });
+        $("#notascredito").dialog({ width: 800, height: 500});
+
+    }
 </script>   
 {% endblock %}

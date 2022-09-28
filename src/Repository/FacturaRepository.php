@@ -100,6 +100,8 @@ class FacturaRepository extends ServiceEntityRepository
                     $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/factura_simple/'.$factura->getId().'/edit"><span class="fas fa-pencil-alt"></span></a>';
                 }
                
+                $actions .= "<button onclick='mostrarNotasCredito(".$factura->getId().");'  class='btn btn-info'>NC</button>";
+                $actions .= "<button onclick='mostrarNotasDebito(".$factura->getId().");'  class='btn btn-success'>ND</button>";
                 if($factura->getRespuestaDian()!='' ||$factura->getRespuestaDian()!=null){
                     $actions.='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onClick="verErrores('.$factura->getId().');" title="Ver respuesta Dian">
                          <i class="fas fa-code text-success" ></i>

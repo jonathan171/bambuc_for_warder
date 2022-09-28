@@ -40,6 +40,7 @@ class EnviosNacionalesController extends AbstractController
             } else {
                 $enviosNacionale->setNumero(1);
             }
+        $enviosNacionale->setObservacion('LLAMAR AL REMITENTE ANTES DE REALIZAR LA DEVOLUCIÓN');
         $form = $this->createForm(EnviosNacionalesType::class, $enviosNacionale);
         $form->handleRequest($request);
 
