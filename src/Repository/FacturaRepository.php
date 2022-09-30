@@ -88,6 +88,7 @@ class FacturaRepository extends ServiceEntityRepository
             $reportar = '';
 
             $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_factura?id='.$factura->getId().'" title="Imprimir"><span class="fas fa-print"></span></a>';
+            $actions .= "<button onclick='mostrarNotasCredito(".$factura->getId().");'  class='btn btn-info'>NC</button>";
             if($factura->getCufe()==''|| $factura->getCufe()==null){
                 
                 $reportar ='<button type="button" id="reportar'.$factura->getId().'" class="btn" onclick="Reportar(' . $factura->getId() . ');"title="Reportar Dian"><img src="/assets/images/facturas/dian.png" height="30px" width="30px"></button>';
@@ -100,7 +101,7 @@ class FacturaRepository extends ServiceEntityRepository
                     $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/factura_simple/'.$factura->getId().'/edit"><span class="fas fa-pencil-alt"></span></a>';
                 }
                
-                $actions .= "<button onclick='mostrarNotasCredito(".$factura->getId().");'  class='btn btn-info'>NC</button>";
+               
                 //$actions .= "<button onclick='mostrarNotasDebito(".$factura->getId().");'  class='btn btn-success'>ND</button>";
                 if($factura->getRespuestaDian()!='' ||$factura->getRespuestaDian()!=null){
                     $actions.='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onClick="verErrores('.$factura->getId().');" title="Ver respuesta Dian">
