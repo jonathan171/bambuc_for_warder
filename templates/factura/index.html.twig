@@ -110,6 +110,52 @@
 
     }
 
+    function ReportarNotacrData(id) {
+
+
+        var idFactura = id;
+
+
+
+        var url = '{{ path('app_nota_credito_reportar')}}';
+
+        $.ajax({
+            method: 'POST',
+            url: url,
+            data: {'id': idFactura, 'tipo': '91'}
+        }).error(function (e) {
+            alertify.error('Hubo un Error con el reporte de Notas Porfavor verifica los datos o Ponte en contacto con el area de soporte');
+        }).success(function (data) {
+            //si todo sale bien en la consulta
+
+            var dataparse = JSON.parse(data);
+            //console.log(itt['xml']);
+            if (dataparse['xml'] == 'fallo') {
+
+                alertify.error('la nota no se puede reportar porque aun no se reporta la factura a la que esta asociada');
+
+            } else if (dataparse[0]['errors'])
+            {
+                alertify.error(dataparse['0']['errors'][0]['error']);
+            } else
+            {
+                alertify.success('Nota Reportada ');
+                //console.log(dataparse);
+            }
+
+
+
+
+
+
+        });
+        setTimeout(function () {
+            location.reload();
+        }, 5000);
+        //console.log('hola');
+
+    }
+
     function verErrores(idFactura) {
 
         ParaError = "{{ path('app_factura_error_dian')}}";

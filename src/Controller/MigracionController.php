@@ -297,6 +297,12 @@ class MigracionController extends AbstractController
             return $_log;
 
         }
+        if(!is_numeric($_rowData['valor_declarado'])){
+            $_log["status"] = "error";
+            $_log["messages"][] = "El valor declarado debe ser un numero.";
+
+            return $_log;
+        }
         
         $unidad = $this->manager->getRepository(EnviosNacionalesUnidades::class)->findOneBy(['numeroReferencia'=>$numero_referencia]);
         

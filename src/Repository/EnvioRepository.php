@@ -76,19 +76,23 @@ class EnvioRepository extends ServiceEntityRepository
         $paginator->getQuery()->setFirstResult($pageSize * $currentPage)->setMaxResults($pageSize)->getResult();
         $list = [];
         foreach ($paginator as $item) {
-            $actions = '<a  class="btn waves-effect waves-light btn-info" href="/envio/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
-            $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envio/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')"><i class="fas fa-trash-alt"></i></a>';
+
+            $actions='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut ="ocultarEnvio()" title="Ver Envio">
+            <i class="fa fa-eye text-success" ></i>
+             </a>';
             if ($item->getVerificado()) {
                 $actions .= '<button class="btn btn-success"> <i class="fas fa-check" ></i></button>';
             }else {
                 $actions .= '<button class="btn btn-secondary" id="verificar'.$item->getId().'" onClick="verificar('.$item->getId().');"> <i class="fas fa-check" ></i></button>';
             }
-            if ($item->getFacturado()) {
-                $actions .= '<button class="btn btn-warning"> <i class="fa fa-window-close" ></i></button>';
+            if ($item->getFacturaItems()) {
+
+                $actions .= '<button class="btn btn-warning"> <i class="fa fa-qrcode"  title="'.$item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().'-'. $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura().'"></i></button>';
+            }else{
+                $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/envio/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
+                $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envio/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')"><i class="fas fa-trash-alt"></i></a>';
             }
-            $actions.='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut ="ocultarEnvio()" title="Ver Envio">
-                         <i class="fa fa-eye text-success" ></i>
-                     </a>';
+           
             $list[] = [
                 'numeroEnvio' => $item->getNumeroEnvio(),
                 'totalPesoCobrar' => $item->getTotalPesoCobrar(),

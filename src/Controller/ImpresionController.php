@@ -7,6 +7,8 @@ use App\Entity\EnviosNacionales;
 use App\Entity\EnviosNacionalesUnidades;
 use App\Entity\Factura;
 use App\Entity\FacturaItems;
+use App\Entity\NotaCredito;
+use App\Entity\NotaCreditoItems;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\PdfPersonalisado;
 use Symfony\Component\HttpFoundation\Request;
@@ -143,6 +145,139 @@ class ImpresionController extends AbstractController
         // This method has several options, check the source code documentation for more information.
         $pdf->Output('factura.pdf', 'I');
     }
+
+    #[Route('/impresion_nota', name: 'app_impresion_nota', methods: ['GET'])]
+    public function nota(Request $request, EntityManagerInterface $entityManager)
+    {
+
+        $nota = $entityManager->getRepository(NotaCredito::class)->find($request->query->get('id'));
+        // create new PDF document
+        $pdf = new PdfPersonalisado(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Jonathan Cruz');
+        $pdf->SetTitle('Impresion Nota');
+        $pdf->SetSubject('Impresion Nota');
+        $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+
+        // set default header data
+        // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE . ' 001', PDF_HEADER_STRING, array(0, 64, 255), array(0, 64, 128));
+        $pdf->setFooterData(array(0, 64, 0), array(0, 0, 128));
+
+        // set header and footer fonts
+        $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // set margins
+        $pdf->SetMargins(3, 10, 2);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        // set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+
+
+        // ---------------------------------------------------------
+
+        // set default font subsetting mode
+        $pdf->setFontSubsetting(true);
+
+        // Set font
+        // dejavusans is a UTF-8 Unicode font, if you only need to
+        // print standard ASCII chars, you can use core fonts like
+        // helvetica or times to reduce file size.
+        $pdf->SetFont('Helvetica', '', 9, '', true);
+
+        // Add a page
+        // This method has several options, check the source code documentation for more information.
+        $pdf->SetPrintHeader(false);
+
+
+
+        $pdf->AddPage();
+
+        $pdf->setCufe('CUFE: '.$nota->getCufe());
+
+
+        // set text shadow effect
+        $pdf->setTextShadow(array('enabled' => false, 'depth_w' => 0.2, 'depth_h' => 0.2, 'color' => array(196, 196, 196), 'opacity' => 1, 'blend_mode' => 'Normal'));
+
+        // Set some content to 
+        
+        $empresa = array(
+            'nombre'=>'COMERCIALIZADORA BAMBUC FORWARDER',
+            'tipoDoc'=>'NIT',
+            'numero' =>'1098754989',
+            'email'  => 'bambuc.forwarder@gmail.com',
+            'telefono' => '3164388280',
+            'direccion' => 'AV 87 22 11 IN 2 BRR DIAMANTE II',
+            'ciudad' => 'BUCARAMANGA, SANTANDER (CO)'
+
+        );
+        $items = $entityManager->getRepository(NotaCreditoItems::class)->createQueryBuilder('nci')
+            ->andWhere('nci.notaCredito = :val')
+            ->setParameter('val', $nota->getId())
+            ->getQuery()->getResult();
+        $factura = $nota->getFacturaCliente();
+
+        if(file_exists('uploads/assets/codes/N'.$nota->getId().'.png')) {
+            $pha_img = 'uploads/assets/codes/N'.$nota->getId().'.png';
+
+        }else {
+            $pha_img = '';
+        }
+        $countItem= count($items);
+        if($nota->getTipo()=='credito'){
+            $tipo = 'Nota Crédito';
+            $prefijo = 'NCE';
+        } else {
+            $tipo = 'Nota Debito';
+            $prefijo = 'NDE';
+        }
+
+        if($request->query->get('html')){
+
+            return $this->render('impresion/nota.html.twig', [
+                'factura' => $factura,
+                'empresa' => $empresa,
+                'code' =>   $pha_img,
+                'items' =>   $items,
+                'countItem' => $countItem,
+                'nota' => $nota,
+                'tipo' => $tipo,
+                'prefijo' => $prefijo
+            ]);
+        }
+
+        $html = $this->renderView('impresion/nota.html.twig', [
+            'factura' => $factura,
+            'empresa' => $empresa,
+            'code' => $pha_img,
+            'items' => $items,
+            'countItem' => $countItem,
+            'nota' => $nota,
+            'tipo' => $tipo,
+            'prefijo' => $prefijo
+        ]);
+
+        // Print text using writeHTMLCell()
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+
+        // ---------------------------------------------------------
+
+        // Close and output PDF document
+        // This method has several options, check the source code documentation for more information.
+        $pdf->Output('nota.pdf', 'I');
+    }
+
 
     #[Route('/impresion_dimension_envio', name: 'app_impresion_dimension_envio', methods: ['GET'])]
     public function dimencionEnvio(Request $request, EntityManagerInterface $entityManager)

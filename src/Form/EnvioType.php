@@ -126,6 +126,12 @@ class EnvioType extends AbstractType
             ->add('jsonRecibido')
             ->add('facturado')
             ->add('verificado')
+            ->add('referencia', TextType::class, [
+                'required'=> false,
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
             ->add('facturaItems', TextType::class, [
                 'required'=> false,
                 'attr' => [

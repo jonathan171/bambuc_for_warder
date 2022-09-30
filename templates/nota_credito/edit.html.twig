@@ -1,13 +1,86 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit NotaCredito{% endblock %}
+{% block title %}Editar Nota Crédito{% endblock %}
 
 {% block body %}
-    <h1>Edit NotaCredito</h1>
+    <h1>Editar Nota Crédito  para la Factura {{ factura.facturaResolucion.prefijo}}- {{factura.numeroFactura}}</h1>
 
     {{ include('nota_credito/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_nota_credito_index') }}">back to list</a>
+     <h2> Items de Nota</h2>
 
-    {{ include('nota_credito/_delete_form.html.twig') }}
+
+
+  {% for item in items %} 
+  <div class="row" id="{{item.id}}">
+    <div class="col-sm-12 col-lg-1">
+      <label class="col-sm-12">Codigo</label>
+       <br>
+       <br>
+      {{item.codigo}}
+    </div>
+    <div class="col-sm-12 col-lg-1">
+    <label class="col-sm-12">Cantidad</label>
+       <br>
+       <br>
+        {{item.cantidad}}
+    </div>
+    <div class="col-sm-12 col-lg-2">
+        <label class="col-sm-12">Descripción</label>
+        <br>
+        <br>
+        <input class="form-control" type="text" id="descripcion{{item.id}}" value="{{item.descripcion}}"  onkeyup="ActualizarItems({{item.id}})" />
+    </div>
+     <div class="col-sm-12 col-lg-2">
+    <label class="col-sm-12">Valor Unitario</label>
+       <br>
+       <br>
+        {{item.valorUnitario}}
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">Descuento %</label>
+        <br>
+        <br>
+        <input class="form-control" type="text" id="descuento{{item.id}}" value="{{item.tasaDescuento}}"  onkeyup="validateMenorCien(this, {{item.id}})" onkeypress='return validaNumericos(event)'/>
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">Rete Fue %</label>
+        <br>
+        <br>
+        <input class="form-control" type="text" id="Retefuente{{item.id}}" value="{{item.retencionFuente}}"  onkeyup="validateMenorCien(this,{{item.id}})" onkeypress='return validaNumericos(event)'/>
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <label class="col-sm-12">Iva %</label>
+        <br>
+        <br>
+        <input class="form-control" type="text" id="Iva{{item.id}}" value="{{item.iva}}"  onkeyup="validateMenorCien(this,{{item.id}})" onkeypress='return validaNumericos(event)'/>
+    </div>
+    <div class="col-sm-12 col-lg-2">
+        <label class="col-sm-12">Total</label>
+        <br>
+        <br>
+        <input class="form-control" type="text" id="total{{item.id}}" value="{{item.total}}" disabled="disabled"/> 
+        <input  type="text" id="subtotal{{item.id}}" value="{{item.subtotal}}" style=" display:none; "/>
+    </div>
+    <div class="col-sm-12 col-lg-1">
+        <form method="post" action="{{ path('app_nota_credito_item_delete', {'id': item.id}) }}" onsubmit="return confirm('Estas seguro de borrar este item?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
+            <button class="btn waves-effect waves-light btn-danger"><span class="fas fa-trash-alt"></span></button>
+        </form>
+    </div>
+  </div>
+   {%  endfor %}
+
+ <div class="row" style="padding-top:20px;">
+    <div class="col-sm-12 col-lg-4">
+         
+    </div>
+    <div class="col-sm-12 col-lg-4">
+        <strong>Total nota</strong>
+    </div>
+     <div class="col-sm-12 col-lg-4">
+         <input class="form-control" type="text" id="totalNota" value="{{nota_credito.total - (  nota_credito.totalReteFuenteG)}}" disabled="disabled"/>
+    </div>
+    
+ </div>
 {% endblock %}

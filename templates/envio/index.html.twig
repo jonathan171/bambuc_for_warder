@@ -54,7 +54,7 @@
     
   $(document).ready(function() {
    
-      $('#data_table_envios').DataTable({
+    $('#data_table_envios').DataTable({
             serverSide: true,
             responsive: true,
             pageLength: 50,
@@ -110,7 +110,7 @@
         success : function(json) {
 
          alertify.success('Envio Verificado correctamente');
-        location.reload();
+         $("#data_table_envios").DataTable().ajax.reload(null,false);
 
             },
        error : function(xhr, status) {

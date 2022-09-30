@@ -164,6 +164,13 @@ class Envio
      */
     private $verificado;
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="referencia", type="text", length=0, nullable=true)
+     */
+    private $referencia;
+
     
 
     public function getId(): ?int
@@ -358,6 +365,18 @@ class Envio
     public function setVerificado(bool $verificado): self
     {
         $this->verificado = $verificado;
+
+        return $this;
+    }
+
+    public function getReferencia(): ?string
+    {
+        return $this->referencia;
+    }
+
+    public function setReferencia(?string $referencia): self
+    {
+        $this->referencia = $referencia;
 
         return $this;
     }

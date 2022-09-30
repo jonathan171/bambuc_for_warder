@@ -329,6 +329,13 @@ class EnvioController extends AbstractController
             'envio' => $envio,
         ]);
     }
+    #[Route('/{id}/facturado', name: 'app_envio_facturado', methods: ['GET', 'POST'])]
+    public function facturado(Envio $envio): Response
+    {
+        return $this->render('envio/facturado.html.twig', [
+            'envio' => $envio,
+        ]);
+    }
 
     #[Route('/{id}/edit', name: 'app_envio_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Envio $envio, EntityManagerInterface $entityManager): Response

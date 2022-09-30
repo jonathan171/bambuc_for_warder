@@ -1,0 +1,373 @@
+<style>
+	table,
+	th,
+	td {
+
+		border-collapse: collapse;
+	}
+</style>
+<table>
+	<tr>
+		<td style=" text-align:center; width:45%"><img src="{{ asset('assets/images/facturas/logo.jpg')}}" alt="user" width="90"></td>
+		<td style="width:55%" colspan="3">
+			<dl>
+				<dt>
+					<strong style="font-size: 15px;">{{tipo }}  de la Factura Electrónica de Venta
+					</strong>
+					{{prefijo}}-{{nota.numeroNota}}
+				</dt>
+				
+			</dl>
+		</td>
+
+	</tr>
+	<tr>
+		<td>
+			<dl>
+				<dt style="font-size: 8;">
+					{{empresa.nombre}}
+					{{empresa.tipoDoc}}
+					{{empresa.numero}}
+				</dt>
+				<dt style="font-size: 8;">
+					No somos gran Contribuyente
+				</dt>
+				<dt style="font-size: 8;">
+					No somos Agente Retenedor del Impuesto sobre las Ventas - IVA
+				</dt>
+				<dt style="font-size: 8;">
+					No somos Autorretenedor del Impuesto sobre la Renta y Complementarios
+				</dt>
+			</dl>
+		</td>
+		<td>
+			<dl>
+				<dt>
+					Representación Gráfica
+				</dt>
+				<dt>
+					Tipo de Operación
+				</dt>
+				<dt>
+					Fecha de Generación
+				</dt>
+				<dt>
+					Fecha de Vencimiento
+				</dt>
+				<dt>
+					Fecha de Validación
+				</dt>
+				<dt>
+					Forma de Pago
+				</dt>
+				<dt>
+					Medio de Pago
+				</dt>
+				<dt>
+					Moneda
+				</dt>
+				<dt>
+					Factura Asociada
+				</dt>
+				<dt>
+					Fecha Generación CUFE
+				</dt>
+			</dl>
+		</td>
+		<td>
+			<dl>
+				<dt style="text-align: right;">
+					
+				</dt>
+				<dt style="text-align: right;">
+					Estandar
+				</dt>
+				<dt style="text-align: right;">
+					{{nota.fecha|date('d/m/Y')}}
+				</dt>
+				<dt style="text-align: right;">
+					{{nota.fecha|date('d/m/Y')}}
+				</dt>
+				<dt style="text-align: right;">
+					{% if nota.fecha %}
+						{{nota.fecha|date('d/m/Y')}}
+					{% endif %}
+				</dt>
+				<dt style="text-align: right;">
+					{% if factura.formaDePago =='DEBITO' %}
+						Contado
+					{%  else %}
+						Crédito
+					{% endif %}
+
+				</dt>
+				<dt style="text-align: right;">
+					{{factura.condDePago.descripcion}}
+				</dt>
+				<dt style="text-align: right;">
+					COP
+				</dt>
+				<dt style="text-align: right;">
+					{{factura.facturaResolucion.prefijo}}-{{factura.numeroFactura}}
+				</dt>
+				<dt style="text-align: right;">
+					{% if factura.fechaValidacion %}
+						{{factura.fechaValidacion|date('d/m/Y')}}
+					{% endif %}
+				</dt>
+			</dl>
+		</td>
+		<td style=" width:20%">
+			{% if code %}
+
+				<img src="{{ asset(code)}}" alt="qr" width="250">
+			{% endif %}
+
+		</td>
+
+	</tr>
+	<tr>
+	<td >
+			
+
+		</td>
+		<td colspan="2">
+			<b>Cufe:</b> {{factura.cufe}}
+
+		</td>
+	</tr>
+</table>
+<table>
+	<tr>
+		<td colspan="2" style="text-align: center; border-bottom: 2px solid black; border-right: 2px solid black;">
+			<h2>DATOS DEL EMISOR</h2>
+		</td>
+		<td colspan="2" style="text-align: center; border-bottom: 2px solid black; ">
+			<h2>DATOS DEL CLIENTE</h2>
+		</td>
+	</tr>
+	<tr>
+		<td style="width:20%;">Razón Social</td>
+		<td style="width:30%; border-right: 2px solid black;">{{empresa.nombre}}</td>
+		<td style="width:20%; ">
+			Razón Social</td>
+		<td style="width:30%;">{{factura.cliente.razonSocial}}</td>
+	</tr>
+	<tr>
+		<td style="width:20%;">{{empresa.tipoDoc}}</td>
+		<td style="width:30%; border-right: 2px solid black;">{{empresa.numero}}</td>
+		<td style="width:20%;">
+			{{factura.cliente.tipoDocumento}}</td>
+		<td style="width:30%;">{{factura.cliente.nit}}</td>
+	</tr>
+	<tr>
+		<td style="width:20%;">Obligación</td>
+		<td style="width:30%; border-right: 2px solid black;">NO RESPONSABLE DE IVA</td>
+		<td style="width:20%;">
+			Obligación</td>
+		<td style="width:30%;">
+			{% if factura.taxLevelCode =='NO_RESPONSABLE_DE_IVA' %}
+				NO RESPONSABLE DE IVA
+			{% else %}
+				RESPONSABLE DE IVA
+			{% endif %}
+		</td>
+	</tr>
+	<tr>
+		<td style="width:20%;">Email</td>
+		<td style="width:30%; border-right: 2px solid black;">{{empresa.email}}</td>
+		<td style="width:20%;">
+			Email</td>
+		<td style="width:30%;">{{factura.cliente.correo}}</td>
+	</tr>
+	<tr>
+		<td style="width:20%;">Teléfono</td>
+		<td style="width:30%; border-right: 2px solid black;">{{empresa.telefono}}</td>
+		<td style="width:20%;">
+			Teléfono</td>
+		<td style="width:30%;">{{factura.cliente.telefono}}</td>
+	</tr>
+	<tr>
+		<td style="width:20%;">Dirección</td>
+		<td style="width:30%; border-right: 2px solid black;">{{empresa.direccion}}</td>
+		<td style="width:20%;">
+			Dirección</td>
+		<td style="width:30%;">{{factura.cliente.direccion}}</td>
+	</tr>
+	<tr>
+		<td style="width:20%;">Ciudad, Depart.</td>
+		<td style="width:30%; border-right: 2px solid black;">{{empresa.ciudad}}</td>
+		<td style="width:20%;">
+			Ciudad, Depart.</td>
+		<td style="width:30%;">{{factura.cliente.municipio.nombre}},{{factura.cliente.municipio.departamento.nombre}}(CO)</td>
+	</tr>
+</table>
+<br>
+<br>
+<table>
+	<tr>
+		<td style="width:3%; border-top: 2px solid gra; border-bottom: 2px solid gray; ">
+			<b>N°
+			</b>
+		</td>
+		<td style="width:11%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			<b>REF
+			</b>
+		</td>
+		<td style="width:30%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			<b>DESCRIPCIÓN
+			</b>
+		</td>
+		<td style="width:7%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			<b>CANT
+			</b>
+		</td>
+		<td style="width:5%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			<b>U/M
+			</b>
+		</td>
+		<td style="width:12%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			<b>PRECIO
+			</b>
+		</td>
+		<td style="width:5%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			<b>IMP
+			</b>
+		</td>
+		<td style="width:12%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			<b>SUBTOTAL
+			</b>
+		</td>
+		<td style="width:15%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
+			<b>TOTAL ITEM
+			</b>
+		</td>
+	</tr>
+	{% set i = 0 %}
+	{% for item in items %}
+		{% set i = i + 1 %}
+
+		<tr>
+			<td>
+				{{i}}
+			</td>
+			<td>
+				{{item.codigo}}
+			</td>
+			<td>
+				{{item.descripcion}}
+			</td>
+			<td>
+				{{item.cantidad}}
+			</td>
+			<td>
+				EA
+			</td>
+			<td>
+				{{item.valorUnitario}}
+			</td>
+			<td>
+				{{item.iva}}
+			</td>
+			<td>
+				{{item.subtotal}}
+			</td>
+			<td>
+				{{item.total}}
+			</td>
+
+		</tr>
+
+
+	{% endfor %}
+	<tr>
+		<td style="border-top: 2px solid grey;">
+			{{i}}
+		</td>
+		<td style="border-top: 2px solid grey;"></td>
+		<td style="border-top: 2px solid grey;"></td>
+		<td style="border-top: 2px solid grey;"></td>
+		<td style="border-top: 2px solid grey;"></td>
+		<td colspan="2" style="border-top: 2px solid grey;"></td>
+
+		<td colspan="2" style="border-top: 2px solid grey;"></td>
+
+
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td colspan="2">
+			Subtotal
+		</td>
+
+		<td colspan="2">
+			{{nota.subtotal}}
+		</td>
+	</tr>
+	{% if nota.reteFuente > 0  %}
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td colspan="2">
+				RETE FUENTE
+			</td>
+
+			<td colspan="2">
+				-${{(nota.totalReteFuenteG)}}
+			</td>
+
+
+		</tr>
+
+	{% endif %}
+	
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td colspan="2" style="border-top: 2px solid black;">
+			Total 
+		</td>
+
+		<td colspan="2" style="border-top: 2px solid black;">
+			${{(nota.total -(nota.totalReteFuenteG))|number_format(2, '.', ',') }}
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">Observaciones:
+		</td>
+
+		<td colspan="2">{{nota.observaciones}}</td>
+		<td></td>
+		<td></td>
+		<td colspan="2"></td>
+
+		<td colspan="2"></td>
+	</tr>
+</table>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<table>
+	<tr>
+		<td></td>
+		<td style="width:35%; border-top: 2px solid black; text-align:center;">FIRMA EMISOR</td>
+		<td style="width:5%;"></td>
+		<td style="width:35%; border-top: 2px solid black; text-align:center;"> FIRMA CLIENTE</td>
+		<td></td>
+	</tr>
+</table>

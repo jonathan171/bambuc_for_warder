@@ -1,65 +1,50 @@
-{% block title %}NotaCredito index{% endblock %}
+{% block title %}Nota Crédito {% endblock %}
 
 {% block body %}
-    <h1>NotaCredito index</h1>
+    
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+                
                 <th>Fecha</th>
-                <th>Hora</th>
-                <th>NumeroNota</th>
-                <th>Subtotal</th>
+                <th>Número Nota</th>
+
                 <th>Total</th>
-                <th>TotalIva</th>
-                <th>ReteFuente</th>
-                <th>TotalReteFuenteG</th>
+                <th>Concepto</th>
+
+                
                 <th>Observaciones</th>
-                <th>Tipo</th>
-                <th>ConceptoDebito</th>
-                <th>ConceptoCredito</th>
-                <th>RespuestaDian</th>
-                <th>Cufe</th>
-                <th>CuerpoJsonf</th>
-                <th>CuerpoJsonc</th>
-                <th>RespuestaCorreo</th>
-                <th>actions</th>
+                <th>Opciones</th>
             </tr>
         </thead>
         <tbody>
         {% for nota_credito in nota_creditos %}
             <tr>
-                <td>{{ nota_credito.id }}</td>
+                
                 <td>{{ nota_credito.fecha ? nota_credito.fecha|date('Y-m-d') : '' }}</td>
-                <td>{{ nota_credito.hora ? nota_credito.hora|date('H:i:s') : '' }}</td>
                 <td>{{ nota_credito.numeroNota }}</td>
-                <td>{{ nota_credito.subtotal }}</td>
                 <td>{{ nota_credito.total }}</td>
-                <td>{{ nota_credito.totalIva }}</td>
-                <td>{{ nota_credito.reteFuente }}</td>
-                <td>{{ nota_credito.totalReteFuenteG }}</td>
-                <td>{{ nota_credito.observaciones }}</td>
-                <td>{{ nota_credito.tipo }}</td>
-                <td>{{ nota_credito.conceptoDebito }}</td>
                 <td>{{ nota_credito.conceptoCredito }}</td>
-                <td>{{ nota_credito.respuestaDian }}</td>
-                <td>{{ nota_credito.cufe }}</td>
-                <td>{{ nota_credito.cuerpoJsonf }}</td>
-                <td>{{ nota_credito.cuerpoJsonc }}</td>
-                <td>{{ nota_credito.respuestaCorreo }}</td>
+                <td>{{ nota_credito.observaciones }}</td>
+              
                 <td>
-                    <a href="{{ path('app_nota_credito_show', {'id': nota_credito.id}) }}">show</a>
-                    <a href="{{ path('app_nota_credito_edit', {'id': nota_credito.id}) }}">edit</a>
+                <a  class="btn waves-effect waves-light btn-info" href="{{ path('app_impresion_nota', {'id': nota_credito.id}) }}" title="Imprimir"><span class="fas fa-print"></span></a>
+                 {% if ( nota_credito.cufe =='' or nota_credito.cufe == null)%}
+                    {% if ( nota_credito.conceptoCredito != 2)%}
+                        <a href="{{ path('app_nota_credito_edit', {'id': nota_credito.id}) }}">edit</a>
+                    {% endif %}
+                  <button type="button" class="btn"  onclick="ReportarNotacrData('{{nota_credito.id}}');" title="Reportar Dian"><img src="/assets/images/facturas/dian.png" height="30px" width="30px"></button>
+                 {% endif %}
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="19">no records found</td>
+                <td colspan="6">no hay notas credito para esta factura</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_nota_credito_new') }}">Create new</a>
+     <a class="btn waves-effect waves-light btn-success" href="{{ path('app_nota_credito_new',{'id': factura_id}) }}"> <i class=" fas fa-paste"> </i> Nueva Nota Crédito</a>
 {% endblock %}

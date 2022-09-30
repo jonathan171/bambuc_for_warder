@@ -1,4 +1,64 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+
+<div class="row">
+        <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> <b>Señores: </b> </label>
+                    <label class="col-sm-3 text-end control-label col-form-label"> 
+                        <b>{{factura.cliente.razonSocial}} </b>
+                    </label>
+            </div>
+        </div>
+         <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label">  <b>{{factura.cliente.tipoDocumento}} </b> </label>
+                     <label class="col-sm-3 text-end control-label col-form-label"> 
+                        <b>{{factura.cliente.nit}} </b>
+                     </label>
+            </div>
+        </div>
+</div>
+<div class="card-body">
+{{ form_start(form, {'attr': {'class': 'form_clientesform-horizontal r-separator border-top'}}) }}
+     <div class="row">
+        <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> Fecha </label>
+                    <div class="col-sm-9">
+                        {{form_widget(form.fecha) }} 
+                    </div>
+                    
+            </div>
+        </div>
+         <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> N° </label>
+                    <div class="col-sm-9">
+                        {{form_widget(form.numeroNota) }} 
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-lg-6">
+            <div class="form-group mb-3 row">
+                    <label class="col-sm-3 text-end control-label col-form-label"> Concepto </label>
+                    <div class="col-sm-9">
+                        
+                        {{form_widget(form.conceptoCredito) }}
+                    </div>
+            </div>
+        </div>
+        
+    </div>
+     <div class="hide">
+    {{form_rest(form)}}
+    </div>
+     <div class="p-3">
+        <div class="form-group text-end">
+        
+        <button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
+         <a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_factura_index') }}">regresar</a>
+        </div>
+    </div>
 {{ form_end(form) }}
+</div>

@@ -104,6 +104,7 @@ class ClientesController extends AbstractController
         $municipio = $entityManager->getRepository(Municipio::class)->find(2);
        
         $cliente ->setMunicipio($municipio);
+        $cliente->setTaxLevelCode('NO_RESPONSABLE_DE_IVA');
 
         $form = $this->createForm(ClientesType::class, $cliente);
        
