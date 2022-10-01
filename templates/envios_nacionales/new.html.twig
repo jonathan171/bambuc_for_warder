@@ -69,7 +69,12 @@
             
                  ParaClientes = '{{ path('app_clientes_create_json')}}';
                  $('#divcliente').load(ParaClientes);
-                 $("#clientes").dialog({ width: 800, height: 500});
+                 $("#clientes").dialog({width: 'auto', // overcomes width:'auto' and maxWidth bug
+                                        maxWidth: 800,
+                                        height: 'auto',
+                                        modal: true,
+                                        fluid: true, //new option
+                                        resizable: false});
             
 
 
