@@ -136,6 +136,9 @@
 
             $('#envios_nacionales_cliente').val(json.id);
             $('#lblcliente').html(json.razon_social);
+            $('#envios_nacionales_direccionOrigen').val(json.direccion);
+            $('#envios_nacionales_municipioOrigen').val(json.municipio);
+            $("#envios_nacionales_municipioOrigen").select2({width: '100%'});
             $("#clientes").dialog('close');
 
         alert('cliente Guardado Correctamente');

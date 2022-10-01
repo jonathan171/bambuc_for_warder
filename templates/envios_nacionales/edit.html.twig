@@ -9,6 +9,11 @@
     <h1>Editar Remision</h1>
 
     {{ include('envios_nacionales/_form.html.twig', {'button_label': 'Actualizar'}) }}
+    <div class="p-3">
+        <div class="form-group ">
+            <a class="btn waves-effect waves-light btn-success" href="{{ path('app_envios_nacionales_new') }}">Nueva Remision</a>
+        </div>
+    </div>
  <h2> Unidades </h2>
 <div class="p-3">
         <div class="form-group text-end">
@@ -197,6 +202,9 @@
 
             $('#envios_nacionales_cliente').val(json.id);
             $('#lblcliente').html(json.razon_social);
+            $('#envios_nacionales_direccionOrigen').val(json.direccion);
+            $('#envios_nacionales_municipioOrigen').val(json.municipio);
+            $("#envios_nacionales_municipioOrigen").select2({width: '100%'});
             $("#clientes").dialog('close');
 
         alert('cliente Guardado Correctamente');

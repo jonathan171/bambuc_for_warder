@@ -61,12 +61,12 @@ class EnviosNacionalesController extends AbstractController
                 $numero = 1;
             }
                 $referenciaUnida = new EnviosNacionalesUnidades();
-                $referenciaUnida->setPeso(0);
+                $referenciaUnida->setPeso($enviosNacionale->getPeso()/$enviosNacionale->getUnidades());
                 $referenciaUnida->setValorDeclarado($enviosNacionale->getSeguro()/$enviosNacionale->getUnidades());
                 $referenciaUnida->setNumeroReferencia($numero);
-                $referenciaUnida->setLargo(0);
-                $referenciaUnida->setAlto(0);
-                $referenciaUnida->setAncho(0);
+                $referenciaUnida->setLargo(35);
+                $referenciaUnida->setAlto(50);
+                $referenciaUnida->setAncho(50);
                 $referenciaUnida->setNumeroGuia(0);
                 $referenciaUnida->setEnvioNacional($enviosNacionale);
                 $entityManager->persist($referenciaUnida);
@@ -100,7 +100,9 @@ class EnviosNacionalesController extends AbstractController
         }
         $responseData = array(
             "id" => $cliente->getId(),
-            "razon_social" => $cliente->getRazonSocial()
+            "razon_social" => $cliente->getRazonSocial(),
+            "direccion" => $cliente->getDireccion(),
+            "municipio" =>  $cliente->getMunicipio()->getId(),
         );
 
 
@@ -159,9 +161,9 @@ class EnviosNacionalesController extends AbstractController
         $referenciaUnida->setPeso(0);
         $referenciaUnida->setValorDeclarado(0);
         $referenciaUnida->setNumeroReferencia($numero);
-        $referenciaUnida->setLargo(0);
-        $referenciaUnida->setAlto(0);
-        $referenciaUnida->setAncho(0);
+        $referenciaUnida->setLargo(35);
+        $referenciaUnida->setAlto(50);
+        $referenciaUnida->setAncho(50);
         $referenciaUnida->setNumeroGuia(0);
         $referenciaUnida->setEnvioNacional($enviosNacionale);
         $entityManager->persist($referenciaUnida);
@@ -232,12 +234,14 @@ class EnviosNacionalesController extends AbstractController
             ->getQuery()->getResult();
 
         $total_remision = 0;
-        
+        $total_peso = 0;
         foreach ($items as $item) {
             $total_remision = $total_remision + $item->getValorDeclarado();
+            $total_peso = $total_peso+$item->getPeso();
             
         }
         $remision->setSeguro($total_remision);
+        $remision->setPeso($total_peso);
         $entityManager->persist($remision);
         $entityManager->flush();
 
