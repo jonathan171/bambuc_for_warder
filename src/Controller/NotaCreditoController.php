@@ -16,6 +16,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use GuzzleHttp;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
 
 #[Route('/nota_credito')]
 class NotaCreditoController extends AbstractController
@@ -224,159 +232,95 @@ class NotaCreditoController extends AbstractController
         EnviarCorreo $enviar
     ) {
         $CuerpoJson =  array();
-        $factura = $entityManager->getRepository(Factura::class)->find($request->request->get('id'));
+        $nota = $entityManager->getRepository(NotaCredito::class)->find($request->request->get('id'));
+        $factura = $nota->getFacturaCliente();
+
+        $consectoCredito = array(
+            '1' => 'DEVOLUCION',
+            '2' => 'ANULACION',
+            '3' => 'REBAJA',
+            '4' => 'DESCUENTO',
+            '5' => 'RECISION',
+            '6' => 'OTROS'
+        );
+
+        $consectoDebito = array(
+            '1' => 'INTERESES',
+            '2' => 'GASTOS',
+            '3' => 'CAMBIO_VALOR',
+            '4' => 'OTROS'
+        );
+
+        if ($request->request->get('tipo') == 91) {
+            $x_nota = 'credit_note';
+            $prefijo = "NCE";
+        } elseif ($request->request->get('tipo') == 92) {
+        
+            $x_nota = 'debit_note';
+            $prefijo = "NDE";
+        }
 
         $CuerpoJson['actions']['send_dian'] = true;
         $CuerpoJson['actions']['send_email'] = false;
 
-
-        $CuerpoJson['invoice']['number'] = $factura->getNumeroFactura();
-        $CuerpoJson['invoice']['invoice_type_code'] = 'FACTURA_VENTA';
-        $CuerpoJson['invoice']['payment_means_type'] = $factura->getFormaDePago();
-        $CuerpoJson['invoice']['payment_means'] = $factura->getCondDePago()->getDescripcioDataico();
-        $CuerpoJson['invoice']['issue_date'] = $factura->getFecha()->format('d/m/Y');
-        $CuerpoJson['invoice']['payment_date'] = $factura->getFechaVencimiento()->format('d/m/Y');
-        $CuerpoJson['invoice']['numbering']['resolution_number'] = $factura->getFacturaResolucion()->getNumeroResolucion();
-        $CuerpoJson['invoice']['numbering']['prefix'] = $factura->getFacturaResolucion()->getPrefijo();
-        $notes = $factura->getObservaciones();
-        if ($notes) {
-            $CuerpoJson['invoice']['notes'] = array(0 => $notes);
+        $CuerpoJson[$x_nota]['issue_date'] = $nota->getFecha()->format('d/m/Y');
+        if ($request->request->get('tipo') == 91) {
+            $CuerpoJson[$x_nota]['reason'] = $consectoCredito[$nota->getConceptoCredito()];
+        } elseif ($request->request->get('tipo') == 92) {
+            $CuerpoJson[$x_nota]['reason'] = $consectoDebito[$nota->getConceptoDebito()];
         }
-        $CuerpoJson['invoice']['customer']['address_line'] = $factura->getCliente()->getDireccion();
-        $CuerpoJson['invoice']['customer']['city'] = $factura->getCliente()->getMunicipio()->getCodigo();
-        $CuerpoJson['invoice']['customer']['company_name'] = $factura->getCliente()->getRazonSocial();
-        $CuerpoJson['invoice']['customer']['department'] = $factura->getCliente()->getMunicipio()->getDepartamento()->getCodigo();
-        $CuerpoJson['invoice']['customer']['email'] = $factura->getCliente()->getCorreo();
-        $CuerpoJson['invoice']['customer']['family_name'] = $factura->getCliente()->getApellidos();
-        $CuerpoJson['invoice']['customer']['first_name'] = $factura->getCliente()->getNombres();
-        $CuerpoJson['invoice']['customer']['phone'] = $factura->getCliente()->getTelefono();
-
-        if ($factura->getCliente()->getTipoDocumento() == "NIT") {
-            $nits = explode("-", $factura->getCliente()->getNit());
-            $numero = $nits[0];
-            $CuerpoJson['invoice']['customer']['party_identification'] = $numero;
-        } else {
-
-            $CuerpoJson['invoice']['customer']['party_identification'] = $factura->getCliente()->getNit();
-        }
-
-        $CuerpoJson['invoice']['customer']['party_identification_type'] = $factura->getCliente()->getTipoDocumento();
-        $CuerpoJson['invoice']['customer']['party_type'] = $factura->getCliente()->getTipoReceptor();
-        $CuerpoJson['invoice']['customer']['regimen'] = $factura->getRegimen();
-        $CuerpoJson['invoice']['customer']['tax_level_code'] = $factura->getTaxLevelCode();
-
-        $CuerpoJson['invoice']['items'] = array();
-
-        $items = $entityManager->getRepository(FacturaItems::class)->createQueryBuilder('fi')
-            ->andWhere('fi.facturaClientes = :val')
-            ->setParameter('val', $factura->getId())
-            ->getQuery()->getResult();
-
-        foreach ($items as $item) {
-            $itemJ = array(
-                "sku" => $item->getCodigo(),
-                "quantity" => (int) $item->getCantidad(),
-                "description" => $item->getDescripcion(),
-                "price" => (float) $item->getValorUnitario()
-            );
-
-            if ($item->getTasaDescuento() > 0) {
-
-                $itemJ["discount_rate"] = $item->getTasaDescuento();
-            }
-
-            if ($item->getIva() > 0) {
-                $itemJ['taxes'] = array();
-                array_push($itemJ['taxes'], array(
-                    "tax_category" => "IVA",
-                    "tax_rate" => (float) $item->getIva()
-                ));
-            }
-            if ($item->getRetencionFuente() > 0) {
-                $itemJ['retentions'] = array();
-                array_push($itemJ['retentions'], array(
-                    "tax_category" => "RET_FUENTE",
-                    "tax_rate" => (float) $item->getRetencionFuente()
-                ));
-            }
-            array_push($CuerpoJson['invoice']['items'], $itemJ);
-        }
-
-        if ($factura->getTotalIva() > 0) {
-            $porIva = ($factura->getTotalReteIva() * 100) / $factura->getTotalIva();
-        } else {
-            $porIva = 0;
-        }
-
-        if ($porIva > 0) {
-
-            if (array_key_exists('retentions', $CuerpoJson['invoice'])) {
-
-                array_push($CuerpoJson['invoice']['retentions'], array(
-                    "tax_category" => "RET_IVA",
-                    "tax_rate" => $porIva
-                ));
-            } else {
-
-                $CuerpoJson['invoice']['retentions'] = array();
-                array_push($CuerpoJson['invoice']['retentions'], array(
-                    "tax_category" => "RET_IVA",
-                    "tax_rate" => $porIva
-                ));
-            }
-        }
-        $porIca = ($factura->getTotalReteIca() * 100) / $factura->getSubtotal();
-        if ($porIca > 0) {
-
-
-            if (array_key_exists('retentions', $CuerpoJson['invoice'])) {
-
-                array_push($CuerpoJson['invoice']['retentions'], array(
-                    "tax_category" => "RET_ICA",
-                    "tax_rate" => ($factura->getTotalReteIca() * 100) / $factura->getSubtotal()
-                ));
-            } else {
-
-                $CuerpoJson['invoice']['retentions'] = array();
-                array_push($CuerpoJson['invoice']['retentions'], array(
-                    "tax_category" => "RET_ICA",
-                    "tax_rate" => ($factura->getTotalReteIca() * 100) / $factura->getSubtotal()
-                ));
-            }
-        }
-        if ($factura->getReteFuente() > 0) {
-
-            if (array_key_exists('retentions', $CuerpoJson['invoice'])) {
-
-                array_push($CuerpoJson['invoice']['retentions'], array(
-                    "tax_category" => "RET_FUENTE",
-                    "tax_rate" => $factura->getReteFuente()
-                ));
-            } else {
-
-                $CuerpoJson['invoice']['retentions'] = array();
-                array_push($CuerpoJson['invoice']['retentions'], array(
-                    "tax_category" => "RET_FUENTE",
-                    "tax_rate" => $factura->getReteFuente()
-                ));
-            }
-        }
-
-        if ($factura->getDescuento() > 0) {
-            $CuerpoJson['invoice']['charges'] = array(
-                array(
-                    'base_amount' => (float) $factura->getDescuento(),
-                    'reason' => 'descuento',
-                    'discount' => true
-                )
-            );
-        }
-
-        $this->llamarFacturaDataico($CuerpoJson, $factura, $entityManager);
-
         if ($factura->getCufe() != null && $factura->getCufe() != '') {
-            $enviar->enviar($factura->getId());
+            $respues = json_decode($factura->getRespuestaDian(), true); 
+        } else {
+            return $this->json(array(
+                        "xml" => 'fallo'
+            ));
         }
+        $CuerpoJson[$x_nota]['invoice_id'] = $respues['uuid'];
+        $CuerpoJson[$x_nota]['number'] = $nota->getNumeroNota();
+        $CuerpoJson[$x_nota]['numbering']['prefix'] = $prefijo;
+
+        $items = $entityManager->getRepository(NotaCreditoItems::class)->createQueryBuilder('nci')
+            ->andWhere('nci.notaCredito = :val')
+            ->setParameter('val', $nota->getId())
+            ->getQuery()->getResult();
+       
+            foreach ($items as $item) {
+                $itemJ ["sku"] = $item->getCup();
+                $itemJ ["quantity"] = (int)$item->getCantidad();
+                $itemJ ["description"] = $item->getDescripcion();
+                 $itemJ ["price"]=(double)$item->getValorUnitario();
+        
+    
+                if($item->getTasaDescuento()){
+                    
+                   $itemJ["discount_rate"] = $item->getTasaDescuento();  
+                }
+                
+                
+                
+                $itemJ ["taxes"] =array();
+                $itemJ ["retentions"] = array(
+                );
+                if ($item->getIva() > 0) {
+                    array_push($itemJ['taxes'], array(
+                        "tax_category" => "IVA",
+                        "tax_rate" => (int) $item->getIva()));
+                }
+                if ($item->getRetencionFuente() > 0) {
+                    array_push($itemJ['retentions'], array(
+                        "tax_category" => "RET_FUENTE",
+                        "tax_rate" => (int) $item->getRetencionFuente()));
+                }
+                array_push($CuerpoJson[$x_nota]['items'], $itemJ);
+            }
+            $CuerpoJson[$x_nota]['dataico_account_id'] = '01814067-cc44-808a-83a1-de850ba1e360';
+            $CuerpoJson[$x_nota]['env'] = 'PRODUCCION';
+        
+
+        $this->llamarNotaDataico($CuerpoJson, $nota, $entityManager);
+
+        
 
 
 
@@ -386,57 +330,68 @@ class NotaCreditoController extends AbstractController
         return $this->json($responseData);
     }
 
-    public function llamarFacturaDataico($Json, Factura $factura, EntityManagerInterface $entityManager)
+    public function llamarNotaDataico($Json,NotaCredito $nota,  EntityManagerInterface $entityManager)
     {
         //lamada a identificarse
         $prueba = 0;
 
-        $Json['invoice']['dataico_account_id'] = '01814067-cc44-808a-83a1-de850ba1e360';
+       
         $headers = array('Content-Type' => 'application/json', 'auth-token' => '232828f7e45e42e74ac28a0e0dbe4053');
 
-        $Json['invoice']['env'] = 'PRODUCCION';
+
+        $nota->setCuerpoJsonf(json_encode($Json));
 
 
-
-        $factura->setCuerpoJsonf(json_encode($Json));
-
-
-        try {
-            $client = new  GuzzleHttp\Client();
-            $guzzleResult = $client->post('https://api.dataico.com/direct/dataico_api/v2/invoices', [
-                'headers' => $headers,
-                'body' => json_encode($Json)
-            ]);
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
-            $guzzleResult = $e->getResponse();
+        if ($nota->getTipo() == 'credito') {
+            try {
+                $client = new  GuzzleHttp\Client();
+                $guzzleResult = $client->post('https://api.dataico.com/direct/dataico_api/v2/credit_notes', [
+                    'headers' => $headers,
+                    'body' => json_encode($Json)
+                ]);
+            } catch (\GuzzleHttp\Exception\RequestException $e) {
+                $guzzleResult = $e->getResponse();
+            }
+        } else {
+            try {
+                $client = new  GuzzleHttp\Client();
+                $guzzleResult = $client->post('https://api.dataico.com/direct/dataico_api/v2/debit_notes', [
+                    'headers' => $headers,
+                    'body' => json_encode($Json)
+                ]);
+            } catch (\GuzzleHttp\Exception\RequestException $e) {
+                $guzzleResult = $e->getResponse();
+            }
         }
+       
 
 
         $respuesta = $guzzleResult->getBody()->getContents();
-        $factura->setRespuestaDian($respuesta);
+        $nota->setRespuestaDian($respuesta);
 
         $respuestaServer =  json_decode($respuesta, true);
 
 
 
 
-        $entityManager->persist($factura);
+        $entityManager->persist($nota);
         $entityManager->flush();
 
 
 
         if (array_key_exists('dian_status', $respuestaServer)) {
             if ($respuestaServer['dian_status'] == 'DIAN_ACEPTADO' || $prueba == 1) {
-                $factura->setCufe($respuestaServer['cufe']);
-
-                $factura->setPdf($respuestaServer['uuid']);
-                $date = new DateTime();
-                $factura->setFechaValidacion($date);
-
+                if (array_key_exists('cufe', $respuestaServer)) {
+                    $nota->setCufe($respuestaServer['cufe']);
+                    $nota->setRespuestaCorreo($respuestaServer['cufe']);
+              
+                }
+                $entityManager->persist($nota);
+                $entityManager->flush();
 
                 if ($respuestaServer['qrcode'] != null && $respuestaServer['qrcode'] != '') {
                     $codesDir = "uploads/assets/codes/";
-                    $codeFile = $factura->getId() . '.png';
+                    $codeFile = 'N'. $nota->getId() . '.png';
                     $result = Builder::create()
                         ->writer(new PngWriter())
                         ->writerOptions([])
@@ -452,104 +407,13 @@ class NotaCreditoController extends AbstractController
                         ->build();
                     $result->saveToFile($codesDir . $codeFile);
 
-                    $factura->setEstado(1);
+                   
                 }
 
-                $entityManager->persist($factura);
-                $entityManager->flush();
+                
             }
         }
 
-        if (array_key_exists('errors', $respuestaServer)) {
-            $error = $respuestaServer['errors'][0];
-            $prefijo = $factura->getFacturaResolucion()->getPrefijo();
-            $numero = $factura->getNumeroFactura();
-            if ($error['error'] == "Solo puede modificar Factura '" . $prefijo . $numero . "' si esta DIAN rechazada.") {
-
-              
-
-                $cuerpo['actions']['send_dian'] = true;
-                $cuerpo['actions']['send_email'] = false;
-                
-              
-
-
-
-                try {
-                    $client = new  GuzzleHttp\Client();
-                    $guzzleResult = $client->get('https://api.dataico.com/direct/dataico_api/v2/invoices?number=' . $prefijo . $numero, [
-                        'headers' => $headers
-                    ]);
-                    
-                } catch (\GuzzleHttp\Exception\RequestException $e) {
-                    $guzzleResult = $e->getResponse();
-                }
-               
-                $respuestaServerMetodoGet1 = json_decode($guzzleResult->getBody()->getContents(), true);
-                
-
-                if ($respuestaServerMetodoGet1['invoice']['dian_status'] != 'DIAN_ACEPTADO') {
-                    $uuid = $respuestaServerMetodoGet1['invoice']['uuid'];
-                    
-
-                    try {
-                        $client = new  GuzzleHttp\Client();
-                        $guzzleResult = $client->put('https://api.dataico.com/direct/dataico_api/v2/invoices/' . $uuid, [
-                            'headers' => $headers,
-                            'body' => json_encode($cuerpo),
-                        ]);
-                    } catch (\GuzzleHttp\Exception\RequestException $e) {
-                        $guzzleResult = $e->getResponse();
-                    }
-                }
-                
-
-                try {
-                    $client = new  GuzzleHttp\Client();
-                    $guzzleResult = $client->get('https://api.dataico.com/direct/dataico_api/v2/invoices?number=' . $prefijo . $numero, [
-                        'headers' => $headers
-                    ]);
-                } catch (\GuzzleHttp\Exception\RequestException $e) {
-                    $guzzleResult = $e->getResponse();
-                }
-
-                $respuestaServerMetodoGet2 = json_decode($guzzleResult->getBody()->getContents(), true);
-
-                if ($respuestaServerMetodoGet2['invoice']['dian_status'] == 'DIAN_ACEPTADO') {
-
-                    $factura->setRespuestaDian(json_encode($respuestaServerMetodoGet2['invoice']));
-
-                    $factura->setCufe($respuestaServerMetodoGet2['invoice']['cufe']);
-
-                    $factura->setPdf($respuestaServerMetodoGet2['invoice']['uuid']);
-                    $date = new DateTime();
-                    $factura->setFechaValidacion($date);
-
-                    if ($respuestaServerMetodoGet2['invoice']['qrcode'] != null && $respuestaServerMetodoGet2['invoice']['qrcode'] != '') {
-                        $codesDir = "uploads/assets/codes/";
-                        $codeFile = $factura->getId() . '.png';
-                        $result = Builder::create()
-                            ->writer(new PngWriter())
-                            ->writerOptions([])
-                            ->data($respuestaServerMetodoGet2['invoice']['qrcode'])
-                            ->encoding(new Encoding('UTF-8'))
-                            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-                            ->size(300)
-                            ->margin(1)
-                            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
-                            ->labelText('')
-                            ->labelFont(new NotoSans(20))
-                            ->labelAlignment(new LabelAlignmentCenter())
-                            ->build();
-
-                        $result->saveToFile($codesDir . $codeFile);
-
-                        $factura->setEstado(1);
-                    }
-                    $entityManager->persist($factura);
-                    $entityManager->flush();
-                }
-            }
-        }
+        
     }
 }
