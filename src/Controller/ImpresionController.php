@@ -540,9 +540,7 @@ class ImpresionController extends AbstractController
         $base_64='data:image/png;base64,';
         $base_64 .= base64_encode($generator->getBarcode($unidad->getNumeroGuia(), $generator::TYPE_CODE_128));
         
-        echo $base_64;
-         echo '<img src="'.$base_64.'"  width="200px"  height="60px">';
-        die();
+        
         $imageContent = file_get_contents($base_64);
         $path = tempnam(sys_get_temp_dir(), 'prefix');
 
