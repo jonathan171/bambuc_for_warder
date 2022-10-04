@@ -11,8 +11,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
+ * * @UniqueEntity(
+ *     fields={"email"},
+ *     message="Ya existe una cuenta con este correo."
+ * )
  */
-#[UniqueEntity(fields: ['email'], message: 'Ya existe una cuenta con este correo')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**

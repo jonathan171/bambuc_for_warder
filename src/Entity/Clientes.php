@@ -10,8 +10,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="clientes", indexes={@ORM\Index(name="nit", columns={"nit"}), @ORM\Index(name="municipio_id", columns={"municipio_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\ClientesRepository")
+ *  * * @UniqueEntity(
+ *     fields={"nit"},
+ *     message="Ya existe una cuenta con este numero de cocumento."
+ * )
  */
-#[UniqueEntity(fields: ['nit'], message: 'Ya existe una cuenta con este numero de cocumento')]
 class Clientes
 {
     /**
