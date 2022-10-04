@@ -537,20 +537,22 @@ class ImpresionController extends AbstractController
         // Set some content to 
         
         $generator = new BarcodeGeneratorPNG();
-        $base_64='data:image/png;base64,';
-        $base_64 .= base64_encode($generator->getBarcode($unidad->getNumeroGuia(), $generator::TYPE_CODE_128));
+        //$base_64='data:image/png;base64,';
+        $base_64 = base64_encode($generator->getBarcode($unidad->getNumeroGuia(), $generator::TYPE_CODE_128));
         
         
-        $imageContent = file_get_contents($base_64);
+        /*$imageContent = file_get_contents($base_64);
         $path = tempnam(sys_get_temp_dir(), 'prefix');
 
         file_put_contents ($path, $imageContent);
+        echo $path;
+        die();*/
         if($request->query->get('html')){
 
             return $this->render('impresion/stiker.html.twig', [
                 'unidad'  => $unidad,
                 'remision' => $unidad->getEnvioNacional(),
-                'base_64'  => $path,
+                'base_64'  => $base_64,
                 'key' => $found_key+1,
             ]); 
         }
@@ -558,7 +560,7 @@ class ImpresionController extends AbstractController
         $html = $this->renderView('impresion/stiker.html.twig', [
             'unidad'  => $unidad,
             'remision' => $unidad->getEnvioNacional(),
-            'base_64'  => $path,
+            'base_64'  => '@'.$base_64,
             'key' => ($found_key+1).'/'.$totalItem,
         ]);
 
