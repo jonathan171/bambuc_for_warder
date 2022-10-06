@@ -119,5 +119,24 @@
           });
 
     }
+    function desverificar(id){
+       $('#desverificar'+id).hide();
+       $.ajax({
+        url : '{{ path('app_envio_desverificar')}}',
+        data : { id : id},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+         alertify.success('Envio fue Desverificado correctamente');
+         $("#data_table_envios").DataTable().ajax.reload(null,false);
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    }
 </script>   
 {% endblock %}

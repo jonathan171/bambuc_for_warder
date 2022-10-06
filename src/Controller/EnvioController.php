@@ -387,6 +387,25 @@ class EnvioController extends AbstractController
          return $this->json($responseData);
     }
 
+    #[Route('/desverificar', name: 'app_envio_desverificar', methods: ['GET', 'POST'])]
+    public function  desverificar(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ) {
+        
+        $envio = $entityManager->getRepository(Envio::class)->find($request->request->get('id'));
+
+        $envio->setVerificado(0);
+
+        $entityManager->persist($envio);
+        $entityManager->flush();
+   
+        $responseData = array(
+        "results" => 'success',
+        );
+         return $this->json($responseData);
+    }
+
     #[Route('/{id}/delete', name: 'app_envio_delete', methods: ['GET'])]
     public function delete(Request $request, Envio $envio, EntityManagerInterface $entityManager): Response
     {

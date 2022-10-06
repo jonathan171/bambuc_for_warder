@@ -81,7 +81,7 @@ class EnvioRepository extends ServiceEntityRepository
             <i class="fa fa-eye text-success" ></i>
              </a>';
             if ($item->getVerificado()) {
-                $actions .= '<button class="btn btn-success"> <i class="fas fa-check" ></i></button>';
+                $actions .= '<button class="btn btn-success" id="desverificar'.$item->getId().'" onClick="desverificar('.$item->getId().');"> <i class="fas fa-check" ></i></button>';
             }else {
                 $actions .= '<button class="btn btn-secondary" id="verificar'.$item->getId().'" onClick="verificar('.$item->getId().');"> <i class="fas fa-check" ></i></button>';
             }
