@@ -120,6 +120,10 @@
             var data = e.params.data;
             
             $('#envios_nacionales_cliente').val(data.id);
+            $('#envios_nacionales_cliente').val(data.id);
+            $('#envios_nacionales_direccionOrigen').val(data.direccion);
+            $('#envios_nacionales_municipioOrigen').val(data.municipio);
+            $("#envios_nacionales_municipioOrigen").select2({width: '100%'});
             $('#lblcliente').html(data.text);
             
         }).on('select2:open', function() {
