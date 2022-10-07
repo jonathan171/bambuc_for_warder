@@ -1,193 +1,222 @@
- <div class="card-body">
-{{ form_start(form) }}
-    <div class="row">
-        <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Cliente </label>
-                    <div class="col-sm-9">
-                       <select class="form-control" id="input-buscador-clientes"></select>
-                       
-                      <label id="lblcliente" name="lblcliente"> 
-                         {% if form.vars.data.id %}
-                               
-                                    {{ form.vars.data.cliente.razonSocial }}
-                               
-                         {% endif %}
-                      </label>
-                      <br>
-                       <a class="btn waves-effect waves-light btn-rounded btn-success" onclick="CrearCliente()">Nuevo Cliente</a>
-                    </div>
-                    
-            </div>
-        </div>
-         <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> N° </label>
-                    <div class="col-sm-9">
-                        {{form_widget(form.numero) }} 
-                    </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> fecha </label>
-                    <div class="col-sm-9">
-                      {{form_widget(form.fecha) }}    
-                    </div>
-                    
-            </div>
-        </div>
-         <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Municipio Origen </label>
-                    <div class="col-sm-9">
-                        {{form_widget(form.municipioOrigen) }} 
-                    </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Dirección Origen </label>
-                    <div class="col-sm-9">
-                      {{form_widget(form.direccionOrigen) }}    
-                    </div>
-                    
-            </div>
-        </div>
-         <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Municipio Destino </label>
-                    <div class="col-sm-9">
-                        {{form_widget(form.municipioDestino) }} 
-                    </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Dirección Destino</label>
-                    <div class="col-sm-9">
-                      {{form_widget(form.direccionDestino) }}    
-                    </div>
-                    
-            </div>
-        </div>
-         <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Unidades </label>
-                    <div class="col-sm-9">
-                        {{form_widget(form.unidades) }} 
-                    </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Destinatario</label>
-                    <div class="col-sm-9">
-                      {{form_widget(form.destinatario) }}    
-                    </div>
-                    
-            </div>
-        </div>
-         <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Telefono  Destinatario</label>
-                    <div class="col-sm-9">
-                        {{form_widget(form.telefonoDestinatario) }} 
-                    </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Seguro</label>
-                    <div class="col-sm-9">
-                      {{form_widget(form.seguro) }}    
-                    </div>
-                    
-            </div>
-        </div>
-         <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Forma de Pago</label>
-                    <div class="col-sm-9">
-                        {{form_widget(form.formaPago) }} 
-                    </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Descripción</label>
-                    <div class="col-sm-9">
-                      {{form_widget(form.descripcion) }}    
-                    </div>
-                    
-            </div>
-        </div>
-         <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Observaciones</label>
-                    <div class="col-sm-9">
-                        {{form_widget(form.observacion) }} 
-                    </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Valor Total</label>
-                    <div class="col-sm-9">
-                      {{form_widget(form.valorTotal) }}    
-                    </div>
-                    
-            </div>
-        </div>
-         <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Peso </label>
-                    <div class="col-sm-9">
-                        {{form_widget(form.peso) }} 
-                    </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-       
-         <div class="col-sm-12 col-lg-6">
-            <div class="form-group mb-3 row">
-                    <label class="col-sm-3 text-end control-label col-form-label"> Contra Entrega </label>
-                    <div class="col-sm-9">
-                        {{form_widget(form.contraEntrega) }} 
-                    </div>
-            </div>
-        </div>
-    </div>
+<div class="card-body">
+	{{ form_start(form) }}
+	<div class="row">
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Cliente
+				</label>
+				<div class="col-sm-9">
+					<select class="form-control" id="input-buscador-clientes"></select>
 
-     <div class="hide">
-    {{form_rest(form)}}
-    </div>
-    <div class="p-3">
-        <div class="form-group text-end">
-       
-        <button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
-         <a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_envios_nacionales_index') }}">regresar</a>
-        </div>
-    </div>
-{{ form_end(form) }}
+					<label id="lblcliente" name="lblcliente">
+						{% if form.vars.data.id %}
+
+							{{ form.vars.data.cliente.razonSocial }}
+
+						{% endif %}
+					</label>
+					<br>
+					<a class="btn waves-effect waves-light btn-rounded btn-success" onclick="CrearCliente()">Nuevo Cliente</a>
+				</div>
+
+			</div>
+		</div>
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					N°
+				</label>
+				<div class="col-sm-9">
+					{{form_widget(form.numero) }}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					fecha
+				</label>
+				<div class="col-sm-9">
+					{{form_widget(form.fecha) }}
+				</div>
+
+			</div>
+		</div>
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Municipio Origen
+				</label>
+				<div class="col-sm-9">
+					{{form_widget(form.municipioOrigen) }}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Dirección Origen
+				</label>
+				<div class="col-sm-9">
+					{{form_widget(form.direccionOrigen) }}
+				</div>
+
+			</div>
+		</div>
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Destinatario</label>
+				<div class="col-sm-9">
+					{{form_widget(form.destinatario) }}
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Dirección Destino</label>
+				<div class="col-sm-9">
+					{{form_widget(form.direccionDestino) }}
+				</div>
+
+			</div>
+		</div>
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Municipio Destino
+				</label>
+				<div class="col-sm-9">
+					{{form_widget(form.municipioDestino) }}
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Telefono  Destinatario</label>
+				<div class="col-sm-9">
+					{{form_widget(form.telefonoDestinatario) }}
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Unidades
+				</label>
+				<div class="col-sm-9">
+					{{form_widget(form.unidades) }}
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Seguro</label>
+				<div class="col-sm-9">
+					{{form_widget(form.seguro) }}
+				</div>
+
+			</div>
+		</div>
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Descripción</label>
+				<div class="col-sm-9">
+					{{form_widget(form.descripcion) }}
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<div class="row">
+
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Observaciones</label>
+				<div class="col-sm-9">
+					{{form_widget(form.observacion) }}
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Forma de Pago</label>
+				<div class="col-sm-9">
+					{{form_widget(form.formaPago) }}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Valor Total</label>
+				<div class="col-sm-9">
+					{{form_widget(form.valorTotal) }}
+				</div>
+
+			</div>
+		</div>
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Peso
+				</label>
+				<div class="col-sm-9">
+					{{form_widget(form.peso) }}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+
+		<div class="col-sm-12 col-lg-6">
+			<div class="form-group mb-3 row">
+				<label class="col-sm-3 text-end control-label col-form-label">
+					Contra Entrega
+				</label>
+				<div class="col-sm-9">
+					{{form_widget(form.contraEntrega) }}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="hide">
+		{{form_rest(form)}}
+	</div>
+	<div class="p-3">
+		<div class="form-group text-end">
+
+			<button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
+			<a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_envios_nacionales_index') }}">regresar</a>
+		</div>
+	</div>
+	{{ form_end(form) }}
 </div>
-<div id="clientes" title="Cliente" style="display:none;width:800px;height:500px;" >        
-    <div id="divcliente" >
-
-    </div>
+<div id="clientes" title="Cliente" style="display:none;width:800px;height:500px;">
+	<div id="divcliente"></div>
 </div>
