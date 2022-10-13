@@ -660,10 +660,14 @@ class ImpresionController extends AbstractController
             ->setParameter('val', $dato['remision'])
             ->getQuery()->getResult();
             
+            $items_array = $entityManager->getRepository(EnviosNacionalesUnidades::class)->createQueryBuilder('fi')
+            ->andWhere('fi.envioNacional = :val')
+            ->setParameter('val', $dato['remision'])
+            ->getQuery()->getArrayResult();
             $totalItem = count($items);
             foreach ($items as $unidad){
         
-                $found_key = array_search($unidad->getId(), array_column($items, 'id'));
+                $found_key = array_search($unidad->getId(), array_column($items_array, 'id'));
                
                 $base_64 = base64_encode($generator->getBarcode($unidad->getNumeroGuia(), $generator::TYPE_CODE_128));
                 /*if($request->query->get('html')){

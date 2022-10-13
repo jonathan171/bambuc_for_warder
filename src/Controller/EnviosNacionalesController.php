@@ -40,6 +40,15 @@ class EnviosNacionalesController extends AbstractController
             } else {
                 $enviosNacionale->setNumero(1);
             }
+            $razon_social = '';
+        if($request->query->get('id_anterior')){
+            $envioAnterior = $entityManager->getRepository(EnviosNacionales::class)->find($request->query->get('id_anterior'));
+            $enviosNacionale->setCliente($envioAnterior->getCliente());
+            $enviosNacionale->setDireccionOrigen($envioAnterior->getCliente()->getDireccion());
+            $enviosNacionale->setMunicipioOrigen($envioAnterior->getCliente()->getMunicipio());
+            $razon_social = $envioAnterior->getCliente()->getRazonSocial();
+
+        }
         $enviosNacionale->setObservacion('LLAMAR AL REMITENTE ANTES DE REALIZAR LA DEVOLUCIÓN');
         $form = $this->createForm(EnviosNacionalesType::class, $enviosNacionale);
         $form->handleRequest($request);
@@ -72,13 +81,14 @@ class EnviosNacionalesController extends AbstractController
                 $entityManager->persist($referenciaUnida);
                 $entityManager->flush();
             }
-            return $this->redirectToRoute('app_envios_nacionales_edit', ['id' => $enviosNacionale->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_envios_nacionales_new', ['id_anterior' => $enviosNacionale->getId()], Response::HTTP_SEE_OTHER);
            
         }
 
         return $this->renderForm('envios_nacionales/new.html.twig', [
             'envios_nacionale' => $enviosNacionale,
             'form' => $form,
+            'razon_social' =>  $razon_social
         ]);
     }
 

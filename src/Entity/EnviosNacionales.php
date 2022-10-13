@@ -73,9 +73,9 @@ class EnviosNacionales
     /**
      * @var string
      *
-     * @ORM\Column(name="peso", type="decimal", precision=20, scale=2, nullable=false, options={"default"="0.00"})
+     * @ORM\Column(name="peso", type="decimal", precision=20, scale=2, nullable=false)
      */
-    private $peso = '0.00';
+    private $peso;
 
     /**
      * @var string|null
@@ -100,9 +100,9 @@ class EnviosNacionales
     /**
      * @var string
      *
-     * @ORM\Column(name="valor_total", type="decimal", precision=20, scale=2, nullable=false, options={"default"="0.00"})
+     * @ORM\Column(name="valor_total", type="decimal", precision=20, scale=2, nullable=false)
      */
-    private $valorTotal = '0.00';
+    private $valorTotal ;
 
     /**
      * @var string

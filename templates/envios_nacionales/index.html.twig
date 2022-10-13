@@ -22,6 +22,13 @@
         <a class="btn waves-effect waves-light btn-warning" onclick="imprimirRemision()">Imprimir Remisiones</a>
   </div>
 </div>
+<div class="alert alert-dismissable" style="border: 1px #75caeb solid;">
+		<div class="div_todo" style="width: 10%;"><input type="checkbox" id="select_all"/>
+		</div>
+		<di class="div_todo">
+			<b>Seleccionar Todo</b>
+		</di>
+	</div>
 <div class="table-responsive">
 <div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
 <div class="col-sm-12">
@@ -138,7 +145,7 @@
                 }
             );
         
-        $.redirect('{{ path('app_impresion_stiker_todos')}}',{datos:datos},"POST");
+        $.redirect('{{ path('app_impresion_stiker_todos')}}',{datos:datos},"POST",  "_blank");
 
 
     }
@@ -150,8 +157,13 @@
                 
                 }
             );
-         $.redirect('{{ path('app_impresion_remision_todos')}}',{datos:datos},"POST");
+         $.redirect('{{ path('app_impresion_remision_todos')}}',{datos:datos},"POST",  "_blank");
 
     }
+
+    $('#select_all').change(function() {
+        var checkboxes = $('#data_table_envios').find(':checkbox').not($(this));
+        checkboxes.prop('checked', $(this).is(':checked'));
+      });
 </script>   
 {% endblock %}
