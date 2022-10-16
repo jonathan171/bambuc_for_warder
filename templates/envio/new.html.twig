@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% import "macros/select2.html.twig" as macroselect2 %}
+
 {% block title %}New Envio{% endblock %}
+
+{% block stylesheets %}
+{{ macroselect2.styleSelect2}}
+{% endblock %}
 
 {% block body %}
     <h1>Crear Nuevo Envio</h1>
@@ -11,7 +17,7 @@
 {% endblock %}
 
 {% block javascripts %} 
-
+{{ macroselect2.scriptSelect2}}
 <script>
 
 $('#envio_numeroEnvio').keyup(function(){
@@ -34,5 +40,14 @@ $('#envio_numeroEnvio').keyup(function(){
             });
         });
 
+    $("#envio_paisOrigen").select2({
+            width: '100%'});
+            
+    $("#envio_paisDestino").select2({
+            width: '100%'});
+
+    $(document).on('select2:open', () => {
+        document.querySelector('.select2-search__field').focus();
+     });
 </script>
 {% endblock %}

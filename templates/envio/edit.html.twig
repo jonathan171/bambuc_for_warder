@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% import "macros/select2.html.twig" as macroselect2 %}
+
 {% block title %}Edit Envio{% endblock %}
+
+{% block stylesheets %}
+{{ macroselect2.styleSelect2}}
+{% endblock %}
 
 {% block body %}
     <h1>Editar Envio</h1>
@@ -13,6 +19,7 @@
    
 {% endblock %}
 {% block javascripts %} 
+{{ macroselect2.scriptSelect2}}
       <script>
     function CambiarValor(id){
        $.ajax({
@@ -95,6 +102,15 @@
           });
 
     }
+    $("#envio_paisOrigen").select2({
+            width: '100%'});
+            
+    $("#envio_paisDestino").select2({
+            width: '100%'});
+
+    $(document).on('select2:open', () => {
+        document.querySelector('.select2-search__field').focus();
+     });
 
     </script>
 {% endblock %}

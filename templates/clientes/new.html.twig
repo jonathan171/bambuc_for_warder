@@ -39,5 +39,9 @@
             width: '100%'});
      $("#clientes_idObligacion").select2({
             width: '100%'});
+
+      $(document).on('select2:open', () => {
+            document.querySelector('.select2-search__field').focus();
+        });
 </script>
 {% endblock %}
