@@ -161,7 +161,7 @@
          $.redirect('{{ path('app_impresion_remision_todos')}}',{datos:datos},"POST",  "_blank");
 
     }
-    function exportarEnvios()(){
+    function exportarEnvios(){
         datos = [];
         $("input[name='envId[]']:checked").each(
             function() {
