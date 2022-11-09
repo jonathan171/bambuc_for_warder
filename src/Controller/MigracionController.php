@@ -153,6 +153,111 @@ class MigracionController extends AbstractController
         return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
     }
 
+    #[Route('/exportar_envio_excel_seleccionados', name: 'app_migracion_exportar_envio_excel_seleccioandos', methods: ['GET','POST'])]
+    public function exportarEnvioExcelSeleccionados(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $spreadsheet = new Spreadsheet();
+
+       
+
+        /* @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet */
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->getCell('A1')->setValue("NOMBRE DE DESTINATARIO");
+        $sheet->getCell('B1')->setValue("DIRECCION");
+
+        $sheet->getCell('C1')->setValue("CIUDAD");
+        $sheet->getCell('D1')->setValue("TELEFONO");
+        $sheet->getCell('E1')->setValue("PESO");
+        $sheet->getCell('F1')->setValue("VALOR DECLARADO");
+        $sheet->getCell('G1')->setValue("LARGO");
+        $sheet->getCell('H1')->setValue("ALTO");
+        $sheet->getCell('I1')->setValue("ANCHO");
+        $sheet->getCell('J1')->setValue("REFERENCIA");
+        $sheet->getCell('K1')->setValue("OBSERVACIONES");
+
+
+
+       
+
+        $sheet->getColumnDimension('B')->setWidth(50);
+        $sheet->getColumnDimension('C')->setWidth(50);
+        $sheet->getColumnDimension('D')->setWidth(50);
+        $sheet->getColumnDimension('E')->setWidth(50);
+        $sheet->getColumnDimension('F')->setWidth(50);
+        $sheet->getColumnDimension('G')->setWidth(50);
+        $sheet->getColumnDimension('H')->setWidth(50);
+        $sheet->getColumnDimension('I')->setWidth(50);
+        $sheet->getColumnDimension('J')->setWidth(50);
+        $sheet->getColumnDimension('K')->setWidth(50);
+       // $sheet->getStyle('B4')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
+       
+
+       
+
+
+
+
+
+
+       $datos = (array)$request->request->get('datos');
+
+        // Indice de la celda en la que se comienza a renderizar
+        $cell = 2;
+        $i = 0;
+        $total = 0;
+        
+
+        foreach ($datos as $dato) {
+
+            $envio = $entityManager->getRepository(EnviosNacionales::class)->find($dato['remision']);
+            $unidades = $entityManager->getRepository(EnviosNacionalesUnidades::class)->createQueryBuilder('eu')
+            ->andWhere('eu.envioNacional = :val')
+            ->setParameter('val', $envio->getId())
+            ->getQuery()->getResult();
+
+            foreach($unidades as $unidad){
+                
+            $sheet->setCellValue("A$cell", ($envio->getDestinatario()));
+            $sheet->setCellValue("B$cell", $envio->getDireccionDestino());
+            $sheet->setCellValue("C$cell", mb_strtoupper($envio->getMunicipioDestino()->getNombre().'-'.$envio->getMunicipioDestino()->getDepartamento()->getNombre()));
+            $sheet->setCellValue("D$cell", $envio->getTelefonoDestinatario());
+            $sheet->setCellValue("E$cell", $unidad->getPeso());
+            $sheet->setCellValue("F$cell", $unidad->getValorDeclarado());
+            $sheet->setCellValue("G$cell", $unidad->getLargo());
+            $sheet->setCellValue("H$cell", $unidad->getAlto());
+            $sheet->setCellValue("I$cell", $unidad->getAncho());
+            $sheet->setCellValue("J$cell", $envio->getCliente()->getRazonSocial().'['.$unidad->getNumeroReferencia().']');
+            $sheet->setCellValue("K$cell", $envio->getObservacion());
+
+           
+
+            // Continuar en una nueva fila
+            $cell++;
+
+            }
+           
+
+        }
+       
+
+
+
+        $sheet->setTitle("Exportacion Envios 472");
+
+        // Crear tu archivo Office 2007 Excel (XLSX Formato)
+        $writer = new Xlsx($spreadsheet);
+
+        // Crear archivo temporal en el sistema
+        $fileName = 'envios_472.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+
+        // Guardar el archivo de excel en el directorio temporal del sistema
+        $writer->save($temp_file);
+
+        // Retornar excel como descarga
+        return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
+    }
+
     #[Route('/importar_472', name: 'app_migracion_importar_472')]
     public function importar472(): Response
     {   

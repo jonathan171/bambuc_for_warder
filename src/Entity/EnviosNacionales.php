@@ -95,7 +95,7 @@ class EnviosNacionales
      *
      * @ORM\Column(name="seguro", type="decimal", precision=20, scale=2, nullable=false, options={"default"="0.00"})
      */
-    private $seguro = '0.00';
+    private $seguro;
 
     /**
      * @var string

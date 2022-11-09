@@ -20,6 +20,7 @@
         <a class="btn waves-effect waves-light btn-success" href="{{ path('app_migracion_importar_472') }}">Importar Envios</a>
         <a class="btn waves-effect waves-light btn-info" onclick="imprimirStiker()">Imprimir Stikers</a>
         <a class="btn waves-effect waves-light btn-warning" onclick="imprimirRemision()">Imprimir Remisiones</a>
+        <a class="btn waves-effect waves-light btn-warning" onclick="exportarEnvios()">Exportar Envios Seleccioandos</a>
   </div>
 </div>
 <div class="alert alert-dismissable" style="border: 1px #75caeb solid;">
@@ -158,6 +159,19 @@
                 }
             );
          $.redirect('{{ path('app_impresion_remision_todos')}}',{datos:datos},"POST",  "_blank");
+
+    }
+    function exportarEnvios()(){
+        datos = [];
+        $("input[name='envId[]']:checked").each(
+            function() {
+                datos.push({remision: $(this).val()});
+                
+                }
+            );
+        
+        $.redirect('{{ path('app_impresion_stiker_todos')}}',{datos:datos},"POST",  "_blank");
+
 
     }
 
