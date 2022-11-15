@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Envio;
+use App\Entity\Pais;
 use App\Form\EnvioType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +16,7 @@ use App\Entity\TarifasConfiguracion;
 use App\Repository\PaisRepository;
 use App\Repository\PaisZonaRepository;
 use DateTime;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 #[Route('/envio')]
@@ -266,7 +268,9 @@ class EnvioController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $shearch = '%' . $request->request->get('envia') . '%';
-        $query = $entityManager->getRepository(Envio::class)->createQueryBuilder('e');
+        $query = $entityManager->getRepository(Envio::class)->createQueryBuilder('e')
+                                ->innerJoin(Pais::class, 'p', Join::WITH,   'p.id = e.paisDestino')
+                                ->innerJoin(Pais::class, 'p1', Join::WITH,  'p1.id = e.paisOrigen');
 
         if ($request->request->get('fecha_inicio')) {
 
@@ -277,8 +281,8 @@ class EnvioController extends AbstractController
         }
 
         if ($request->request->get('envia')) {
-            $query->andWhere('e.quienEnvia like :val2')
-                ->setParameter('val2', $shearch);
+            $query->andWhere('e.numeroEnvio like :val OR e.fechaEnvio like :val2 OR e.empresa like :val3 OR e.quienRecibe like :val4 OR e.quienEnvia like :val5 OR p.nombre like :val6 OR p1.nombre like :val7')
+                ->setParameters(['val' => $shearch, 'val2' => $shearch, 'val3' => $shearch, 'val4' => $shearch, 'val5' => $shearch, 'val6' => $shearch, 'val7' => $shearch]);
         }
         $envios = $query->andWhere('e.facturado = 0')
             ->setMaxResults(200)
