@@ -286,7 +286,7 @@ class NotaCreditoController extends AbstractController
             ->getQuery()->getResult();
        
             foreach ($items as $item) {
-                $itemJ ["sku"] = $item->getCup();
+                $itemJ ["sku"] = $item->getCodigo();
                 $itemJ ["quantity"] = (int)$item->getCantidad();
                 $itemJ ["description"] = $item->getDescripcion();
                  $itemJ ["price"]=(double)$item->getValorUnitario();
