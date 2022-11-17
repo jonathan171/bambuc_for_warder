@@ -279,6 +279,7 @@ class NotaCreditoController extends AbstractController
         $CuerpoJson[$x_nota]['invoice_id'] = $respues['uuid'];
         $CuerpoJson[$x_nota]['number'] = $nota->getNumeroNota();
         $CuerpoJson[$x_nota]['numbering']['prefix'] = $prefijo;
+        $CuerpoJson[$x_nota]['items'] = array();
 
         $items = $entityManager->getRepository(NotaCreditoItems::class)->createQueryBuilder('nci')
             ->andWhere('nci.notaCredito = :val')
