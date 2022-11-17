@@ -253,11 +253,11 @@ class NotaCreditoController extends AbstractController
 
         if ($request->request->get('tipo') == 91) {
             $x_nota = 'credit_note';
-            $prefijo = "NCE";
+            $prefijo = "NC";
         } elseif ($request->request->get('tipo') == 92) {
         
             $x_nota = 'debit_note';
-            $prefijo = "NDE";
+            $prefijo = "ND";
         }
 
         $CuerpoJson['actions']['send_dian'] = true;
