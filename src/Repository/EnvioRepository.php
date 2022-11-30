@@ -64,8 +64,8 @@ class EnvioRepository extends ServiceEntityRepository
             ->innerJoin(Pais::class, 'p1', Join::WITH,  'p1.id = e.paisOrigen');
         if ($options['search']) {
             $shearch = '%' . $options['search'] . '%';
-            $query->andWhere('e.numeroEnvio like :val OR e.fechaEnvio like :val2 OR e.empresa like :val3 OR e.quienRecibe like :val4 OR e.quienEnvia like :val5 OR p.nombre like :val6 OR p1.nombre like :val7')
-                ->setParameters(['val' => $shearch, 'val2' => $shearch, 'val3' => $shearch, 'val4' => $shearch, 'val5' => $shearch, 'val6' => $shearch, 'val7' => $shearch]);
+            $query->andWhere('e.numeroEnvio like :val OR e.fechaEnvio like :val2 OR e.empresa like :val3 OR e.quienRecibe like :val4 OR e.quienEnvia like :val5 OR p.nombre like :val6 OR p1.nombre like :val7 OR e.referencia like :val8')
+                ->setParameters(['val' => $shearch, 'val2' => $shearch, 'val3' => $shearch, 'val4' => $shearch, 'val5' => $shearch, 'val6' => $shearch, 'val7' => $shearch , 'val8' => $shearch]);
         }
         if ($options['order']['column']) {
             $query->orderBy('e.' . $options['order']['column'], $options['order']['dir']);
