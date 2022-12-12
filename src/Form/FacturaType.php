@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Factura;
 use App\Form\DataTransformer\ClientesToNumberTransformer;
+use App\Repository\FacturaResolucionRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -14,10 +15,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class FacturaType extends AbstractType
 {
     private $transformer;
+    private $facturaResolucionRepository;
+   
 
-    public function __construct(ClientesToNumberTransformer $transformer)
+    public function __construct(ClientesToNumberTransformer $transformer , FacturaResolucionRepository $facturaResolucionRepository)
     {
         $this->transformer = $transformer;
+        $this->facturaResolucionRepository = $facturaResolucionRepository;
     }
 
 
@@ -74,6 +78,7 @@ class FacturaType extends AbstractType
                 ]
             ])
             ->add('facturaResolucion',null,[
+                'choices' => $this->facturaResolucionRepository->findActive(),
                 'attr' => [
                     'class' => 'form-control',
                 ],
