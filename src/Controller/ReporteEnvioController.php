@@ -55,6 +55,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getCell('G4')->setValue("DESTINATARIO");
         $sheet->getCell('H4')->setValue("VALOR \n DEL \n ENVÍO");
         $sheet->getCell('I4')->setValue("FACTURA");
+        $sheet->getCell('J4')->setValue("REFERENCIA");
 
 
         $styleArray = array(
@@ -71,7 +72,7 @@ class ReporteEnvioController extends AbstractController
                 ),
             ),
         );
-        foreach (range('A', 'I') as $columnID) {
+        foreach (range('A', 'J') as $columnID) {
 
             $sheet->getStyle($columnID . '4')->applyFromArray($styleArray);
         }
@@ -144,8 +145,9 @@ class ReporteEnvioController extends AbstractController
             $sheet->getStyle("H$cell",)
                 ->getNumberFormat()
                 ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->setCellValue("J$cell", $envio->getReferencia());
             $total += $envio->getTotalACobrar();
-            foreach (range('A', 'I') as $columnID) {
+            foreach (range('A', 'J') as $columnID) {
 
                 $sheet->getStyle($columnID . $cell)->applyFromArray($styleArray);
             }
@@ -163,6 +165,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getStyle("G$cell")->applyFromArray($styleArray);
         $sheet->getStyle("H$cell")->applyFromArray($styleArray);
         $sheet->getStyle("I$cell")->applyFromArray($styleArray);
+        $sheet->getStyle("J$cell")->applyFromArray($styleArray);
 
 
         $sheet->setTitle("Reporte envios");
