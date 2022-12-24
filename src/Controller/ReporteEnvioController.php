@@ -84,6 +84,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getColumnDimension('F')->setWidth(15);
         $sheet->getColumnDimension('G')->setWidth(30);
         $sheet->getColumnDimension('H')->setWidth(25);
+        $sheet->getColumnDimension('J')->setWidth(30);
         $sheet->getStyle('B4')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
         $sheet->getRowDimension('4')->setRowHeight(45, 'pt');
         $sheet->getRowDimension('1')->setRowHeight(100, 'px');
