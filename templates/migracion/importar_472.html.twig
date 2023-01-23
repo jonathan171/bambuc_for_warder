@@ -68,7 +68,7 @@
         $("#form-importar-envios").on("submit", function(){
             var filename = $("#archivo_excel").val();
             var extension = filename.substr(filename.lastIndexOf('.') + 1).toLowerCase();
-            var allowedExtensions = ["xls", "xlsx"];
+            var allowedExtensions = ["xls", "xlsx","csv"];
             
             // Validar que se suba un archivo
             if(!document.getElementById("archivo_excel").files.length){

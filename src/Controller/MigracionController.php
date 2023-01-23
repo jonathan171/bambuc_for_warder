@@ -280,16 +280,17 @@ class MigracionController extends AbstractController
             }
             
         
-            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file->getRealPath());
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
 
             // Need this otherwise dates and such are returned formatted
             /** @noinspection PhpUndefinedMethodInspection */
             $reader->setReadDataOnly(true);
+            $reader->castFormattedNumberToNumeric(true);
     
             // Just grab all the rows
             $wb = $reader->load($file->getRealPath());
             $ws = $wb->getSheet(0);
-            $rows = $ws->toArray();
+            $rows = $ws->toArray();          
             $i=0;
             $this->result = array();
             foreach($rows as $row) {
@@ -339,7 +340,7 @@ class MigracionController extends AbstractController
             "messages" => array(),
             "data" => array()
         );
-      
+         
         $_rowData = array(
             "guia_master" => $excel_row[0],
             "numero_guia" => $excel_row[1],
@@ -347,8 +348,8 @@ class MigracionController extends AbstractController
             "direccion_destinatario" => trim($excel_row[3]),
             "ciudad" => $excel_row[4],
             "pais" => $excel_row[5],
-            "valor_declarado" => $excel_row[6],
-            "valor_por_recaudar" => $excel_row[7],
+            "valor_declarado" => $this->str_replaceChars($excel_row[6]),
+            "valor_por_recaudar" => $this->str_replaceChars($excel_row[7]),
             "peso_fisico" => $excel_row[8],
             "largo" => $excel_row[9],
             "ancho" => $excel_row[10],
@@ -432,5 +433,8 @@ class MigracionController extends AbstractController
         return $_log;
     }
 
+    private function str_replaceChars ($str){
+        return str_replace(array("$", " ", "."), "", $str);
+      }
 
 }

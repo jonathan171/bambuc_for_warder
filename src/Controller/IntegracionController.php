@@ -22,7 +22,7 @@ class IntegracionController extends AbstractController
 {
     #[Route('/', name: 'app_integracion_index')]
     public function index(Request $request): Response
-    {   
+    {
         // usually you'll want to make sure the user is authenticated first,
         // see "Authorization" below
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -38,7 +38,7 @@ class IntegracionController extends AbstractController
         // usually you'll want to make sure the user is authenticated first,
         // see "Authorization" below
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
+
         return $this->render('integracion/dhl.html.twig', [
             'controller_name' => 'IntegracionController',
         ]);
@@ -46,37 +46,39 @@ class IntegracionController extends AbstractController
 
     #[Route('/envio_dhl', name: 'app_integracion_enviodhl', methods: ['GET', 'POST'])]
     public function enviodhl(Request $request, ManagerRegistry $doctrine, TarifasRepository $tarifasRepository, PaisZonaRepository $paisZonaRepository): Response
-    {   
+    {
         $codigo_barras = $request->request->get('codigo_barras');
         $client = new GuzzleHttp\Client();
-        $headers = array('Accept-Language'=>'eng','Authorization' => 'Basic YXBZNWlEMGZRNGpDNXQ6TSQ1elokMmZOQDNvTiM2aA==',
-        'Accept' => 'application/json');
-       
+        $headers = array(
+            'Accept-Language' => 'eng', 'Authorization' => 'Basic YXBZNWlEMGZRNGpDNXQ6TSQ1elokMmZOQDNvTiM2aA==',
+            'Accept' => 'application/json'
+        );
+
         try {
             $client = new  GuzzleHttp\Client();
-            $res = $client->get('https://express.api.dhl.com/mydhlapi/shipments/'.$codigo_barras.'/tracking?trackingView=all-checkpoints&levelOfDetail=all', [
+            $res = $client->get('https://express.api.dhl.com/mydhlapi/shipments/' . $codigo_barras . '/tracking?trackingView=all-checkpoints&levelOfDetail=all', [
                 'headers' => $headers
             ]);
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             $res = $e->getResponse();
         }
         //para pruebas 
-       /* $headers = array('Accept-Language'=>'eng','Authorization' => 'Basic YXBZNWlEMGZRNGpDNXQ6TSQ1elokMmZOQDNvTiM2aA==',
+        /* $headers = array('Accept-Language'=>'eng','Authorization' => 'Basic YXBZNWlEMGZRNGpDNXQ6TSQ1elokMmZOQDNvTiM2aA==',
         'Accept' => 'application/json');
         $res = $client->request('GET', 'https://express.api.dhl.com/mydhlapi/test/shipments/'.$codigo_barras.'/tracking?trackingView=all-checkpoints&levelOfDetail=all', ['headers' => $headers]);
         */
 
         // 'application/json; charset=utf8'
-        $respuestaServer= json_decode($res->getBody(), true);
-        if(array_key_exists('shipments', $respuestaServer)){
+        $respuestaServer = json_decode($res->getBody(), true);
+        if (array_key_exists('shipments', $respuestaServer)) {
             $array_envio = $respuestaServer['shipments'][0];
 
-         
-            $envio = $doctrine->getRepository(Envio::class)->findOneBy(['numeroEnvio'=> $array_envio['shipmentTrackingNumber'],'empresa'=> 'DHL']);
 
-            if(!$envio){
+            $envio = $doctrine->getRepository(Envio::class)->findOneBy(['numeroEnvio' => $array_envio['shipmentTrackingNumber'], 'empresa' => 'DHL']);
+
+            if (!$envio) {
                 $envio = new Envio();
-            }else {
+            } else {
                 $this->addFlash(
                     'notice',
                     'Este envio ya se encuentra registrado en el sistema por favor verificalo en el listado de envios'
@@ -84,8 +86,8 @@ class IntegracionController extends AbstractController
                 return $this->redirectToRoute('app_integracion_dhl', [], Response::HTTP_SEE_OTHER);
             }
             $envio->setCodigo($array_envio['productCode']);
-            
-            $envio->setNumeroEnvio($array_envio['shipmentTrackingNumber']); 
+
+            $envio->setNumeroEnvio($array_envio['shipmentTrackingNumber']);
             $envio->setDescripcion($array_envio['description']);
 
             //calcular que se cobrara
@@ -93,87 +95,74 @@ class IntegracionController extends AbstractController
             $total_peso_real = 0;
             $total_dimension = 0;
             $total_peso = 0;
-            foreach($array_envio['pieces'] as $pieza){
-                $dimension = (($pieza['dimensions']['length']*$pieza['dimensions']['width']*$pieza['dimensions']['height'])/5000);
-                $total_dimension+= $dimension;
-                $total_peso+= $pieza['weight'];
+            foreach ($array_envio['pieces'] as $pieza) {
+                $dimension = (($pieza['dimensions']['length'] * $pieza['dimensions']['width'] * $pieza['dimensions']['height']) / 5000);
+                $total_dimension += $dimension;
+                $total_peso += $pieza['weight'];
                 //pesos reales de la transportadora
-                if(array_key_exists('actualWeight', $pieza)){
-                    $total_peso_real+= $pieza['actualWeight'];
-                }else{
-                    $total_peso_real=0;
+                if (array_key_exists('actualWeight', $pieza)) {
+                    $total_peso_real += $pieza['actualWeight'];
+                } else {
+                    $total_peso_real = 0;
                 }
-                if(array_key_exists('actualDimensions', $pieza)){
-               
-                $dimension_real = (($pieza['actualDimensions']['length']*$pieza['actualDimensions']['width']*$pieza['actualDimensions']['height'])/5000);
-                $total_dimension_real+= $dimension_real;
-                }else {
-                    
-                    $total_dimension_real=0;
+                if (array_key_exists('actualDimensions', $pieza)) {
 
+                    $dimension_real = (($pieza['actualDimensions']['length'] * $pieza['actualDimensions']['width'] * $pieza['actualDimensions']['height']) / 5000);
+                    $total_dimension_real += $dimension_real;
+                } else {
+
+                    $total_dimension_real = 0;
                 }
-                
-
             }
-            if($total_dimension>$total_peso){
-                
-                if( $total_dimension < 10){
+            if ($total_dimension > $total_peso) {
+
+                if ($total_dimension < 10) {
                     $envio->setPesoEstimado($total_dimension);
-                    if(fmod($total_dimension, 1) != 0.5){
+                    if (fmod($total_dimension, 1) != 0.5) {
                         $envio->setTotalPesoCobrar($this->roundUp($total_dimension, 0.5));
-                    }else{
+                    } else {
                         $envio->setTotalPesoCobrar($total_dimension);
                     }
-                    
-                }else {
-                    $envio->setPesoEstimado( $total_dimension);
-                    $envio->setTotalPesoCobrar(ceil( $total_dimension));
+                } else {
+                    $envio->setPesoEstimado($total_dimension);
+                    $envio->setTotalPesoCobrar(ceil($total_dimension));
                 }
+            } else {
 
-                
-                
-            }else{
-                
 
-                if( $total_peso < 10){
-                    
-                    if(fmod($total_peso, 1) != 0.5){
+                if ($total_peso < 10) {
+
+                    if (fmod($total_peso, 1) != 0.5) {
                         $envio->setTotalPesoCobrar($this->roundUp($total_peso, 0.5));
-                       
-                    }else{
+                    } else {
                         $envio->setTotalPesoCobrar($total_peso);
                     }
                     $envio->setPesoEstimado($total_peso);
-                }else {
+                } else {
                     $envio->setPesoEstimado($total_peso);
-                    $envio->setTotalPesoCobrar(ceil( $total_peso));
+                    $envio->setTotalPesoCobrar(ceil($total_peso));
                 }
-               
-               
             }
-            
-            if($total_dimension_real>$total_peso_real){
-              
-                
-                    $envio->setPesoReal( $total_dimension_real);
-                
-            }else{
-               
-                    $envio->setPesoReal($total_peso_real);
-                
-                
+
+            if ($total_dimension_real > $total_peso_real) {
+
+
+                $envio->setPesoReal($total_dimension_real);
+            } else {
+
+                $envio->setPesoReal($total_peso_real);
             }
-            
+
             $fecha_envio = new DateTime($array_envio['shipmentTimestamp']);
             $envio->setFechaEnvio($fecha_envio);
-            
-            if(array_key_exists('estimatedDeliveryDate', $array_envio)){
+
+            if (array_key_exists('estimatedDeliveryDate', $array_envio)) {
                 $fecha = new DateTime($array_envio['estimatedDeliveryDate']);
                 $envio->setFechaEstimadaEntrega($fecha);
                 $envio->setEstado(1);
-            }else{
+            } else {
                 $ultimo_evento = end($array_envio['events']);
-                
+
                 $envio->setEstado(3);
                 $fecha = new DateTime($ultimo_evento['date']);
                 $envio->setFechaEstimadaEntrega($fecha);
@@ -181,38 +170,36 @@ class IntegracionController extends AbstractController
             $envio->setEmpresa('DHL');
             $envio->setVerificado(0);
 
-            $pais_envio = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['shipperDetails']['postalAddress']['countryCode']]);
-            $pais_recibe = $doctrine->getRepository(Pais::class)->findOneBy(['code'=> $array_envio['receiverDetails']['postalAddress']['countryCode']]);
+            $pais_envio = $doctrine->getRepository(Pais::class)->findOneBy(['code' => $array_envio['shipperDetails']['postalAddress']['countryCode']]);
+            $pais_recibe = $doctrine->getRepository(Pais::class)->findOneBy(['code' => $array_envio['receiverDetails']['postalAddress']['countryCode']]);
 
-            
 
-           
-            if($array_envio['shipperDetails']['postalAddress']['countryCode']=='CO'){
 
-                $zona =$paisZonaRepository->findOneByZona(['pais'=>$pais_recibe->getId(),'tipo'=> 'exportacion']);
-                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
 
-            }else {
+            if ($array_envio['shipperDetails']['postalAddress']['countryCode'] == 'CO') {
 
-                $zona =$paisZonaRepository->findOneByZona(['pais'=>$pais_envio->getId(),'tipo'=> 'importacion']);
-                $tarifa = $tarifasRepository->findOneByPeso(['zona'=>$zona->getZona()->getId(),'peso'=> $envio->getTotalPesoCobrar()]);
-                
+                $zona = $paisZonaRepository->findOneByZona(['pais' => $pais_recibe->getId(), 'tipo' => 'exportacion']);
+                $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $envio->getTotalPesoCobrar()]);
+            } else {
+
+                $zona = $paisZonaRepository->findOneByZona(['pais' => $pais_envio->getId(), 'tipo' => 'importacion']);
+                $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $envio->getTotalPesoCobrar()]);
             }
-            
-            if(count( $tarifa )){
+
+            if (count($tarifa)) {
                 $envio->setTotalACobrar($tarifa[0]['total']);
-            }else{
+            } else {
                 $envio->setTotalACobrar(0);
             }
-            
-           
+
+
             $envio->setPaisOrigen($pais_envio);
             $envio->setPaisDestino($pais_recibe);
             $envio->setQuienEnvia($array_envio['shipperDetails']['name']);
             $envio->setQuienRecibe($array_envio['receiverDetails']['name']);
             $envio->setJsonRecibido($res->getBody());
             $envio->setFacturado(0);
-            
+
 
             $entityManager = $doctrine->getManager();
 
@@ -225,20 +212,226 @@ class IntegracionController extends AbstractController
                 'notice',
                 'Envío Guardado Correctamente'
             );
-            return $this->redirectToRoute('app_envio_edit', ['id'=>$envio->getId(),'url'=>'app_integracion_dhl'], Response::HTTP_SEE_OTHER);
-            
-         
-
+            return $this->redirectToRoute('app_envio_edit', ['id' => $envio->getId(), 'url' => 'app_integracion_dhl'], Response::HTTP_SEE_OTHER);
         }
-       
+
         $this->addFlash(
             'notice',
             'No se encontro ningun envío con este numero de guia porfavor verifica los datos '
         );
         return $this->redirectToRoute('app_integracion_dhl', [], Response::HTTP_SEE_OTHER);
-       
     }
-    public function roundUp($number, $nearest){
+
+    #[Route('/envio_dhl', name: 'app_integracion_envio_fedex', methods: ['GET', 'POST'])]
+    public function envio_fedex(Request $request, ManagerRegistry $doctrine, TarifasRepository $tarifasRepository, PaisZonaRepository $paisZonaRepository): Response
+    {
+        $codigo_barras = $request->request->get('codigo_barras');
+        $client = new GuzzleHttp\Client();
+        $headers = array('content-type' => 'application/x-www-form-urlencoded');
+        $body = array(
+            'grant_type' => 'client_credentials',
+            'client_id'  => 'XXXX-XXX-XXXX-XXX',
+            'client_secret' => 'XXXX-XXX-XXXX-XXX'
+        );
+
+
+        try {
+            $client = new  GuzzleHttp\Client();
+            $res = $client->get('https://apis.fedex.com/oauth/token', [
+                'headers' => $headers,
+                'body' => $body
+            ]);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $res = $e->getResponse();
+        }
+        //para pruebas 
+        /* $headers = array('Accept-Language'=>'eng','Authorization' => 'Basic YXBZNWlEMGZRNGpDNXQ6TSQ1elokMmZOQDNvTiM2aA==',
+        'Accept' => 'application/json');
+        $res = $client->request('GET', 'https://express.api.dhl.com/mydhlapi/test/shipments/'.$codigo_barras.'/tracking?trackingView=all-checkpoints&levelOfDetail=all', ['headers' => $headers]);
+        */
+
+        // 'application/json; charset=utf8'
+
+
+        $respuestaServer = json_decode($res->getBody(), true);
+
+        if (array_key_exists('access_token', $respuestaServer)) {
+
+            $headers = array('content-type' => 'application/x-www-form-urlencoded');
+            $body = array(
+                'grant_type' => 'client_credentials',
+                'client_id'  => 'XXXX-XXX-XXXX-XXX',
+                'client_secret' => 'XXXX-XXX-XXXX-XXX'
+            );
+
+
+            try {
+                $client = new  GuzzleHttp\Client();
+                $res = $client->get('https://apis.fedex.com/oauth/token', [
+                    'headers' => $headers,
+                    'body' => $body
+                ]);
+            } catch (\GuzzleHttp\Exception\RequestException $e) {
+                $res = $e->getResponse();
+            }
+
+            if (array_key_exists('shipments', $respuestaServer)) {
+                $array_envio = $respuestaServer['shipments'][0];
+
+
+                $envio = $doctrine->getRepository(Envio::class)->findOneBy(['numeroEnvio' => $array_envio['shipmentTrackingNumber'], 'empresa' => 'DHL']);
+
+                if (!$envio) {
+                    $envio = new Envio();
+                } else {
+                    $this->addFlash(
+                        'notice',
+                        'Este envio ya se encuentra registrado en el sistema por favor verificalo en el listado de envios'
+                    );
+                    return $this->redirectToRoute('app_integracion_dhl', [], Response::HTTP_SEE_OTHER);
+                }
+                $envio->setCodigo($array_envio['productCode']);
+
+                $envio->setNumeroEnvio($array_envio['shipmentTrackingNumber']);
+                $envio->setDescripcion($array_envio['description']);
+
+                //calcular que se cobrara
+                $total_dimension_real = 0;
+                $total_peso_real = 0;
+                $total_dimension = 0;
+                $total_peso = 0;
+                foreach ($array_envio['pieces'] as $pieza) {
+                    $dimension = (($pieza['dimensions']['length'] * $pieza['dimensions']['width'] * $pieza['dimensions']['height']) / 5000);
+                    $total_dimension += $dimension;
+                    $total_peso += $pieza['weight'];
+                    //pesos reales de la transportadora
+                    if (array_key_exists('actualWeight', $pieza)) {
+                        $total_peso_real += $pieza['actualWeight'];
+                    } else {
+                        $total_peso_real = 0;
+                    }
+                    if (array_key_exists('actualDimensions', $pieza)) {
+
+                        $dimension_real = (($pieza['actualDimensions']['length'] * $pieza['actualDimensions']['width'] * $pieza['actualDimensions']['height']) / 5000);
+                        $total_dimension_real += $dimension_real;
+                    } else {
+
+                        $total_dimension_real = 0;
+                    }
+                }
+                if ($total_dimension > $total_peso) {
+
+                    if ($total_dimension < 10) {
+                        $envio->setPesoEstimado($total_dimension);
+                        if (fmod($total_dimension, 1) != 0.5) {
+                            $envio->setTotalPesoCobrar($this->roundUp($total_dimension, 0.5));
+                        } else {
+                            $envio->setTotalPesoCobrar($total_dimension);
+                        }
+                    } else {
+                        $envio->setPesoEstimado($total_dimension);
+                        $envio->setTotalPesoCobrar(ceil($total_dimension));
+                    }
+                } else {
+
+
+                    if ($total_peso < 10) {
+
+                        if (fmod($total_peso, 1) != 0.5) {
+                            $envio->setTotalPesoCobrar($this->roundUp($total_peso, 0.5));
+                        } else {
+                            $envio->setTotalPesoCobrar($total_peso);
+                        }
+                        $envio->setPesoEstimado($total_peso);
+                    } else {
+                        $envio->setPesoEstimado($total_peso);
+                        $envio->setTotalPesoCobrar(ceil($total_peso));
+                    }
+                }
+
+                if ($total_dimension_real > $total_peso_real) {
+
+
+                    $envio->setPesoReal($total_dimension_real);
+                } else {
+
+                    $envio->setPesoReal($total_peso_real);
+                }
+
+                $fecha_envio = new DateTime($array_envio['shipmentTimestamp']);
+                $envio->setFechaEnvio($fecha_envio);
+
+                if (array_key_exists('estimatedDeliveryDate', $array_envio)) {
+                    $fecha = new DateTime($array_envio['estimatedDeliveryDate']);
+                    $envio->setFechaEstimadaEntrega($fecha);
+                    $envio->setEstado(1);
+                } else {
+                    $ultimo_evento = end($array_envio['events']);
+
+                    $envio->setEstado(3);
+                    $fecha = new DateTime($ultimo_evento['date']);
+                    $envio->setFechaEstimadaEntrega($fecha);
+                }
+                $envio->setEmpresa('DHL');
+                $envio->setVerificado(0);
+
+                $pais_envio = $doctrine->getRepository(Pais::class)->findOneBy(['code' => $array_envio['shipperDetails']['postalAddress']['countryCode']]);
+                $pais_recibe = $doctrine->getRepository(Pais::class)->findOneBy(['code' => $array_envio['receiverDetails']['postalAddress']['countryCode']]);
+
+
+
+
+                if ($array_envio['shipperDetails']['postalAddress']['countryCode'] == 'CO') {
+
+                    $zona = $paisZonaRepository->findOneByZona(['pais' => $pais_recibe->getId(), 'tipo' => 'exportacion']);
+                    $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $envio->getTotalPesoCobrar()]);
+                } else {
+
+                    $zona = $paisZonaRepository->findOneByZona(['pais' => $pais_envio->getId(), 'tipo' => 'importacion']);
+                    $tarifa = $tarifasRepository->findOneByPeso(['zona' => $zona->getZona()->getId(), 'peso' => $envio->getTotalPesoCobrar()]);
+                }
+
+                if (count($tarifa)) {
+                    $envio->setTotalACobrar($tarifa[0]['total']);
+                } else {
+                    $envio->setTotalACobrar(0);
+                }
+
+
+                $envio->setPaisOrigen($pais_envio);
+                $envio->setPaisDestino($pais_recibe);
+                $envio->setQuienEnvia($array_envio['shipperDetails']['name']);
+                $envio->setQuienRecibe($array_envio['receiverDetails']['name']);
+                $envio->setJsonRecibido($res->getBody());
+                $envio->setFacturado(0);
+
+
+                $entityManager = $doctrine->getManager();
+
+                $entityManager->persist($envio);
+
+                // actually executes the queries (i.e. the INSERT query)
+                $entityManager->flush();
+
+                $this->addFlash(
+                    'notice',
+                    'Envío Guardado Correctamente'
+                );
+                return $this->redirectToRoute('app_envio_edit', ['id' => $envio->getId(), 'url' => 'app_integracion_dhl'], Response::HTTP_SEE_OTHER);
+            }
+        }
+
+
+
+
+        $this->addFlash(
+            'notice',
+            'No se encontro ningun envío con este numero de guia porfavor verifica los datos '
+        );
+        return $this->redirectToRoute('app_integracion_dhl', [], Response::HTTP_SEE_OTHER);
+    }
+    public function roundUp($number, $nearest)
+    {
         return $number + ($nearest - fmod($number, $nearest));
     }
 }
