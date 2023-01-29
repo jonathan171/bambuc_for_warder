@@ -452,7 +452,7 @@ class IntegracionController extends AbstractController
 
     
     #[Route('/excel_dhl', name: 'app_integracion_excel_dhl')]
-    public function importar472(): Response
+    public function importardhl(): Response
     {   
         // usually you'll want to make sure the user is authenticated first,
         // see "Authorization" below
@@ -540,6 +540,137 @@ class IntegracionController extends AbstractController
         $_rowData = array(
             "numero_factura" => $excel_row[3],
             "numero_guia" => $excel_row[23]
+        );
+
+        $_log["excel_data"] = $_rowData;
+
+        // Si todos los elementos de la fila estan vacíos, saltelo ...
+        if (!array_filter($excel_row)) {
+            return false;
+        }
+      
+        // 1. Validadores previos a inserción de datos
+        if (!$_rowData["numero_guia"] ) {
+           
+
+            return false;
+        }
+
+        
+        
+        
+        $envio = $this->manager->getRepository(Envio::class)->findOneBy(['numeroEnvio'=> $_rowData["numero_guia"]]);
+        
+        if($envio){
+             if($envio->getFacturadoTransportadora()){
+                $_log["status"] = "warning";
+                $_log["messages"][] = "Este envio YA se encuentra facturado previamente en la Factura : ".$envio->getFacturaTransportadora()." Esto se puede deber a que ya habia sido cargado anteriormente este archivo o se esta cobrando doble";
+             }else{
+                $envio->setFacturadoTransportadora(1);
+                $envio->setFacturaTransportadora($_rowData["numero_factura"]);
+                $this->manager->persist($envio);
+                $this->manager->flush();
+             }
+           
+        }else{
+            $_log["status"] = "error";
+            $_log["messages"][] = "No se encontro ningun envio con este  número de Guia en el sistema.";
+
+            return $_log;
+        }
+
+        
+        return $_log;
+    }
+
+    #[Route('/excel_ups', name: 'app_integracion_excel_ups')]
+    public function importarups(): Response
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        return $this->render('integracion/importar_ups.html.twig', [
+        ]);
+    }
+
+    #[Route('/importar_excel_ups', name: 'app_integracion_importar_excel_ups')]
+    public function importarExcelUps(Request $request, EntityManagerInterface $entityManager): Response
+    {   
+       
+        if ($request->getMethod() == "POST") {
+            $file = $request->files->has('archivo_excel') ? $request->files->get('archivo_excel') : null;
+            if (!$file) {
+                $errors[] = 'Missing File';
+            }
+            
+        
+            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file->getRealPath());
+
+            // Need this otherwise dates and such are returned formatted
+            /** @noinspection PhpUndefinedMethodInspection */
+            $reader->setReadDataOnly(true);
+    
+            // Just grab all the rows
+            $wb = $reader->load($file->getRealPath());
+            $ws = $wb->getSheet(0);
+            $rows = $ws->toArray();          
+            $i=0;
+            $result = array();
+            foreach($rows as $row) {
+
+                if($i!=0){
+                    
+                    $_log = $this->processEnvioExcelRowUps($row);
+
+
+                    if ($_log) {
+                        $result[] = $_log;
+                    }
+                    
+                }
+                $i++;
+                // this is where you do your database stuff
+               
+            }
+            $this->addFlash(
+                'success',
+                'Archivo de excel subido y procesado satisfactoriamente'
+            );
+
+
+        }else{
+            $this->addFlash(
+                'error',
+                'El archivo de excel no pudo ser subido/procesado, por favor intente nuevamente'
+            );
+        }
+        $this->addFlash(
+            'result',
+             $result
+        );
+        return $this->redirectToRoute('app_integracion_excel_dhl', [], Response::HTTP_SEE_OTHER);
+
+    }
+
+      /**
+     * Procesa cada fila del archivo excel subido.
+     * 
+     * @param Array $excel_row
+     * @return boolean
+     */
+    private function processEnvioExcelRowUps($excel_row) {
+
+        /* @var $grupoAutorizacion GrupoAutorizacion */
+        $_log = array(
+            "status" => "success",
+            "messages" => array(),
+            "data" => array()
+        );
+         
+        $_rowData = array(
+            "numero_factura" => $excel_row[50],
+            "numero_guia" => $excel_row[1]
         );
 
         $_log["excel_data"] = $_rowData;

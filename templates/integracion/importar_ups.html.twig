@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+{% import "macros/select2.html.twig" as macroselect2 %}
+{% block stylesheets %}
+{{ macroselect2.styleSelect2}}
+{% endblock %}
+{% block title %}excel Ups
+{% endblock %}
+
+{% block body %}
+	<h1>Importar Envios UPS</h1>
+	<div class="card-body">
+		<form enctype="multipart/form-data" action="{{ path('app_integracion_importar_excel_ups') }}" method="post" id="form-importar-envios">
+
+			<div class="form-group mb-3 row pb-3">
+				<label class="col-sm-3 text-end control-label col-form-label">Seleccione el archivo de excel ...</label>
+				<div class="col-sm-9">
+					<input type="file" id="archivo_excel" name="archivo_excel"/>
+				</div>
+			</div>
+			
+			<div class="p-3">
+				<div class="form-group text-end">
+					<input type="submit" value="Importar envios" class="btn btn-info  font-weight-medium rounded-pill px-4">
+				</div>
+			</div>
+		</form>
+	</div>
+
+	{% for message in app.flashes('result') %}
+		{% for data in message %}
+		
+		 {% if data['status'] == 'success' %}
+			<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<ul>
+					
+						<li>Guia {{data['excel_data']['numero_guia']}} Vinculada Correctamente</li>
+					           
+             	</ul>
+			</div>
+		 {% elseif data['status'] == 'warning'  %}
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				 <ul>
+					{% for alert in data['messages'] %}  
+						<li>{{alert}}</li>
+					{% endfor %}  
+					<li>Guia: {{data['excel_data']['numero_guia']}}</li>
+					<li>Factura Del Archivo: {{data['excel_data']['numero_factura']}} </li> 		          
+             </ul>
+			</div>
+		  {% else %}
+		  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+			 <ul>
+                {% for alert in data['messages'] %}  
+					 <li>{{alert}}</li>
+				{% endfor %}        
+				<li>Guia: {{data['excel_data']['numero_guia']}}</li>          
+			    <li>Factura Del Archivo : {{data['excel_data']['numero_factura']}} </li>       
+             </ul>
+			 <pre>
+			 {# {{data['excel_data']}}#} 
+			 </pre>
+			</div>
+	     {% endif %}
+		
+		{% endfor %}
+	{% endfor %}
+{% endblock %}
+{% block javascripts %}
+{{ macroselect2.scriptSelect2}}
+	<script>
+		  $(function(){
+        $("#form-importar-envios").on("submit", function(){
+            var filename = $("#archivo_excel").val();
+            var extension = filename.substr(filename.lastIndexOf('.') + 1).toLowerCase();
+            var allowedExtensions = ["xls", "xlsx","csv"];
+            
+            // Validar que se suba un archivo
+            if(!document.getElementById("archivo_excel").files.length){
+                alertify.error("Por favor seleccione un archivo excel con información de autorizaciones a importar");
+                return false;
+            }
+            
+            // Si no es archivo de excel
+            if (allowedExtensions.indexOf(extension) === -1)
+            {
+                alertify.error('Formato de archivo inválido, solamente los formatos ' + allowedExtensions.join(', ') + ' están permitidos.');
+                return false;
+            }
+        });
+    });
+
+       
+
+	</script>
+{% endblock %}
