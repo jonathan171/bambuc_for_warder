@@ -137,6 +137,13 @@ class EnvioType extends AbstractType
                 'attr' => [
                     'class' => 'form-control'
                 ]
+            ])
+            ->add('facturadoTransportadora')
+            ->add('facturaTransportadora', TextType::class, [
+                'required'=> false,
+                'attr' => [
+                    'class' => 'form-control'
+                ]
             ]);
 
             $builder->get('facturaItems')

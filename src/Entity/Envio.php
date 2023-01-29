@@ -171,6 +171,20 @@ class Envio
      */
     private $referencia;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="facturado_transportadora", type="boolean", nullable=false)
+     */
+    private $facturadoTransportadora;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="factura_transportadora", type="string", length=255, nullable=false)
+     */
+    private $facturaTransportadora;
+
     
 
     public function getId(): ?int
@@ -413,6 +427,30 @@ class Envio
     public function setPaisOrigen(?Pais $paisOrigen): self
     {
         $this->paisOrigen = $paisOrigen;
+
+        return $this;
+    }
+
+    public function getFacturadoTransportadora(): ?bool
+    {
+        return $this->facturadoTransportadora;
+    }
+
+    public function setFacturadoTransportadora(bool $facturadoTransportadora): self
+    {
+        $this->facturadoTransportadora = $facturadoTransportadora;
+
+        return $this;
+    }
+
+    public function getFacturaTransportadora(): ?string
+    {
+        return $this->facturaTransportadora;
+    }
+
+    public function setFacturaTransportadora(?string $facturaTransportadora): self
+    {
+        $this->facturaTransportadora = $facturaTransportadora;
 
         return $this;
     }

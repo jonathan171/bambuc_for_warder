@@ -292,13 +292,13 @@ class MigracionController extends AbstractController
             $ws = $wb->getSheet(0);
             $rows = $ws->toArray();          
             $i=0;
-            $this->result = array();
+            $result = array();
             foreach($rows as $row) {
                 if($i!=0){
                     $_log = $this->processEnvioExcelRow($row);
 
                     if ($_log) {
-                        $this->result[] = $_log;
+                        $result[] = $_log;
                     }
                     
                 }
@@ -320,7 +320,7 @@ class MigracionController extends AbstractController
         }
         $this->addFlash(
             'result',
-             $this->result
+             $result
         );
         return $this->redirectToRoute('app_migracion_importar_472', [], Response::HTTP_SEE_OTHER);
 
