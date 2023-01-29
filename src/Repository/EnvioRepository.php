@@ -87,12 +87,12 @@ class EnvioRepository extends ServiceEntityRepository
             }
             if ($item->getFacturaItems()) {
 
-                $actions .= '<button class="btn btn-warning"> <i class="fa fa-qrcode"  title="'.$item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().'-'. $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura().'"></i></button>';
+                $actions .= '<a class="btn btn-warning" title="'.$item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().'-'. $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura().'" href="/impresion/impresion_factura?id='.$item->getFacturaItems()->getFacturaClientes()->getId().'" target="_blank"> <i class="fa fa-qrcode"  title="'.$item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().'-'. $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura().'" ></i></a>';
             }else{
                 $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/envio/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
                 $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envio/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')"><i class="fas fa-trash-alt"></i></a>';
             }
-           
+            $actions .='<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_dimension_envio?id=' . $item->getId() . '" title="Imprimir" target="_blank"><span class="fas fa-print"></span></a>';
             $list[] = [
                 'numeroEnvio' => $item->getNumeroEnvio(),
                 'totalPesoCobrar' => $item->getTotalPesoCobrar(),
