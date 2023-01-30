@@ -109,6 +109,12 @@ class ReporteEnvioController extends AbstractController
             $query->andWhere(' e.quienEnvia like :val2')
                 ->setParameter('val2', $shearch);
         }
+        if ($request->get('referencia')) {
+
+            $shearch = '%' . $request->get('referencia') . '%';
+            $query->andWhere(' e.referencia like :val4')
+                ->setParameter('val4', $shearch);
+        }
         if ($request->get('facturado')) {
             if($request->get('facturado')=='facturado'){
                 $query->andWhere(' e.facturado = :val3')
