@@ -781,7 +781,7 @@ class IntegracionController extends AbstractController
             'result',
              $result
         );
-        return $this->redirectToRoute('app_integracion_excel_ups', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_integracion_excel_siigo', [], Response::HTTP_SEE_OTHER);
 
     }
 
