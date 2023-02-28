@@ -75,6 +75,11 @@ class FacturaResolucion
      */
     private $fechaVencimiento;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=empresa::class, inversedBy="facturaResolucions")
+     */
+    private $empresa;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -160,6 +165,18 @@ class FacturaResolucion
     public function setFechaVencimiento(?\DateTimeInterface $fechaVencimiento): self
     {
         $this->fechaVencimiento = $fechaVencimiento;
+
+        return $this;
+    }
+
+    public function getEmpresa(): ?empresa
+    {
+        return $this->empresa;
+    }
+
+    public function setEmpresa(?empresa $empresa): self
+    {
+        $this->empresa = $empresa;
 
         return $this;
     }

@@ -92,12 +92,14 @@ class ImpresionController extends AbstractController
         // set text shadow effect
         $pdf->setTextShadow(array('enabled' => false, 'depth_w' => 0.2, 'depth_h' => 0.2, 'color' => array(196, 196, 196), 'opacity' => 1, 'blend_mode' => 'Normal'));
 
+        //
+        $empresa_base = $factura->getFacturaResolucion()->getEmpresa();
         // Set some content to 
         
         $empresa = array(
-            'nombre'=>'COMERCIALIZADORA BAMBUC FORWARDER',
-            'tipoDoc'=>'NIT',
-            'numero' =>'1098754989',
+            'nombre'=>$empresa_base->getNombre(),
+            'tipoDoc'=>$empresa_base->getTipoDoc(),
+            'numero' =>$empresa_base->getDocumento(),
             'email'  => 'bambuc.forwarder@gmail.com',
             'telefono' => '3164388280',
             'direccion' => 'AV 87 22 11 IN 2 BRR DIAMANTE II',
