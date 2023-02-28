@@ -14,7 +14,7 @@ class FacturaResolucion
 {
     public function __toString()
     {
-        return $this->numeroResolucion.'-'.$this->prefijo;
+        return $this->empresa->getDocumento().'-'.$this->prefijo;
     }
 
     /**
@@ -76,7 +76,7 @@ class FacturaResolucion
     private $fechaVencimiento;
 
     /**
-     * @ORM\ManyToOne(targetEntity=empresa::class, inversedBy="facturaResolucions")
+     * @ORM\ManyToOne(targetEntity=Empresa::class, inversedBy="facturaResolucions")
      */
     private $empresa;
 
@@ -169,12 +169,12 @@ class FacturaResolucion
         return $this;
     }
 
-    public function getEmpresa(): ?empresa
+    public function getEmpresa(): ?Empresa
     {
         return $this->empresa;
     }
 
-    public function setEmpresa(?empresa $empresa): self
+    public function setEmpresa(?Empresa $empresa): self
     {
         $this->empresa = $empresa;
 
