@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Envio;
 use App\Entity\Factura;
 use App\Entity\FacturaItems;
+use App\Entity\FacturaResolucion;
 use App\Entity\NotaCredito;
 use App\Entity\NotaCreditoItems;
 use App\Form\NotaCreditoType;
