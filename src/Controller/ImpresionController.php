@@ -98,9 +98,11 @@ class ImpresionController extends AbstractController
         if($empresa_base->getId()==1){
             $email = 'bambuc.forwarder@gmail.com';
             $iva = 'No somos Agente Retenedor del Impuesto sobre las Ventas - IVA';
+            $obligacion = 'NO RESPONSABLE DE IVA';
         }else{
             $email = 'comercializadorabambucsas@gmail.com';
             $iva = 'Agente Retenedor del Impuesto sobre las Ventas - IVA';
+            $obligacion = 'RESPONSABLE DE IVA';
         }
         
         $empresa = array(
@@ -111,7 +113,8 @@ class ImpresionController extends AbstractController
             'telefono' => '3164388280',
             'direccion' => 'AV 87 22 11 IN 2 BRR DIAMANTE II',
             'ciudad' => 'BUCARAMANGA, SANTANDER (CO)',
-            'iva'    => $iva
+            'iva'    => $iva,
+            'obligacion' => $obligacion
 
         );
         $items = $entityManager->getRepository(FacturaItems::class)->createQueryBuilder('fi')
