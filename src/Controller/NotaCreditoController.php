@@ -234,6 +234,7 @@ class NotaCreditoController extends AbstractController
         $CuerpoJson =  array();
         $nota = $entityManager->getRepository(NotaCredito::class)->find($request->request->get('id'));
         $factura = $nota->getFacturaCliente();
+        $empresa = $factura->getFacturaResolucion()->getEmpresa();
 
         $consectoCredito = array(
             '1' => 'DEVOLUCION',
@@ -315,7 +316,9 @@ class NotaCreditoController extends AbstractController
                 }
                 array_push($CuerpoJson[$x_nota]['items'], $itemJ);
             }
-            $CuerpoJson[$x_nota]['dataico_account_id'] = '01814067-cc44-808a-83a1-de850ba1e360';
+
+
+            $CuerpoJson[$x_nota]['dataico_account_id'] = $empresa->getUsuario();
             $CuerpoJson[$x_nota]['env'] = 'PRODUCCION';
         
 
@@ -335,9 +338,10 @@ class NotaCreditoController extends AbstractController
     {
         //lamada a identificarse
         $prueba = 0;
-
+        $factura = $nota->getFacturaCliente();
+        $empresa = $factura->getFacturaResolucion()->getEmpresa();
        
-        $headers = array('Content-Type' => 'application/json', 'auth-token' => '232828f7e45e42e74ac28a0e0dbe4053');
+        $headers = array('Content-Type' => 'application/json', 'auth-token' => $empresa->getClave());
 
 
         $nota->setCuerpoJsonf(json_encode($Json));
