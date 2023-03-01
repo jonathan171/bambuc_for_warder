@@ -264,10 +264,10 @@ class ImpresionController extends AbstractController
         $countItem= count($items);
         if($nota->getTipo()=='credito'){
             $tipo = 'Nota Crédito';
-            $prefijo = 'NCE';
+            $prefijo = 'NC';
         } else {
             $tipo = 'Nota Debito';
-            $prefijo = 'NDE';
+            $prefijo = 'ND';
         }
 
         if($request->query->get('html')){
