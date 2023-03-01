@@ -224,15 +224,29 @@ class ImpresionController extends AbstractController
         $pdf->setTextShadow(array('enabled' => false, 'depth_w' => 0.2, 'depth_h' => 0.2, 'color' => array(196, 196, 196), 'opacity' => 1, 'blend_mode' => 'Normal'));
 
         // Set some content to 
+        $factura = $nota->getFacturaCliente();
+        $empresa_base = $factura->getFacturaResolucion()->getEmpresa();
+        // Set some content to 
+        if($empresa_base->getId()==1){
+            $email = 'bambuc.forwarder@gmail.com';
+            $iva = 'No somos Agente Retenedor del Impuesto sobre las Ventas - IVA';
+            $obligacion = 'NO RESPONSABLE DE IVA';
+        }else{
+            $email = 'comercializadorabambucsas@gmail.com';
+            $iva = 'Agente Retenedor del Impuesto sobre las Ventas - IVA';
+            $obligacion = 'RESPONSABLE DE IVA';
+        }
         
         $empresa = array(
-            'nombre'=>'COMERCIALIZADORA BAMBUC FORWARDER',
-            'tipoDoc'=>'NIT',
-            'numero' =>'1098754989',
-            'email'  => 'bambuc.forwarder@gmail.com',
+            'nombre'=>$empresa_base->getNombre(),
+            'tipoDoc'=>$empresa_base->getTipoDoc(),
+            'numero' =>$empresa_base->getDocumento(),
+            'email'  => $email,
             'telefono' => '3164388280',
             'direccion' => 'AV 87 22 11 IN 2 BRR DIAMANTE II',
-            'ciudad' => 'BUCARAMANGA, SANTANDER (CO)'
+            'ciudad' => 'BUCARAMANGA, SANTANDER (CO)',
+            'iva'    => $iva,
+            'obligacion' => $obligacion
 
         );
         $items = $entityManager->getRepository(NotaCreditoItems::class)->createQueryBuilder('nci')
