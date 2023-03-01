@@ -99,7 +99,7 @@ class ImpresionController extends AbstractController
             $email = 'bambuc.forwarder@gmail.com';
             $iva = 'No somos Agente Retenedor del Impuesto sobre las Ventas - IVA';
         }else{
-            $email = 'bambuc.forwarder@gmail.com';
+            $email = 'comercializadorabambucsas@gmail.com';
             $iva = 'Agente Retenedor del Impuesto sobre las Ventas - IVA';
         }
         
