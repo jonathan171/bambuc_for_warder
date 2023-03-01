@@ -11,6 +11,7 @@ use App\Form\NotaCreditoType;
 use App\Service\EnviarCorreo;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,16 +49,7 @@ class NotaCreditoController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $notaCredito = new NotaCredito();
-        $numeroQuery = $entityManager->getRepository(NotaCredito::class)->createQueryBuilder('nc')
-                ->orderBy('nc.numeroNota', 'DESC')
-                ->setMaxResults(1);
         
-        $consulta = $numeroQuery->getQuery()->getOneOrNullResult();
-        if($consulta){
-            $notaCredito->setNumeroNota($consulta->getNumeroNota()+1);
-        }else{
-            $notaCredito->setNumeroNota(1);
-        }
 
         $hora = new DateTime();
         $notaCredito->setHora($hora);
@@ -65,6 +57,21 @@ class NotaCreditoController extends AbstractController
         $factura = $entityManager
                     ->getRepository(Factura::class)->find($request->query->get('id'));
         $notaCredito->setFacturaCliente($factura);
+
+        $numeroQuery = $entityManager->getRepository(NotaCredito::class)->createQueryBuilder('nc')
+                        ->innerJoin(Factura::class, 'f', Join::WITH,   'f.id = nc.facturaCliente')
+                        ->innerJoin(FacturaResolucion::class,'fr', Join::WITH,   'fr.id = f.facturaResolucion')
+                        ->where('fr.id = :val')
+                        ->setParameter('val',$factura->getFacturaResolucion()->getId())
+                        ->orderBy('nc.numeroNota', 'DESC')
+                        ->setMaxResults(1);
+        
+        $consulta = $numeroQuery->getQuery()->getOneOrNullResult();
+        if($consulta){
+            $notaCredito->setNumeroNota($consulta->getNumeroNota()+1);
+        }else{
+            $notaCredito->setNumeroNota(1);
+        }
 
         $form = $this->createForm(NotaCreditoType::class, $notaCredito);
         $form->handleRequest($request);
