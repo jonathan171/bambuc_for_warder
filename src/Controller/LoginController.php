@@ -29,6 +29,9 @@ class LoginController extends AbstractController
             if($this->isGranted('ROLE_SUPERVISOR')){
                 return $this->redirectToRoute('app_supervisor');  
             }
+            if($this->isGranted('ROLE_NACIONAL')){
+                return $this->redirectToRoute('app_admind');  
+            }
          }
 
         return $this->render('login/index.html.twig', [
