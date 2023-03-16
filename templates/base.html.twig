@@ -1,850 +1,821 @@
 <!DOCTYPE html>
 <!-- saved from url=(0117)https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html -->
-<html dir="ltr" lang="en">
-	<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html dir="ltr" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="wrappixel, admin dashboard, html css dashboard, web dashboard, bootstrap 5 admin, bootstrap 5, css3 dashboard, bootstrap 5 dashboard, nice admin bootstrap 5 dashboard, frontend, responsive bootstrap 5 admin template, ">
+    <meta name="description" content="Nice is powerful and clean admin dashboard template, inpired from Google&#39;s Material Design">
+    <meta name="robots" content="noindex,nofollow">
+   <title>{% block title %}{% endblock %} | Bambuc for warder</title>
+    <link rel="canonical" href="https://www.wrappixel.com/templates/niceadmin/">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/assets/images/favicon.png">
+    <!-- Custom CSS -->
+            
+            <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 
-		<meta
-		http-equiv="X-UA-Compatible" content="IE=edge">
-		<!-- Tell the browser to be responsive to screen width -->
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="keywords" content="wrappixel, admin dashboard, html css dashboard, web dashboard, bootstrap 5 admin, bootstrap 5, css3 dashboard, bootstrap 5 dashboard, nice admin bootstrap 5 dashboard, frontend, responsive bootstrap 5 admin template, ">
-		<meta name="description" content="Nice is powerful and clean admin dashboard template, inpired from Google&#39;s Material Design">
-		<meta name="robots" content="noindex,nofollow">
-		<title>
-			{% block title %}{% endblock %}
-			| Bambuc for warder</title>
-		<link
-		rel="canonical" href="https://www.wrappixel.com/templates/niceadmin/">
-		<!-- Favicon icon -->
-		<link
-		rel="icon" type="image/png" sizes="16x16" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/assets/images/favicon.png">
-		<!-- Custom CSS -->
+            <link href="{{ asset('css/style.min.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/personal.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/alertify/alertify.min.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/alertify/themes/bootstrap.css') }}" rel="stylesheet">
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+   
+    {% block stylesheets %}
+    
+    {% endblock %}
 
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+ 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+   
+  <style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;box-sizing: content-box;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style></head>
 
-		<link href="{{ asset('css/style.min.css') }}" rel="stylesheet">
-		<link href="{{ asset('css/personal.css') }}" rel="stylesheet">
-		<link href="{{ asset('css/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet">
-		<link href="{{ asset('css/alertify/alertify.min.css') }}" rel="stylesheet">
-		<link href="{{ asset('css/alertify/themes/bootstrap.css') }}" rel="stylesheet">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"> {% block stylesheets %}{% endblock %}
+  <body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader" style="display: none;">
+      <svg class="tea lds-ripple" width="37" height="48" viewBox="0 0 37 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M27.0819 17H3.02508C1.91076 17 1.01376 17.9059 1.0485 19.0197C1.15761 22.5177 1.49703 29.7374 2.5 34C4.07125 40.6778 7.18553 44.8868 8.44856 46.3845C8.79051 46.79 9.29799 47 9.82843 47H20.0218C20.639 47 21.2193 46.7159 21.5659 46.2052C22.6765 44.5687 25.2312 40.4282 27.5 34C28.9757 29.8188 29.084 22.4043 29.0441 18.9156C29.0319 17.8436 28.1539 17 27.0819 17Z" stroke="#233242" stroke-width="2"></path>
+        <path d="M29 23.5C29 23.5 34.5 20.5 35.5 25.4999C36.0986 28.4926 34.2033 31.5383 32 32.8713C29.4555 34.4108 28 34 28 34" stroke="#233242" stroke-width="2"></path>
+        <path id="teabag" fill="#233242" fill-rule="evenodd" clip-rule="evenodd" d="M16 25V17H14V25H12C10.3431 25 9 26.3431 9 28V34C9 35.6569 10.3431 37 12 37H18C19.6569 37 21 35.6569 21 34V28C21 26.3431 19.6569 25 18 25H16ZM11 28C11 27.4477 11.4477 27 12 27H18C18.5523 27 19 27.4477 19 28V34C19 34.5523 18.5523 35 18 35H12C11.4477 35 11 34.5523 11 34V28Z"></path>
+        <path id="steamL" d="M17 1C17 1 17 4.5 14 6.5C11 8.5 11 12 11 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#233242"></path>
+        <path id="steamR" d="M21 6C21 6 21 8.22727 19 9.5C17 10.7727 17 13 17 13" stroke="#233242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+      <!-- ============================================================== -->
+      <!-- Topbar header - style you can find in pages.scss -->
+      <!-- ============================================================== -->
+      {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+      <header class="topbar" data-navbarbg="skin6">
+        <nav class="navbar top-navbar navbar-expand-md navbar-light">
+          <div class="navbar-header" data-logobg="skin5">
+            <!-- This is for the sidebar toggle which is visible on mobile only -->
+            <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)">
+              <i class="ri-close-line fs-6 ri-menu-2-line"></i>
+            </a>
+            <!-- ============================================================== -->
+            <!-- Logo -->
+            <!-- ============================================================== -->
+            <div class="navbar-brand">
+              <a href="/" class="logo">
+                <!-- Logo icon -->
+                <b class="logo-icon">
+                  <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                  <!-- Dark Logo icon -->
+                  <img src="{{ asset('assets/images/logo1.png')}}" alt="homepage" class="dark-logo">
+                  <!-- Light Logo icon -->
+                  <img src="{{ asset('assets/images/logo1.png')}}" alt="homepage" class="light-logo my_logo_icon">
+                </b>
+                <!--End Logo icon -->
+                <!-- Logo text -->
+                <span class="logo-text my-logo-text">
+                 BAMBUC FOR WARDER
+                </span>
+              </a>
+              <a class="sidebartoggler d-none d-md-block" href="javascript:void(0)" data-sidebartype="mini-sidebar">
+                <i class="mdi mdi-toggle-switch mdi-toggle-switch-off fs-6"></i>
+              </a>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Logo -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Toggle which is visible on mobile only -->
+            <!-- ============================================================== -->
+            <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal feather-sm"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+            </a>
+          </div>
+          <!-- ============================================================== -->
+          <!-- End Logo -->
+          <!-- ============================================================== -->
+          <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin6">
+            <!-- ============================================================== -->
+            <!-- toggle and nav items -->
+            <!-- ============================================================== -->
+            <ul class="navbar-nav me-auto">
+              <!-- <li class="nav-item d-none d-md-block">
+                            <a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)" data-sidebartype="mini-sidebar">
+                                <i class="mdi mdi-menu font-24"></i>
+                            </a>
+                        </li> -->
+              <!-- ============================================================== -->
+              <!-- Search -->
+              <!-- ============================================================== -->
+              <li class="nav-item search-box">
+                <a class="nav-link waves-effect waves-dark" href="javascript:void(0)">
+                  <div class="d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search feather-sm me-1"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <div class="ms-1 d-none d-sm-block">
+                      <span>Search</span>
+                    </div>
+                  </div>
+                </a>
+                <form class="app-search position-absolute">
+                  <input type="text" class="form-control" placeholder="Search &amp; enter">
+                  <a class="srh-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x feather-sm"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </a>
+                </form>
+              </li>
+            </ul>
+            <!-- ============================================================== -->
+            <!-- Right side toggle and nav items -->
+            <!-- ============================================================== -->
+            <ul class="navbar-nav">
+              <!-- ============================================================== -->
+              <!-- Messages -->
+              <!-- ============================================================== -->
+         <!--<li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle waves-effect waves-dark" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html" id="2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </a>
+                <div class="
+                    dropdown-menu dropdown-menu-end
+                    mailbox
+                    dropdown-menu-animate-up
+                  " aria-labelledby="2">
+                  <span class="with-arrow">
+                    <span class="bg-danger"></span>
+                  </span>
+                  <ul class="list-style-none">
+                    <li>
+                      <div class="drop-title text-white bg-danger">
+                        <h4 class="mb-0 m-t-5">5 New</h4>
+                        <span class="fw-light">Messages</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="message-center message-body position-relative ps-container ps-theme-default" style="height: 230px" data-ps-id="d775a8c0-38af-206a-62e3-d742a06a5d16">
+                       
+                        <a href="javascript:void(0)" class="
+                            message-item
+                            d-flex
+                            align-items-center
+                            border-bottom
+                            px-3
+                            py-2
+                          ">
+                          <span class="user-img position-relative d-inline-block">
+                            <img src="{{ asset('assets/images/1.jpg')}}" alt="user" class="rounded-circle w-100">
+                            <span class="profile-status rounded-circle online"></span>
+                          </span>
+                          <div class="w-75 d-inline-block v-middle ps-3">
+                            <h5 class="
+                                message-title
+                                mb-0
+                                mt-1
+                                fs-3
+                                font-weight-medium
+                              ">
+                              Pavan kumar
+                            </h5>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                time
+                                text-truncate
+                                fw-normal
+                                mt-1
+                              ">Just see the my admin!</span>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                subtext
+                                text-muted
+                              ">9:30 AM</span>
+                          </div>
+                        </a>
+                       
+                        <a href="javascript:void(0)" class="
+                            message-item
+                            d-flex
+                            align-items-center
+                            border-bottom
+                            px-3
+                            py-2
+                          ">
+                          <span class="user-img position-relative d-inline-block">
+                            <img src="{{ asset('assets/images/2.jpg')}}" alt="user" class="rounded-circle w-100">
+                            <span class="profile-status rounded-circle busy"></span>
+                          </span>
+                          <div class="w-75 d-inline-block v-middle ps-3">
+                            <h5 class="
+                                message-title
+                                mb-0
+                                mt-1
+                                fs-3
+                                font-weight-medium
+                              ">
+                              Sonu Nigam
+                            </h5>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                time
+                                text-truncate
+                              ">I've sung a song! See you at</span>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                subtext
+                                text-muted
+                              ">9:10 AM</span>
+                          </div>
+                        </a>
+                     
+                        <a href="javascript:void(0)" class="
+                            message-item
+                            d-flex
+                            align-items-center
+                            border-bottom
+                            px-3
+                            py-2
+                          ">
+                          <span class="user-img position-relative d-inline-block">
+                            <img src="{{ asset('assets/images/3.jpg')}}" alt="user" class="rounded-circle w-100">
+                            <span class="profile-status rounded-circle away"></span>
+                          </span>
+                          <div class="w-75 d-inline-block v-middle ps-3">
+                            <h5 class="
+                                message-title
+                                mb-0
+                                mt-1
+                                fs-3
+                                font-weight-medium
+                              ">
+                              Arijit Sinh
+                            </h5>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                time
+                                text-truncate
+                              ">I am a singer!</span>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                subtext
+                                text-muted
+                              ">9:08 AM</span>
+                          </div>
+                        </a>
+                       
+                        <a href="javascript:void(0)" class="
+                            message-item
+                            d-flex
+                            align-items-center
+                            border-bottom
+                            px-3
+                            py-2
+                          ">
+                          <span class="user-img position-relative d-inline-block">
+                            <img src="{{ asset('assets/images/4.jpg')}}" alt="user" class="rounded-circle w-100">
+                            <span class="profile-status rounded-circle offline"></span>
+                          </span>
+                          <div class="w-75 d-inline-block v-middle ps-3">
+                            <h5 class="
+                                message-title
+                                mb-0
+                                mt-1
+                                fs-3
+                                font-weight-medium
+                              ">
+                              Pavan kumar
+                            </h5>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                time
+                                text-truncate
+                              ">Just see the my admin!</span>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                subtext
+                                text-muted
+                              ">9:02 AM</span>
+                          </div>
+                        </a>
+                      <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
+                    </li>
+                    <li>
+                      <a class="nav-link text-center link text-dark" href="javascript:void(0);">
+                        <b>See all e-Mails</b>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right feather-sm"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>-->
+              <!-- ============================================================== -->
+              <!-- End Messages -->
+              <!-- ============================================================== -->
+              <!-- ============================================================== -->
+              <!-- Comment -->
+              <!-- ============================================================== -->
+        <!--  <li class="nav-item dropdown border-end">
+                <a class="
+                    nav-link
+                    dropdown-toggle
+                    waves-effect waves-dark
+                    position-relative
+                  " href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                  <span class="badge rounded-pill bg-info noti">3</span>
+                </a>
+                <div class="
+                    dropdown-menu dropdown-menu-end
+                    mailbox
+                    dropdown-menu-animate-up
+                  ">
+                  <span class="with-arrow">
+                    <span class="bg-primary"></span>
+                  </span>
+                  <ul class="list-style-none">
+                    <li>
+                      <div class="drop-title bg-primary text-white">
+                        <h4 class="mb-0 m-t-5">4 New</h4>
+                        <span class="fw-light">Notifications</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="message-center notifications position-relative ps-container ps-theme-default" style="height: 230px" data-ps-id="d331931c-1d25-039c-ed36-f6a5dc5e44ac">
 
+                        <a href="javascript:void(0)" class="
+                            message-item
+                            d-flex
+                            align-items-center
+                            border-bottom
+                            px-3
+                            py-2
+                          ">
+                          <span class="btn btn-light-danger text-danger btn-circle">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link feather-sm fill-white"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                          </span>
+                          <div class="w-75 d-inline-block v-middle ps-3">
+                            <h5 class="
+                                message-title
+                                mb-0
+                                mt-1
+                                fs-3
+                                font-weight-medium
+                              ">
+                              Luanch Admin
+                            </h5>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                time
+                                text-truncate
+                                fw-normal
+                                text-muted
+                                mt-1
+                              ">Just see the my new admin!</span>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                subtext
+                                text-muted
+                              ">9:30 AM</span>
+                          </div>
+                        </a>
+                       
+                        <a href="javascript:void(0)" class="
+                            message-item
+                            d-flex
+                            align-items-center
+                            border-bottom
+                            px-3
+                            py-2
+                          ">
+                          <span class="
+                              btn btn-light-success
+                              text-success
+                              btn-circle
+                            ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar feather-sm fill-white"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                          </span>
+                          <div class="w-75 d-inline-block v-middle ps-3">
+                            <h5 class="
+                                message-title
+                                mb-0
+                                mt-1
+                                fs-3
+                                font-weight-medium
+                              ">
+                              Event today
+                            </h5>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                time
+                                text-truncate
+                                fw-normal
+                                text-muted
+                                mt-1
+                              ">Just a reminder that you have event</span>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                subtext
+                                text-muted
+                              ">9:10 AM</span>
+                          </div>
+                        </a>
+                       
+                        <a href="javascript:void(0)" class="
+                            message-item
+                            d-flex
+                            align-items-center
+                            border-bottom
+                            px-3
+                            py-2
+                          ">
+                          <span class="btn btn-light-info text-info btn-circle">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings feather-sm fill-white"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                          </span>
+                          <div class="w-75 d-inline-block v-middle ps-3">
+                            <h5 class="
+                                message-title
+                                mb-0
+                                mt-1
+                                fs-3
+                                font-weight-medium
+                              ">
+                              Settings
+                            </h5>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                time
+                                text-truncate
+                                fw-normal
+                                text-muted
+                                mt-1
+                              ">You can customize this</span>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                subtext
+                                text-muted
+                              ">9:08 AM</span>
+                          </div>
+                        </a>
+                       
+                        <a href="javascript:void(0)" class="
+                            message-item
+                            d-flex
+                            align-items-center
+                            border-bottom
+                            px-3
+                            py-2
+                          ">
+                          <span class="
+                              btn btn-light-primary
+                              text-primary
+                              btn-circle
+                            ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users feather-sm fill-white"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                          </span>
+                          <div class="w-75 d-inline-block v-middle ps-3">
+                            <h5 class="
+                                message-title
+                                mb-0
+                                mt-1
+                                fs-3
+                                font-weight-medium
+                              ">
+                              Pavan kumar
+                            </h5>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                time
+                                text-truncate
+                                fw-normal
+                                text-muted
+                                mt-1
+                              ">Just see the my admin!</span>
+                            <span class="
+                                fs-2
+                                text-nowrap
+                                d-block
+                                subtext
+                                text-muted
+                              ">9:02 AM</span>
+                          </div>
+                        </a>
+                      <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
+                    </li>
+                    <li>
+                      <a class="nav-link text-center mb-1 text-dark" href="javascript:void(0);">
+                        <strong>Check all notifications</strong>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right feather-sm"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>-->
+              <!-- ============================================================== -->
+              <!-- End Comment -->
+              <!-- ============================================================== -->
+              <!-- ============================================================== -->
+              <!-- User profile and search -->
+              <!-- ============================================================== -->
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle waves-effect waves-dark pro-pic" href="/var" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <img src="{{ asset('assets/images/2.jpg')}}" alt="user" class="rounded-circle" width="40">
+                  <span class="ms-1 font-weight-medium d-none d-sm-inline-block">{{ app.user.firstName }} {{ app.user.lastName }} 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down feather-sm"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end user-dd animated flipInY">
+                  <span class="with-arrow">
+                    <span class="bg-primary"></span>
+                  </span>
+                  <div class="
+                      d-flex
+                      no-block
+                      align-items-center
+                      p-3
+                      bg-primary
+                      text-white
+                      mb-2
+                    ">
+                    <div class="">
+                      <img src="{{ asset('assets/images/1.jpg')}}" alt="user" class="rounded-circle" width="60">
+                    </div>
+                    <div class="ms-2">
+                      <h4 class="mb-0 text-white">{{ app.user.firstName }} {{ app.user.lastName }} </h4>
+                      <p class="mb-0">{{ app.user.email }}</p>
+                    </div>
+                  </div>
+                  <!--
+                  <a class="dropdown-item" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user feather-sm text-info me-1 ms-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    My Profile</a>
+                  <a class="dropdown-item" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card feather-sm text-info me-1 ms-1"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                    My Balance</a>
+                  <a class="dropdown-item" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail feather-sm text-success me-1 ms-1"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    Inbox</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings feather-sm text-warning me-1 ms-1"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Account Setting</a>-->
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="/logout"svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out feather-sm text-danger me-1 ms-1"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Logout</a>
+                    <!--
+                  <div class="dropdown-divider"></div>
+                  <div class="p-2">
+                    <a href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html#" class="btn d-block w-100 btn-primary rounded-pill">View Profile</a>
+                  </div>-->
+                </div>
+              </li>
+              <!-- ============================================================== -->
+              <!-- User profile and search -->
+              <!-- ============================================================== -->
+            </ul>
+          </div>
+        </nav>
+      </header>
+     
+      <!-- ============================================================== -->
+      <!-- End Topbar header -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!-- Left Sidebar - style you can find in sidebar.scss  -->
+      <!-- ============================================================== -->
+      <aside class="left-sidebar" data-sidebarbg="skin5">
+        <!-- Sidebar scroll-->
+        <div class="scroll-sidebar ps-container ps-theme-default ps-active-y" data-ps-id="42284294-a733-5497-050e-72dfca251ec6">
+          <!-- Sidebar navigation-->
+          <nav class="sidebar-nav">
+            <ul id="sidebarnav" class="in">
+              <li class="nav-small-cap">
+                <i class="mdi mdi-dots-horizontal"></i>
+                <span class="hide-menu">Envios</span>
+              </li>
+               <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/envio" aria-expanded="false"><i class="fas fa-plane"></i><span class="hide-menu">Envios</span></a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{path('app_envios_nacionales_index')}}" aria-expanded="false"><i class=" fas fa-box"></i><span class="hide-menu">Remisiones Nacionales</span></a>
+              </li>
+               <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{path('app_envio_index_retrasados')}}" aria-expanded="false"><i class="fas fa-shipping-fast"></i><span class="hide-menu">Envios Retrasados</span></a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                  <i class="mdi mdi-barcode"></i>
+                  <span class="hide-menu">Integraciones</span>
+                  
+                </a>
+                <ul aria-expanded="false" class="collapse first-level">
+                  <li class="sidebar-item">
+                    <a href="/integracion/dhl" class="sidebar-link">
+                     <i  class="mdi mdi-adjust"></i>
+                      <span class="fab fa-dhl" style="font-size:35px ; color:#fb4c4c;"> </span>
+                    </a>
+                  </li>
+                  <li class="sidebar-item">
+                    <a href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/index2.html" class="sidebar-link">
+                     
+                      <i class="mdi mdi-adjust"></i>
+                      <span class="fab fa-fedex" style="font-size:35px ; color:#137eff;"></span>
+                    </a>
+                  </li>
+                  <li class="sidebar-item">
+                    <a href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/index3.html" class="sidebar-link">
+                      <i class="mdi mdi-adjust"></i>
+                      <span class="fab fa-ups" style="font-size:35px ; color:#eca921;"></span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              
+               <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ path('app_integracion_excel') }}" aria-expanded="false"><i class="fas fa-file-excel"></i><span class="hide-menu">Integraciones Excel</span></a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                  <i class="mdi mdi-tune"></i>
+                  <span class="hide-menu">Reportes </span>
+                </a>
+                <ul aria-expanded="false" class="collapse first-level">
+                  <li class="sidebar-item">
+                    <a href="/reporte_envio" class="sidebar-link">
+                      <i class="mdi mdi-view-quilt"></i>
+                      <span class="hide-menu"> Reporte Envios </span>
+                    </a>
+                  </li>
+                  
+                </ul>
+              </li>
+            
+              <li class="nav-small-cap">
+                <i class="mdi mdi-dots-horizontal"></i>
+                <span class="hide-menu">Facturación</span>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/factura" aria-expanded="false"><i class="mdi mdi-book"></i><span class="hide-menu">Facturas</span></a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                  <i class="mdi mdi-barcode"></i>
+                  <span class="hide-menu">Tarifas</span>
+                  
+                </a>
+                <ul aria-expanded="false" class="collapse first-level">
+                  <li class="sidebar-item">
+                    <a href="/tarifas_configuracion" class="sidebar-link">
+                     <i  class="mdi mdi-adjust"></i>
+                      <span class="hide-menu"> Variables</span>
+                    </a>
+                  </li>
+                  <li class="sidebar-item">
+                    <a href="/tarifas" class="sidebar-link">
+                     
+                      <i class="mdi mdi-adjust"></i>
+                      <span class="hide-menu"> Listado Tarifas</span>
+                    </a>
+                  </li>
+        
+                </ul>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span class="hide-menu">Localización</span>
+                  
+                </a>
+                <ul aria-expanded="false" class="collapse first-level">
+                  <li class="sidebar-item">
+                    <a href="/zonas" class="sidebar-link">
+                     <i  class="mdi mdi-adjust"></i>
+                      <span class="hide-menu"> Zonas</span>
+                    </a>
+                  </li>
+                  <li class="sidebar-item">
+                    <a href="/pais" class="sidebar-link">
+                     
+                      <i class="mdi mdi-adjust"></i>
+                      <span class="hide-menu"> Paises</span>
+                    </a>
+                  </li>
+        
+                </ul>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/logout" aria-expanded="false">
+                  <i class="mdi mdi-directions"></i>
+                  <span class="hide-menu">Log Out</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <!-- End Sidebar navigation -->
+        <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: -2677px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 2677px; height: 616px; right: 3px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 501px; height: 115px;"></div></div></div>
+        <!-- End Sidebar scroll-->
+      </aside>
+       {% endif %}
+      <!-- ============================================================== -->
+      <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!-- Page wrapper  -->
+      <!-- ============================================================== -->
+      <div class="page-wrapper" style="display: block;">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <div class="page-breadcrumb">
+          <div class="row">
+              {% block body %}{% endblock %}      
+          </div>
+          <!-- End Row -->
+          <!-- -------------------------------------------------------------- -->
+          <!-- End PAge Content -->
+          <!-- -------------------------------------------------------------- -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <footer class="footer text-center">
+       
+        </footer>
+        <!-- ============================================================== -->
+        <!-- End footer -->
+        <!-- ============================================================== -->
+      </div>
+      <!-- ============================================================== -->
+      <!-- End Page wrapper  -->
+      <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- customizer Panel -->
+    <!-- ============================================================== -->
+   
+    <div class="chat-windows"></div>
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+     
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>      
+  
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
+    <!-- apps -->
+    <script src="{{ asset('js/app.min.js')}}"></script>
+    <script src="{{ asset('js/app.init.js')}}"></script>
+    <script src="{{ asset('js/app-style-switcher.js')}}"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="{{ asset('js/perfect-scrollbar.jquery.min.js')}}"></script>
+    <script src="{{ asset('js/jquery.sparkline.min.js')}}"></script>
+    <!--Wave Effects -->
+    <script src="{{ asset('js/waves.js')}}"></script>
+    <!--Menu sidebar -->
+    <script src="{{ asset('js/sidebarmenu.js')}}"></script>
+    <!--Custom JavaScript -->
+    <script src="{{ asset('js/feather.min.js')}}"></script>
+    <script src="{{ asset('js/custom.min.js')}}"></script>
+    <script src="{{ asset('js/libs/jquery.datatables.min.js')}}"></script>
+    <script src="{{ asset('js/libs/custom-datatable.js')}}"></script>
+    <script src="{{ asset('js/libs/datatable-basic.init.js')}}"></script>
+    <script src="{{ asset('js/alertify.js')}}"></script>  
+    
+     {% block javascripts %} 
+     
+     {% endblock %}
 
-		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+</body>
 
-		<style type="text/css">
-			.jqstooltip {
-				position: absolute;
-				left: 0;
-				top: 0;
-				visibility: hidden;
-				background: rgb(0, 0, 0) transparent;
-				background-color: rgba(0, 0, 0, 0.6);
-				filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
-				color: white;
-				font: 10px arial, san serif;
-				text-align: left;
-				white-space: nowrap;
-				padding: 5px;
-				border: 1px solid white;
-				box-sizing: content-box;
-				z-index: 10000;
-			}
-			.jqsfield {
-				color: white;
-				font: 10px arial, san serif;
-				text-align: left;
-			}
-		</style>
-	</head>
-
-	<body>
-		<!-- ============================================================== -->
-		<!-- Preloader - style you can find in spinners.css -->
-		<!-- ============================================================== -->
-			<div class="preloader" style="display: none;"> <svg class="tea lds-ripple" width="37" height="48" viewbox="0 0 37 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-				<path d="M27.0819 17H3.02508C1.91076 17 1.01376 17.9059 1.0485 19.0197C1.15761 22.5177 1.49703 29.7374 2.5 34C4.07125 40.6778 7.18553 44.8868 8.44856 46.3845C8.79051 46.79 9.29799 47 9.82843 47H20.0218C20.639 47 21.2193 46.7159 21.5659 46.2052C22.6765 44.5687 25.2312 40.4282 27.5 34C28.9757 29.8188 29.084 22.4043 29.0441 18.9156C29.0319 17.8436 28.1539 17 27.0819 17Z" stroke="#233242" stroke-width="2"></path>
-				<path d="M29 23.5C29 23.5 34.5 20.5 35.5 25.4999C36.0986 28.4926 34.2033 31.5383 32 32.8713C29.4555 34.4108 28 34 28 34" stroke="#233242" stroke-width="2"></path>
-				<path id="teabag" fill="#233242" fill-rule="evenodd" clip-rule="evenodd" d="M16 25V17H14V25H12C10.3431 25 9 26.3431 9 28V34C9 35.6569 10.3431 37 12 37H18C19.6569 37 21 35.6569 21 34V28C21 26.3431 19.6569 25 18 25H16ZM11 28C11 27.4477 11.4477 27 12 27H18C18.5523 27 19 27.4477 19 28V34C19 34.5523 18.5523 35 18 35H12C11.4477 35 11 34.5523 11 34V28Z"></path>
-				<path id="steamL" d="M17 1C17 1 17 4.5 14 6.5C11 8.5 11 12 11 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#233242"></path>
-				<path id="steamR" d="M21 6C21 6 21 8.22727 19 9.5C17 10.7727 17 13 17 13" stroke="#233242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-			</svg>
-		</div>
-		<!-- ============================================================== -->
-		<!-- Main wrapper - style you can find in pages.scss -->
-		<!-- ============================================================== -->
-			<div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full"> <!-- ============================================================== -->
-			<!-- Topbar header - style you can find in pages.scss -->
-			<!-- ============================================================== -->
-				{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-					<header class="topbar" data-navbarbg="skin6"> <nav class="navbar top-navbar navbar-expand-md navbar-light">
-						<div
-							class="navbar-header" data-logobg="skin5">
-							<!-- This is for the sidebar toggle which is visible on mobile only -->
-							<a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)">
-								<i class="ri-close-line fs-6 ri-menu-2-line"></i>
-							</a>
-							<!-- ============================================================== -->
-							<!-- Logo -->
-							<!-- ============================================================== -->
-								<div class="navbar-brand"> <a
-									href="/" class="logo">
-									<!-- Logo icon -->
-									<b class="logo-icon">
-										<!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
-										<!-- Dark Logo icon -->
-										<img
-										src="{{ asset('assets/images/logo1.png')}}" alt="homepage" class="dark-logo"> <!-- Light Logo icon -->
-										<img src="{{ asset('assets/images/logo1.png')}}" alt="homepage" class="light-logo my_logo_icon">
-									</b>
-									<!--End Logo icon -->
-									<!-- Logo text -->
-									<span class="logo-text my-logo-text">
-										BAMBUC FOR WARDER
-									</span>
-								</a>
-								<a class="sidebartoggler d-none d-md-block" href="javascript:void(0)" data-sidebartype="mini-sidebar">
-									<i class="mdi mdi-toggle-switch mdi-toggle-switch-off fs-6"></i>
-								</a>
-							</div>
-							<!-- ============================================================== -->
-							<!-- End Logo -->
-							<!-- ============================================================== -->
-							<!-- ============================================================== -->
-							<!-- Toggle which is visible on mobile only -->
-							<!-- ============================================================== -->
-								<a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal feather-sm">
-									<circle cx="12" cy="12" r="1"></circle>
-									<circle cx="19" cy="12" r="1"></circle>
-									<circle cx="5" cy="12" r="1"></circle>
-								</svg>
-							</a>
-						</div>
-						<!-- ============================================================== -->
-						<!-- End Logo -->
-						<!-- ============================================================== -->
-							<div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin6"> <!-- ============================================================== -->
-							<!-- toggle and nav items -->
-							<!-- ============================================================== -->
-								<ul class="navbar-nav me-auto"> <!-- <li class="nav-item d-none d-md-block">
-																		                            <a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)" data-sidebartype="mini-sidebar">
-																		                                <i class="mdi mdi-menu font-24"></i>
-																		                            </a>
-																		                        </li> -->
-								<!-- ============================================================== -->
-								<!-- Search -->
-								<!-- ============================================================== -->
-									<li class="nav-item search-box"> <a class="nav-link waves-effect waves-dark" href="javascript:void(0)">
-										<div class="d-flex align-items-center">
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search feather-sm me-1">
-												<circle cx="11" cy="11" r="8"></circle>
-												<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-											</svg>
-											<div class="ms-1 d-none d-sm-block">
-												<span>Search</span>
-											</div>
-										</div>
-									</a>
-									<form class="app-search position-absolute">
-										<input type="text" class="form-control" placeholder="Search &amp; enter">
-										<a class="srh-btn">
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x feather-sm">
-												<line x1="18" y1="6" x2="6" y2="18"></line>
-												<line x1="6" y1="6" x2="18" y2="18"></line>
-											</svg>
-										</a>
-									</form>
-								</li>
-							</ul>
-							<!-- ============================================================== -->
-							<!-- Right side toggle and nav items -->
-							<!-- ============================================================== -->
-								<ul class="navbar-nav"> <!-- ============================================================== -->
-								<!-- Messages -->
-								<!-- ============================================================== -->
-								<!--<li class="nav-item dropdown">
-																                <a class="nav-link dropdown-toggle waves-effect waves-dark" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html" id="2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-																                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-																                </a>
-																                <div class="
-																                    dropdown-menu dropdown-menu-end
-																                    mailbox
-																                    dropdown-menu-animate-up
-																                  " aria-labelledby="2">
-																                  <span class="with-arrow">
-																                    <span class="bg-danger"></span>
-																                  </span>
-																                  <ul class="list-style-none">
-																                    <li>
-																                      <div class="drop-title text-white bg-danger">
-																                        <h4 class="mb-0 m-t-5">5 New</h4>
-																                        <span class="fw-light">Messages</span>
-																                      </div>
-																                    </li>
-																                    <li>
-																                      <div class="message-center message-body position-relative ps-container ps-theme-default" style="height: 230px" data-ps-id="d775a8c0-38af-206a-62e3-d742a06a5d16">
-																                       
-																                        <a href="javascript:void(0)" class="
-																                            message-item
-																                            d-flex
-																                            align-items-center
-																                            border-bottom
-																                            px-3
-																                            py-2
-																                          ">
-																                          <span class="user-img position-relative d-inline-block">
-																                            <img src="{{ asset('assets/images/1.jpg')}}" alt="user" class="rounded-circle w-100">
-																                            <span class="profile-status rounded-circle online"></span>
-																                          </span>
-																                          <div class="w-75 d-inline-block v-middle ps-3">
-																                            <h5 class="
-																                                message-title
-																                                mb-0
-																                                mt-1
-																                                fs-3
-																                                font-weight-medium
-																                              ">
-																                              Pavan kumar
-																                            </h5>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                time
-																                                text-truncate
-																                                fw-normal
-																                                mt-1
-																                              ">Just see the my admin!</span>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                subtext
-																                                text-muted
-																                              ">9:30 AM</span>
-																                          </div>
-																                        </a>
-																                       
-																                        <a href="javascript:void(0)" class="
-																                            message-item
-																                            d-flex
-																                            align-items-center
-																                            border-bottom
-																                            px-3
-																                            py-2
-																                          ">
-																                          <span class="user-img position-relative d-inline-block">
-																                            <img src="{{ asset('assets/images/2.jpg')}}" alt="user" class="rounded-circle w-100">
-																                            <span class="profile-status rounded-circle busy"></span>
-																                          </span>
-																                          <div class="w-75 d-inline-block v-middle ps-3">
-																                            <h5 class="
-																                                message-title
-																                                mb-0
-																                                mt-1
-																                                fs-3
-																                                font-weight-medium
-																                              ">
-																                              Sonu Nigam
-																                            </h5>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                time
-																                                text-truncate
-																                              ">I've sung a song! See you at</span>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                subtext
-																                                text-muted
-																                              ">9:10 AM</span>
-																                          </div>
-																                        </a>
-																                     
-																                        <a href="javascript:void(0)" class="
-																                            message-item
-																                            d-flex
-																                            align-items-center
-																                            border-bottom
-																                            px-3
-																                            py-2
-																                          ">
-																                          <span class="user-img position-relative d-inline-block">
-																                            <img src="{{ asset('assets/images/3.jpg')}}" alt="user" class="rounded-circle w-100">
-																                            <span class="profile-status rounded-circle away"></span>
-																                          </span>
-																                          <div class="w-75 d-inline-block v-middle ps-3">
-																                            <h5 class="
-																                                message-title
-																                                mb-0
-																                                mt-1
-																                                fs-3
-																                                font-weight-medium
-																                              ">
-																                              Arijit Sinh
-																                            </h5>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                time
-																                                text-truncate
-																                              ">I am a singer!</span>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                subtext
-																                                text-muted
-																                              ">9:08 AM</span>
-																                          </div>
-																                        </a>
-																                       
-																                        <a href="javascript:void(0)" class="
-																                            message-item
-																                            d-flex
-																                            align-items-center
-																                            border-bottom
-																                            px-3
-																                            py-2
-																                          ">
-																                          <span class="user-img position-relative d-inline-block">
-																                            <img src="{{ asset('assets/images/4.jpg')}}" alt="user" class="rounded-circle w-100">
-																                            <span class="profile-status rounded-circle offline"></span>
-																                          </span>
-																                          <div class="w-75 d-inline-block v-middle ps-3">
-																                            <h5 class="
-																                                message-title
-																                                mb-0
-																                                mt-1
-																                                fs-3
-																                                font-weight-medium
-																                              ">
-																                              Pavan kumar
-																                            </h5>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                time
-																                                text-truncate
-																                              ">Just see the my admin!</span>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                subtext
-																                                text-muted
-																                              ">9:02 AM</span>
-																                          </div>
-																                        </a>
-																                      <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
-																                    </li>
-																                    <li>
-																                      <a class="nav-link text-center link text-dark" href="javascript:void(0);">
-																                        <b>See all e-Mails</b>
-																                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right feather-sm"><polyline points="9 18 15 12 9 6"></polyline></svg>
-																                      </a>
-																                    </li>
-																                  </ul>
-																                </div>
-																              </li>-->
-								<!-- ============================================================== -->
-								<!-- End Messages -->
-								<!-- ============================================================== -->
-								<!-- ============================================================== -->
-								<!-- Comment -->
-								<!-- ============================================================== -->
-								<!--  <li class="nav-item dropdown border-end">
-																                <a class="
-																                    nav-link
-																                    dropdown-toggle
-																                    waves-effect waves-dark
-																                    position-relative
-																                  " href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-																                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-																                  <span class="badge rounded-pill bg-info noti">3</span>
-																                </a>
-																                <div class="
-																                    dropdown-menu dropdown-menu-end
-																                    mailbox
-																                    dropdown-menu-animate-up
-																                  ">
-																                  <span class="with-arrow">
-																                    <span class="bg-primary"></span>
-																                  </span>
-																                  <ul class="list-style-none">
-																                    <li>
-																                      <div class="drop-title bg-primary text-white">
-																                        <h4 class="mb-0 m-t-5">4 New</h4>
-																                        <span class="fw-light">Notifications</span>
-																                      </div>
-																                    </li>
-																                    <li>
-																                      <div class="message-center notifications position-relative ps-container ps-theme-default" style="height: 230px" data-ps-id="d331931c-1d25-039c-ed36-f6a5dc5e44ac">
-																
-																                        <a href="javascript:void(0)" class="
-																                            message-item
-																                            d-flex
-																                            align-items-center
-																                            border-bottom
-																                            px-3
-																                            py-2
-																                          ">
-																                          <span class="btn btn-light-danger text-danger btn-circle">
-																                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link feather-sm fill-white"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-																                          </span>
-																                          <div class="w-75 d-inline-block v-middle ps-3">
-																                            <h5 class="
-																                                message-title
-																                                mb-0
-																                                mt-1
-																                                fs-3
-																                                font-weight-medium
-																                              ">
-																                              Luanch Admin
-																                            </h5>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                time
-																                                text-truncate
-																                                fw-normal
-																                                text-muted
-																                                mt-1
-																                              ">Just see the my new admin!</span>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                subtext
-																                                text-muted
-																                              ">9:30 AM</span>
-																                          </div>
-																                        </a>
-																                       
-																                        <a href="javascript:void(0)" class="
-																                            message-item
-																                            d-flex
-																                            align-items-center
-																                            border-bottom
-																                            px-3
-																                            py-2
-																                          ">
-																                          <span class="
-																                              btn btn-light-success
-																                              text-success
-																                              btn-circle
-																                            ">
-																                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar feather-sm fill-white"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-																                          </span>
-																                          <div class="w-75 d-inline-block v-middle ps-3">
-																                            <h5 class="
-																                                message-title
-																                                mb-0
-																                                mt-1
-																                                fs-3
-																                                font-weight-medium
-																                              ">
-																                              Event today
-																                            </h5>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                time
-																                                text-truncate
-																                                fw-normal
-																                                text-muted
-																                                mt-1
-																                              ">Just a reminder that you have event</span>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                subtext
-																                                text-muted
-																                              ">9:10 AM</span>
-																                          </div>
-																                        </a>
-																                       
-																                        <a href="javascript:void(0)" class="
-																                            message-item
-																                            d-flex
-																                            align-items-center
-																                            border-bottom
-																                            px-3
-																                            py-2
-																                          ">
-																                          <span class="btn btn-light-info text-info btn-circle">
-																                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings feather-sm fill-white"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-																                          </span>
-																                          <div class="w-75 d-inline-block v-middle ps-3">
-																                            <h5 class="
-																                                message-title
-																                                mb-0
-																                                mt-1
-																                                fs-3
-																                                font-weight-medium
-																                              ">
-																                              Settings
-																                            </h5>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                time
-																                                text-truncate
-																                                fw-normal
-																                                text-muted
-																                                mt-1
-																                              ">You can customize this</span>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                subtext
-																                                text-muted
-																                              ">9:08 AM</span>
-																                          </div>
-																                        </a>
-																                       
-																                        <a href="javascript:void(0)" class="
-																                            message-item
-																                            d-flex
-																                            align-items-center
-																                            border-bottom
-																                            px-3
-																                            py-2
-																                          ">
-																                          <span class="
-																                              btn btn-light-primary
-																                              text-primary
-																                              btn-circle
-																                            ">
-																                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users feather-sm fill-white"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-																                          </span>
-																                          <div class="w-75 d-inline-block v-middle ps-3">
-																                            <h5 class="
-																                                message-title
-																                                mb-0
-																                                mt-1
-																                                fs-3
-																                                font-weight-medium
-																                              ">
-																                              Pavan kumar
-																                            </h5>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                time
-																                                text-truncate
-																                                fw-normal
-																                                text-muted
-																                                mt-1
-																                              ">Just see the my admin!</span>
-																                            <span class="
-																                                fs-2
-																                                text-nowrap
-																                                d-block
-																                                subtext
-																                                text-muted
-																                              ">9:02 AM</span>
-																                          </div>
-																                        </a>
-																                      <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
-																                    </li>
-																                    <li>
-																                      <a class="nav-link text-center mb-1 text-dark" href="javascript:void(0);">
-																                        <strong>Check all notifications</strong>
-																                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right feather-sm"><polyline points="9 18 15 12 9 6"></polyline></svg>
-																                      </a>
-																                    </li>
-																                  </ul>
-																                </div>
-																              </li>-->
-								<!-- ============================================================== -->
-								<!-- End Comment -->
-								<!-- ============================================================== -->
-								<!-- ============================================================== -->
-								<!-- User profile and search -->
-								<!-- ============================================================== -->
-									<li class="nav-item dropdown"> <a class="nav-link dropdown-toggle waves-effect waves-dark pro-pic" href="/var" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<img src="{{ asset('assets/images/2.jpg')}}" alt="user" class="rounded-circle" width="40">
-										<span class="ms-1 font-weight-medium d-none d-sm-inline-block">{{ app.user.firstName }}
-											{{ app.user.lastName }}
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down feather-sm">
-												<polyline points="6 9 12 15 18 9"></polyline>
-											</svg>
-										</span>
-									</a>
-									<div class="dropdown-menu dropdown-menu-end user-dd animated flipInY">
-										<span class="with-arrow">
-											<span class="bg-primary"></span>
-										</span>
-										<div class="
-																								                      d-flex
-																								                      no-block
-																								                      align-items-center
-																								                      p-3
-																								                      bg-primary
-																								                      text-white
-																								                      mb-2
-																								                    ">
-											<div class="">
-												<img src="{{ asset('assets/images/1.jpg')}}" alt="user" class="rounded-circle" width="60">
-											</div>
-											<div class="ms-2">
-												<h4 class="mb-0 text-white">{{ app.user.firstName }}
-													{{ app.user.lastName }}
-												</h4>
-												<p class="mb-0">{{ app.user.email }}</p>
-											</div>
-										</div>
-										<!--
-																				                  <a class="dropdown-item" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user feather-sm text-info me-1 ms-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-																				                    My Profile</a>
-																				                  <a class="dropdown-item" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card feather-sm text-info me-1 ms-1"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
-																				                    My Balance</a>
-																				                  <a class="dropdown-item" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail feather-sm text-success me-1 ms-1"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-																				                    Inbox</a>
-																				                  <div class="dropdown-divider"></div>
-																				                  <a class="dropdown-item" href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings feather-sm text-warning me-1 ms-1"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-																				                    Account Setting</a>-->
-										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="/logout" svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out feather-sm text-danger me-1 ms-1">
-											<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-											<polyline points="16 17 21 12 16 7"></polyline>
-											<line x1="21" y1="12" x2="9" y2="12"></line>
-										</svg>
-										Logout</a>
-									<!--
-																		                  <div class="dropdown-divider"></div>
-																		                  <div class="p-2">
-																		                    <a href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/form-row-separator.html#" class="btn d-block w-100 btn-primary rounded-pill">View Profile</a>
-																		                  </div>-->
-								</li>
-							</div>
-						</li>
-						<!-- ============================================================== -->
-					<!-- User profile and search -->
-						<!-- ============================================================== -->
-					</ul>
-				</div>
-			</nav>
-		</header>
-
-		<!-- ============================================================== -->
-		<!-- End Topbar header -->
-		<!-- ============================================================== -->
-		<!-- ============================================================== -->
-		<!-- Left Sidebar - style you can find in sidebar.scss  -->
-		<!-- ============================================================== -->
-			<aside
-			class="left-sidebar" data-sidebarbg="skin5"> <!-- Sidebar scroll-->
-			<div
-				class="scroll-sidebar ps-container ps-theme-default ps-active-y" data-ps-id="42284294-a733-5497-050e-72dfca251ec6">
-				<!-- Sidebar navigation-->
-				<nav class="sidebar-nav">
-					<ul id="sidebarnav" class="in">
-						{% if is_granted('ROLE_ADMIN') %}
-							<li class="nav-small-cap">
-								<i class="mdi mdi-dots-horizontal"></i>
-								<span class="hide-menu">Envios</span>
-							</li>
-							{% if is_granted('ROLE_ADMIN') %}
-								<li class="sidebar-item">
-									<a class="sidebar-link waves-effect waves-dark sidebar-link" href="/envio" aria-expanded="false">
-										<i class="fas fa-plane"></i>
-										<span class="hide-menu">Envios</span>
-									</a>
-								</li>
-							{% endif %}
-							<li class="sidebar-item">
-								<a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{path('app_envios_nacionales_index')}}" aria-expanded="false">
-									<i class=" fas fa-box"></i>
-									<span class="hide-menu">Remisiones Nacionales</span>
-								</a>
-							</li>
-							{% if is_granted('ROLE_ADMIN') %}
-								<li class="sidebar-item">
-									<a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{path('app_envio_index_retrasados')}}" aria-expanded="false">
-										<i class="fas fa-shipping-fast"></i>
-										<span class="hide-menu">Envios Retrasados</span>
-									</a>
-								</li>
-							{% endif %}
-						{% endif %}
-						{% if is_granted('ROLE_ADMIN') %}
-							<li class="sidebar-item">
-								<a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-									<i class="mdi mdi-barcode"></i>
-									<span class="hide-menu">Integraciones</span>
-
-								</a>
-								<ul aria-expanded="false" class="collapse first-level">
-									<li class="sidebar-item">
-										<a href="/integracion/dhl" class="sidebar-link">
-											<i class="mdi mdi-adjust"></i>
-											<span class="fab fa-dhl" style="font-size:35px ; color:#fb4c4c;"></span>
-										</a>
-									</li>
-									<li class="sidebar-item">
-										<a href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/index2.html" class="sidebar-link">
-
-											<i class="mdi mdi-adjust"></i>
-											<span class="fab fa-fedex" style="font-size:35px ; color:#137eff;"></span>
-										</a>
-									</li>
-									<li class="sidebar-item">
-										<a href="https://demos.wrappixel.com/premium-admin-templates/bootstrap/nice-bootstrap/package/html/ltr/index3.html" class="sidebar-link">
-											<i class="mdi mdi-adjust"></i>
-											<span class="fab fa-ups" style="font-size:35px ; color:#eca921;"></span>
-										</a>
-									</li>
-								</ul>
-							</li>
-
-							<li class="sidebar-item">
-								<a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ path('app_integracion_excel') }}" aria-expanded="false">
-									<i class="fas fa-file-excel"></i>
-									<span class="hide-menu">Integraciones Excel</span>
-								</a>
-							</li>
-							<li class="sidebar-item">
-								<a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-									<i class="mdi mdi-tune"></i>
-									<span class="hide-menu">Reportes
-									</span>
-								</a>
-								<ul aria-expanded="false" class="collapse first-level">
-									<li class="sidebar-item">
-										<a href="/reporte_envio" class="sidebar-link">
-											<i class="mdi mdi-view-quilt"></i>
-											<span class="hide-menu">
-												Reporte Envios
-											</span>
-										</a>
-									</li>
-
-								</ul>
-							</li>
-
-							<li class="nav-small-cap">
-								<i class="mdi mdi-dots-horizontal"></i>
-								<span class="hide-menu">Facturación</span>
-							</li>
-							<li class="sidebar-item">
-								<a class="sidebar-link waves-effect waves-dark sidebar-link" href="/factura" aria-expanded="false">
-									<i class="mdi mdi-book"></i>
-									<span class="hide-menu">Facturas</span>
-								</a>
-							</li>
-							<li class="sidebar-item">
-								<a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-									<i class="mdi mdi-barcode"></i>
-									<span class="hide-menu">Tarifas</span>
-
-								</a>
-								<ul aria-expanded="false" class="collapse first-level">
-									<li class="sidebar-item">
-										<a href="/tarifas_configuracion" class="sidebar-link">
-											<i class="mdi mdi-adjust"></i>
-											<span class="hide-menu">
-												Variables</span>
-										</a>
-									</li>
-									<li class="sidebar-item">
-										<a href="/tarifas" class="sidebar-link">
-
-											<i class="mdi mdi-adjust"></i>
-											<span class="hide-menu">
-												Listado Tarifas</span>
-										</a>
-									</li>
-
-								</ul>
-							</li>
-							<li class="sidebar-item">
-								<a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-									<i class="fas fa-map-marker-alt"></i>
-									<span class="hide-menu">Localización</span>
-
-								</a>
-								<ul aria-expanded="false" class="collapse first-level">
-									<li class="sidebar-item">
-										<a href="/zonas" class="sidebar-link">
-											<i class="mdi mdi-adjust"></i>
-											<span class="hide-menu">
-												Zonas</span>
-										</a>
-									</li>
-									<li class="sidebar-item">
-										<a href="/pais" class="sidebar-link">
-
-											<i class="mdi mdi-adjust"></i>
-											<span class="hide-menu">
-												Paises</span>
-										</a>
-									</li>
-
-								</ul>
-							</li>
-						{% endif %}
-						<li class="sidebar-item">
-							<a class="sidebar-link waves-effect waves-dark sidebar-link" href="/logout" aria-expanded="false">
-								<i class="mdi mdi-directions"></i>
-								<span class="hide-menu">Log Out</span>
-							</a>
-						</li>
-
-					</ul>
-				</nav>
-				<!-- End Sidebar navigation -->
-				<div class="ps-scrollbar-x-rail" style="left: 0px; bottom: -2677px;">
-					<div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
-				</div>
-				<div class="ps-scrollbar-y-rail" style="top: 2677px; height: 616px; right: 3px;">
-					<div class="ps-scrollbar-y" tabindex="0" style="top: 501px; height: 115px;"></div>
-				</div>
-			</div>
-			<!-- End Sidebar scroll-->
-		</aside>
-	{% endif %}
-	<!-- ============================================================== -->
-	<!-- End Left Sidebar - style you can find in sidebar.scss  -->
-	<!-- ============================================================== -->
-	<!-- ============================================================== -->
-	<!-- Page wrapper  -->
-	<!-- ============================================================== -->
-		<div class="page-wrapper" style="display: block;"> <!-- ============================================================== -->
-		<!-- Bread crumb and right sidebar toggle -->
-		<!-- ============================================================== -->
-			<div class="page-breadcrumb"> <div class="row"> {% block body %}{% endblock %}
-				</div>
-				<!-- End Row -->
-			<!-- -------------------------------------------------------------- -->
-				<!-- End PAge Content -->
-				<!-- -------------------------------------------------------------- -->
-			</div>
-			<!-- ============================================================== -->
-			<!-- End Container fluid  -->
-			<!-- ============================================================== -->
-			<!-- ============================================================== -->
-			<!-- footer -->
-			<!-- ============================================================== --><footer class="footer text-center"> </footer>
-			<!-- ============================================================== -->
-		<!-- End footer -->
-			<!-- ============================================================== -->
-		</div>
-		<!-- ============================================================== -->
-	<!-- End Page wrapper  -->
-		<!-- ============================================================== -->
-	</html>
-</body></html></div><!-- ============================================================== --><!-- End Wrapper --><!-- ============================================================== --><!-- ============================================================== --><!-- customizer Panel --><!-- ============================================================== --><div class="chat-windows"> </div><!-- ============================================================== --><!-- All Jquery --><!-- ============================================================== --><script src="https://code.jquery.com/jquery-3.6.0.js"> </script><script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script><!-- Bootstrap tether Core JavaScript --><script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script><!-- apps --><script src="{{ asset('js/app.min.js')}}"></script><script src="{{ asset('js/app.init.js')}}"></script><script src="{{ asset('js/app-style-switcher.js')}}"></script><!-- slimscrollbar scrollbar JavaScript --><script src="{{ asset('js/perfect-scrollbar.jquery.min.js')}}"></script><script src="{{ asset('js/jquery.sparkline.min.js')}}"></script><!--Wave Effects --><script src="{{ asset('js/waves.js')}}"></script><!--Menu sidebar --><script src="{{ asset('js/sidebarmenu.js')}}"></script><!--Custom JavaScript --><script src="{{ asset('js/feather.min.js')}}"></script><script src="{{ asset('js/custom.min.js')}}"></script><script src="{{ asset('js/libs/jquery.datatables.min.js')}}"></script><script src="{{ asset('js/libs/custom-datatable.js')}}"></script><script src="{{ asset('js/libs/datatable-basic.init.js')}}"></script><script src="{{ asset('js/alertify.js')}}"></script>{% block javascripts %}{% endblock %}</body></html>
+</html>
