@@ -51,16 +51,18 @@
 				<b>{{remision.municipioDestino.departamento.nombre }}({{remision.municipioDestino.nombre }})</b>
 			</td>
 		</tr>
+		</table>
+		<table>
 		<tr>
-			<td style="background-color: #e4ffc5;">
+			<td style="background-color: #e4ffc5; width:10%;">
 				<b>Fecha:
 				</b>
 			</td>
-			<td style="background-color: #e4ffc5;">{{remision.fecha|date('d/m/Y')}}</td>
-			<td style="background-color: #e4ffc5;">
+			<td style="background-color: #e4ffc5; width:40%;">{{remision.fecha|date('d/m/Y')}}</td>
+			<td style="background-color: #e4ffc5; width:10%;">
 				<b>Dirección:</b>
 			</td>
-			<td style="background-color: #e4ffc5;">{{remision.direccionDestino}}</td>
+			<td style="background-color: #e4ffc5; width:40%;">{{remision.direccionDestino}}</td>
 		</tr>
 		<tr>
 			<td style="background-color: #e4ffc5;">
