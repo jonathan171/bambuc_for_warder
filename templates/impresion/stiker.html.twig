@@ -1,59 +1,71 @@
-
-
-<table  style=" text-align:center; " >
+<table style=" text-align:left; ">
 
 
 	<tr>
-	    
-		<td ><img src="{{ asset('assets/images/facturas/logo.jpg')}}" alt="user" width="90" ></td>
-		
+
+		<td style="width:30%;"><img src="{{ asset('assets/images/facturas/logo.jpg')}}" alt="user" width="90"></td>
+		<td style="width:70%;">
+			<br>
+			<br>
+			<img src="{{base_64}}" width="200px" height="60px"></td>
+
 	</tr>
 
 	<tr>
-		<td   >
-			<img src="{{base_64}}"  width="200px"  height="60px"><br>
-			<b class="title">GUIA   {{unidad.numeroGuia }}</b>
+		<td colspan="2">
+
+			<b style="font-size: 25px">GUIA:
+			</b>
+			<b style="font-size: 25px">{{unidad.numeroGuia }}</b>
 		</td>
 	</tr>
 	<tr>
-		<td   >
-			<b>Remitente: </b>{{remision.cliente.razonSocial }}
+		<td colspan="2">
+			<b>DE:
+			</b>
+
+			{{remision.cliente.razonSocial }}, Tel:  {{remision.cliente.telefono }}
 		</td>
 	</tr>
 	<tr>
-		<td  >
-			<b>Destinatario: </b>{{remision.destinatario }}
-		</td>
+		<td colspan="2">
+			<b>PARA:
+			</b>
+			{{remision.destinatario }}</td>
 	</tr>
-    <tr>
-		<td   >
-			<b>Destino: {{remision.municipioDestino.departamento.nombre }}({{remision.municipioDestino.nombre }})</b>
+	<tr>
+		<td colspan="2">
+			<b style="font-size: 20px">Destino:
+			</b>
+			<b style="font-size: 20px">{{remision.municipioDestino.departamento.nombre }}({{remision.municipioDestino.nombre }})</b>
 		</td>
 	</tr>
 	<tr>
-		<td   >
-			<b>Dirección: </b>{{remision.direccionDestino }}
+		<td colspan="2">
+			<b>Dirección:
+			</b>
+			{{remision.direccionDestino }}
 		</td>
 	</tr>
-    <tr>
-		<td   >
-			<b>Telefono: </b>{{remision.telefonoDestinatario}}
+	<tr>
+		<td colspan="2">
+			<b>Telefono:
+			</b>
+			{{remision.telefonoDestinatario}}
 		</td>
 	</tr>
-	 <tr>
-		<td  >
-			<b>Observaciones: </b>{{remision.observacion}}
+	<tr>
+		<td colspan="2">
+			<b>Nota:
+			</b>
+
+
+			{{remision.observacion}}
 		</td>
 	</tr>
-	 <tr>
-		<td   >
-			<b>{{key}}</b>
+	<tr>
+		<td colspan="2" style=" text-align:center; ">
+			<b style="font-size: 20px">{{key}}</b>
 		</td>
 	</tr>
 </table>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>

@@ -502,7 +502,7 @@ class ImpresionController extends AbstractController
         $found_key = array_search($unidad->getId(), array_column($items, 'id'));
         $totalItem = count($items);
         // create new PDF document
-        $pdf = new TCPDF('P', PDF_UNIT, 'A7', true, 'UTF-8', false);
+        $pdf = new TCPDF('P', PDF_UNIT, array(100,100), true, 'UTF-8', false);
 
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
@@ -544,7 +544,7 @@ class ImpresionController extends AbstractController
         // dejavusans is a UTF-8 Unicode font, if you only need to
         // print standard ASCII chars, you can use core fonts like
         // helvetica or times to reduce file size.
-        $pdf->SetFont('Helvetica', '', 9, '', true);
+        $pdf->SetFont('Helvetica', '', 12, '', true);
 
         // Add a page
         // This method has several options, check the source code documentation for more information.
@@ -592,7 +592,7 @@ class ImpresionController extends AbstractController
         ]);
 
         // Print text using writeHTMLCell()
-        $pdf->writeHTMLCell(0, 0, '', '', $html, 1, 1, 0, true, '', true);
+        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
 
         // ---------------------------------------------------------
 
@@ -607,7 +607,7 @@ class ImpresionController extends AbstractController
         $datos = (array)$request->request->get('datos');
         
         // create new PDF document
-        $pdf = new TCPDF('P', PDF_UNIT, 'A7', true, 'UTF-8', false);
+        $pdf = new TCPDF('P', PDF_UNIT, array(100,100), true, 'UTF-8', false);
 
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
@@ -649,7 +649,7 @@ class ImpresionController extends AbstractController
         // dejavusans is a UTF-8 Unicode font, if you only need to
         // print standard ASCII chars, you can use core fonts like
         // helvetica or times to reduce file size.
-        $pdf->SetFont('Helvetica', '', 9, '', true);
+        $pdf->SetFont('Helvetica', '', 12, '', true);
 
         // Add a page
         // This method has several options, check the source code documentation for more information.

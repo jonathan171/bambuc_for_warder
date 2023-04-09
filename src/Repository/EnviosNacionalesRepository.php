@@ -4,8 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Clientes;
 use App\Entity\EnviosNacionales;
+use App\Entity\EnviosNacionalesUnidades;
 use App\Entity\Municipio;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,9 +21,12 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method EnviosNacionales[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class EnviosNacionalesRepository extends ServiceEntityRepository
-{
-    public function __construct(ManagerRegistry $registry)
-    {
+{   
+    private $entityManager; 
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
+    {   
+        $this->entityManager = $entityManager;
         parent::__construct($registry, EnviosNacionales::class);
     }
 
@@ -70,18 +75,51 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
             $actions = '<a  class="btn waves-effect waves-light btn-warning" href="/envios_nacionales/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
            // $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envios_nacionales/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')"><i class="fas fa-trash-alt"></i></a>';
             
+           $items = $this->entityManager->getRepository(EnviosNacionalesUnidades::class)->createQueryBuilder('en')
+           ->andWhere('en.envioNacional= :val')
+           ->setParameter('val', $item->getId())
+           ->getQuery()->getResult();
+
+           $clase = 'justify-content-center w-100 btn btn-success d-flex align-items-center';
+           $guias = '';
+           foreach($items as $unidad){
+            if($unidad->getNumeroGuia()=='0'){
+                $clase = 'btn waves-effect waves-light btn-warning';
+            }
+            $guias.= $unidad->getNumeroGuia().'<br>';
+           }
            $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_remision?id='.$item->getId().'" title="Imprimir"><span class="fas fa-print"></span></a>';
            $actions .= '&nbsp;<input name="envId[]" id="checkBoxImprimir" value="'.$item->getId().'" type="checkbox">';
            /* $actions.='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut ="ocultarEnvio()" title="Ver Envio">
                          <i class="fa fa-eye text-success" ></i>
                      </a>';*/
+
+                     $select ='<select class="form-select" data-id="'.$item->getId().'">';
+                     $select .='<option value= ""> </option>';
+
+                     $estados = array(
+                        "1"=> "transito",
+                        "2"=> "entregado");
+         
+                     foreach ($estados as $key => $value){
+                         if($key == $item->getEstado()){
+                             $select .='<option value= "'.$key.'" selected="selected">'.$value.' </option>';
+         
+                         }else{
+                             $select .='<option value= "'.$key.'">'.$value.' </option>';
+                         }
+         
+                     }
+                     $select .='</select>';
+
             $list[] = [
-                'numero' => $item->getNumero(),
+                'numero' => '<spam class="'.$clase.'">'.$guias.'</spam>',
                 'valorTotal' => $item->getValorTotal(),
                 'fecha' => $item->getFecha()->format('Y-m-d'),
                 'cliente' => $item->getCliente()->getRazonSocial(),
                 'destinatario' => $item->getDestinatario(),
                 'municipioDestino' => $item->getMunicipioDestino()->getNombre(),
+                'estado' => $select,
                 'actions' => $actions
             ];
             // echo $item->getZona()->getNombre();

@@ -148,6 +148,11 @@ class EnviosNacionales
      */
     private $municipioDestino;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $estado;
+
     public function getId(): ?string
     {
         return $this->id;
@@ -353,6 +358,18 @@ class EnviosNacionales
     public function setMunicipioDestino(?Municipio $municipioDestino): self
     {
         $this->municipioDestino = $municipioDestino;
+
+        return $this;
+    }
+
+    public function getEstado(): ?string
+    {
+        return $this->estado;
+    }
+
+    public function setEstado(?string $estado): self
+    {
+        $this->estado = $estado;
 
         return $this;
     }

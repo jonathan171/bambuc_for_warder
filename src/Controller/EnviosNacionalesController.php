@@ -283,6 +283,27 @@ class EnviosNacionalesController extends AbstractController
         return $this->redirectToRoute('app_envios_nacionales_edit', ['id' => $remision->getId()], Response::HTTP_SEE_OTHER);
     }
 
+    #[Route('/save_estado', name: 'app_envios_nacionales_save_estado', methods: ['GET', 'POST'])]
+    public function executeSaveTier(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ) {
+
+        $envioNacional= $entityManager->getRepository(EnviosNacionales::class)->find($request->request->get('id'));
+       
+
+        $envioNacional->setEstado($request->request->get('estado_id'));
+
+        $entityManager->persist($envioNacional);
+        $entityManager->flush();
+
+
+        $responseData = array(
+            "results" => true,
+        );
+        return $this->json($responseData);
+    }
+
     #[Route('/{id}', name: 'app_envios_nacionales_delete', methods: ['POST'])]
     public function delete(Request $request, EnviosNacionales $enviosNacionale, EnviosNacionalesRepository $enviosNacionalesRepository): Response
     {

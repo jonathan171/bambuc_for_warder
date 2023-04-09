@@ -42,6 +42,7 @@
                 <th>Quien Envia</th>
                 <th>Quien Recibe</th>
                 <th>Municipio Destino</th>
+                <th>Estado</th>
                 <th>Opciones</th>
                
             </tr>
@@ -90,6 +91,7 @@
                 {data: 'cliente'},
                 {data: 'destinatario'},
                 {data: 'municipioDestino'},
+                {data: 'estado'},
                 {data: 'actions'}
                 
                 ],
@@ -98,9 +100,50 @@
             ],
              order: [[ 0, "desc" ]]
         });
-   });
+
+        
+		$('#data_table_envios tbody').on('change', '.form-select', function () {
+					
+			$.ajax({
+					context: this,
+						url: '{{path('app_envios_nacionales_save_estado')}}',
+						data: {
+						id: $(this).data('id'),
+						estado_id: $(this).val(),
+						},
+						type: 'POST',
+						dataType: 'json',
+						success: function (json) {
+							
+							
+						toastr.options = {
+								"closeButton": true,
+								"debug": false,
+								"newestOnTop": false,
+								"progressBar": false,
+								"positionClass": "toast-bottom-right",
+								"preventDuplicates": false,
+								"onclick": null,
+								"showDuration": 300,
+								"hideDuration": 1000,
+								"timeOut": 5000,
+								"extendedTimeOut": 1000,
+								"showEasing": "swing",
+								"hideEasing": "linear",
+								"showMethod": "fadeIn",
+								"hideMethod": "fadeOut"
+								}
+
+							Command: toastr["success"]("carga Actualizada Correctamente");
+
+							},
+							error: function (xhr, status) {
+							alert('Disculpe, existió un problema');
+							}
+							});
+            });
     
-   
+    });
     function verEnvio(idEnvio) {
 
         ParaEnvio = '/envios_nacionales/'+idEnvio+'/mostrar';
