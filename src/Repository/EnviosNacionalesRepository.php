@@ -87,7 +87,7 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
                 $clase = 'btn waves-effect waves-light btn-warning';
             }
             
-            $guias.= strlen($unidad->getNumeroGuia())> 13  ? substr($unidad->getNumeroGuia(), 0, 12):$unidad->getNumeroGuia().'<br>';
+            $guias.= strlen($unidad->getNumeroGuia())> 13  ? substr($unidad->getNumeroGuia(), 0, 12).'<br>':$unidad->getNumeroGuia().'<br>';
            }
            $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_remision?id='.$item->getId().'" title="Imprimir"><span class="fas fa-print"></span></a>';
            $actions .= '&nbsp;<input name="envId[]" id="checkBoxImprimir" value="'.$item->getId().'" type="checkbox">';
