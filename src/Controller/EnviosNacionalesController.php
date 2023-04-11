@@ -21,6 +21,7 @@ class EnviosNacionalesController extends AbstractController
     #[Route('/', name: 'app_envios_nacionales_index', methods: ['GET'])]
     public function index(EnviosNacionalesRepository $enviosNacionalesRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         return $this->render('envios_nacionales/index.html.twig', [
             'envios_nacionales' => $enviosNacionalesRepository->findAll(),
         ]);
