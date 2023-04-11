@@ -81,7 +81,7 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
            ->getQuery()->getResult();
 
            $clase = 'justify-content-center btn-success d-flex align-items-center';
-           $guias = $item->getNumero().'<br>';
+           $guias = '';
            foreach($items as $unidad){
             if($unidad->getNumeroGuia()=='0'){
                 $clase = 'justify-content-center btn-warning d-flex align-items-center';
@@ -120,7 +120,7 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
                      $select .='</select>';
 
             $list[] = [
-                'numero' => '<span class="'.$clase.'">'.$guias.'</span>',
+                'numero' =>  $item->getNumero().'<span class="'.$clase.'">'.$guias.'</span>',
                 'valorTotal' => $item->getValorTotal(),
                 'fecha' => $item->getFecha()->format('Y-m-d'),
                 'cliente' => $item->getCliente()->getRazonSocial(),
