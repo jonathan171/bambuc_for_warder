@@ -106,14 +106,14 @@
 			<td style="background-color: #e4ffc5;">
 				<b>Seguro:</b>
 			</td>
-			<td style="background-color: #e4ffc5;">${{remision.seguro}}</td>
+			<td style="background-color: #e4ffc5;">${{remision.seguro|number_format(2, '.', ',')}}</td>
 		</tr>
 		<tr>
 			<td style="background-color: #e4ffc5;">
 				<b>Valor Total:
 				</b>
 			</td>
-			<td style="background-color: #e4ffc5;">{{remision.valorTotal}}</td>
+			<td style="background-color: #e4ffc5;">{{remision.valorTotal|number_format(2, '.', ',')}}</td>
 			<td style="background-color: #e4ffc5;">
 				<b>Forma Pago:</b>
 			</td>

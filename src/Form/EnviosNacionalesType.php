@@ -115,7 +115,7 @@ class EnviosNacionalesType extends AbstractType
             ])
             ->add('formaPago', ChoiceType::class, [
                 'choices'  => [
-                    'Contado' => 'DEBITO',
+                    'Contado' => 'CONTADO',
                     'Crédito' => 'CRÉDITO'
                 ],
                 'attr' => [
