@@ -95,6 +95,19 @@
                 {data: 'actions'}
                 
                 ],
+ 
+                createdRow: function(row, data, index) {
+
+                    // Updated Schedule Week 1 - 07 Mar 22
+                    $('td:eq(0)', row).css('background-color', data.color); 
+                    $('td:eq(1)', row).css('background-color', data.color);  
+                    $('td:eq(2)', row).css('background-color', data.color); 
+                    $('td:eq(3)', row).css('background-color', data.color);
+                    $('td:eq(4)', row).css('background-color', data.color); 
+                    $('td:eq(5)', row).css('background-color', data.color);   
+                    $('td:eq(6)', row).css('background-color', data.color);  
+                    
+                },
             columnDefs: [
                 
             ],

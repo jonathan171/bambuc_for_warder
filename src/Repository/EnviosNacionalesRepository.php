@@ -80,12 +80,9 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
            ->setParameter('val', $item->getId())
            ->getQuery()->getResult();
 
-           $clase = 'justify-content-center btn-success d-flex align-items-center';
+           
            $guias = '';
            foreach($items as $unidad){
-            if($unidad->getNumeroGuia()=='0'){
-                $clase = 'justify-content-center btn-warning d-flex align-items-center';
-            }
             
             $guias.= strlen($unidad->getNumeroGuia())> 13  ? substr($unidad->getNumeroGuia(), 0, 12).'<br>':$unidad->getNumeroGuia().'<br>';
            }
@@ -103,9 +100,9 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
                         "2"=> "entregado");
 
                     $colores = array(
-                        "1"=> "justify-content-center btn-warning d-flex align-items-center",
-                        "2"=> "justify-content-center btn-success d-flex align-items-center");
-                    $color = '';
+                        "1"=> '#FFEEBA',
+                        "2"=> '#C3E6CB');
+                    $color = '#FFFFFF';
                      foreach ($estados as $key => $value){
                         
                          if($key == $item->getEstado()){
@@ -120,14 +117,15 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
                      $select .='</select>';
 
             $list[] = [
-                'numero' =>  $item->getNumero().'<span class="'.$clase.'">'.$guias.'</span>',
+                'numero' =>  $item->getNumero().'<br>'.$guias,
                 'valorTotal' => $item->getValorTotal(),
                 'fecha' => $item->getFecha()->format('Y-m-d'),
                 'cliente' => $item->getCliente()->getRazonSocial(),
                 'destinatario' => $item->getDestinatario(),
                 'municipioDestino' => $item->getMunicipioDestino()->getNombre(),
-                'estado' => $select.'<span class="'.$color.'">    --------      </span>',
-                'actions' => $actions
+                'estado' => $select,
+                'actions' => $actions,
+                'color' => $color
             ];
             // echo $item->getZona()->getNombre();
         }
