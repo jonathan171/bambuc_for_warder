@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Entity\Clientes;
 use App\Entity\EnviosNacionales;
 use App\Entity\EnviosNacionalesUnidades;
+use App\Entity\Municipio;
 use App\Form\ClientesType;
 use App\Form\EnviosNacionalesType;
 use App\Repository\EnviosNacionalesRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -306,6 +308,51 @@ class EnviosNacionalesController extends AbstractController
             "results" => true,
         );
         return $this->json($responseData);
+    }
+
+    //listado de envios sin facturar
+
+    #[Route('/listado_envios', name: 'app_envios_nacionales_listado_envios', methods: ['GET', 'POST'])]
+    public function listadoEnvios(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $shearch = '%' . $request->request->get('filtro') . '%';
+        $query = $entityManager->getRepository(EnviosNacionales::class)->createQueryBuilder('e')
+                            ->innerJoin(Municipio::class, 'm', Join::WITH,   'm.id = e.municipioDestino')
+                            ->innerJoin(Municipio::class, 'm1', Join::WITH,  'm1.id = e.municipioOrigen')
+                            ->innerJoin(Clientes::class, 'c', Join::WITH,   'c.id = e.cliente')
+                            ->innerJoin(EnviosNacionalesUnidades::class,'enu' , Join::WITH,  'e.id = enu.envioNacional');;
+
+        if ($request->request->get('fecha_inicio')) {
+
+            $query->andWhere('e.fecha >= :val')
+                ->setParameter('val', $request->request->get('fecha_inicio'))
+                ->andWhere('e.fecha <= :val1')
+                ->setParameter('val1', $request->request->get('fecha_fin'));
+        }
+        if ($request->get('quien_envia')) {
+
+            $query->andWhere(' e.cliente = :cliente')
+                ->setParameter('cliente', $request->get('quien_envia'));
+        }
+
+        if ($request->request->get('filtro')) {
+            $query->andWhere('e.numero like :val OR e.fecha like :val   OR e.destinatario like :val OR m.nombre like :val OR m1.nombre like :val OR enu.numeroGuia like :val')
+                ->setParameter('val', $shearch);
+        }
+        $envios = $query->andWhere('e.facturado = 0')
+            ->setMaxResults(200)
+            ->getQuery()->getResult();
+
+
+
+        return $this->render('envios_nacionales/listado_envios.html.twig', [
+            'envios'     => $envios,
+            'factura_id' => $request->request->get('factura_id')
+        ]);
     }
 
     #[Route('/{id}', name: 'app_envios_nacionales_delete', methods: ['POST'])]

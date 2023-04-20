@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Clientes;
 use App\Entity\Envio;
+use App\Entity\EnviosNacionales;
 use App\Entity\Pais;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
@@ -27,6 +29,18 @@ class ReporteEnvioController extends AbstractController
         
         return $this->render('reporte_envio/index.html.twig', [
             'controller_name' => 'ReporteEnvioController',
+        ]);
+    }
+
+    #[Route('/reporte_envio_nacional', name: 'app_reporte_envio_nacional')]
+    public function reporteNacional(): Response
+    {   
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        return $this->render('reporte_envio/envio_nacional.html.twig', [
+            
         ]);
     }
 
@@ -182,6 +196,165 @@ class ReporteEnvioController extends AbstractController
 
         // Crear archivo temporal en el sistema
         $fileName = 'reporte_envios.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+
+        // Guardar el archivo de excel en el directorio temporal del sistema
+        $writer->save($temp_file);
+
+        // Retornar excel como descarga
+        return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
+    }
+
+    #[Route('/reporte_envio_nacional_excel', name: 'app_reporte_envio_nacional_excel')]
+    public function excelEnvioNacional(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $spreadsheet = new Spreadsheet();
+
+        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+        $drawing->setName('Logo');
+        $drawing->setDescription('Logo');
+        $drawing->setPath('assets/images/facturas/logo.jpg');
+        $drawing->setCoordinates('B1');
+        $drawing->setHeight(100);
+
+        /* @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet */
+        $sheet = $spreadsheet->getActiveSheet();
+        $drawing->setWorksheet($sheet);
+        $sheet->getCell('A4')->setValue("#");
+        $sheet->getCell('B4')->setValue("FECHA \n DE \n FACTURACIÓN");
+
+        $sheet->getCell('C4')->setValue("REMISIÓN");
+        $sheet->getCell('D4')->setValue("REMITENTE");
+        $sheet->getCell('E4')->setValue("DESTINO");
+        $sheet->getCell('F4')->setValue("PESO COBRADO");
+        $sheet->getCell('G4')->setValue("DESTINATARIO");
+        $sheet->getCell('H4')->setValue("VALOR \n DEL \n ENVÍO");
+        $sheet->getCell('I4')->setValue("FACTURA");
+        $sheet->getCell('J4')->setValue("DESCRIPCIÓN");
+
+
+        $styleArray = array(
+            'font' => [
+                'bold' => true,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ],
+            'borders' => array(
+                'outline' => array(
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM,
+                    'color' => array('argb' => '070707'),
+                ),
+            ),
+        );
+        foreach (range('A', 'J') as $columnID) {
+
+            $sheet->getStyle($columnID . '4')->applyFromArray($styleArray);
+        }
+
+        $sheet->getColumnDimension('B')->setWidth(15);
+        $sheet->getColumnDimension('C')->setWidth(15);
+        $sheet->getColumnDimension('D')->setWidth(30);
+        $sheet->getColumnDimension('E')->setWidth(20);
+        $sheet->getColumnDimension('F')->setWidth(15);
+        $sheet->getColumnDimension('G')->setWidth(30);
+        $sheet->getColumnDimension('H')->setWidth(25);
+        $sheet->getColumnDimension('J')->setWidth(30);
+        $sheet->getStyle('B4')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
+        $sheet->getRowDimension('4')->setRowHeight(45, 'pt');
+        $sheet->getRowDimension('1')->setRowHeight(100, 'px');
+       
+
+
+
+
+
+
+        $query = $entityManager->getRepository(EnviosNacionales::class)->createQueryBuilder('e')
+            ->innerJoin(Clientes::class, 'c', Join::WITH,   'c.id = e.cliente')
+            ->andWhere('e.fecha >= :val')
+            ->setParameter('val', $request->get('fecha_inicio'))
+            ->andWhere('e.fecha <= :val1')
+            ->setParameter('val1', $request->get('fecha_fin'));
+
+        if ($request->get('quien_envia')) {
+
+            $query->andWhere(' e.cliente = :val2')
+                ->setParameter('val2', $request->get('quien_envia'));
+        }
+        if ($request->get('descripcion')) {
+
+            $shearch = '%' . $request->get('descripcion') . '%';
+            $query->andWhere(' e.descripcion like :val4')
+                ->setParameter('val4', $shearch);
+        }
+        if ($request->get('facturado')) {
+            if($request->get('facturado')=='facturado'){
+                $query->andWhere(' e.facturado = :val3')
+                ->setParameter('val3', 1);
+            }else{
+                $query->andWhere(' e.facturado != :val3')
+                ->setParameter('val3', 1);
+            }
+           
+        }
+
+
+        $envios = $query->getQuery()->getResult();
+
+        // Indice de la celda en la que se comienza a renderizar
+        $cell = 5;
+        $i = 0;
+        $total = 0;
+
+        foreach ($envios as $envio) {
+            $i++;
+
+            $sheet->setCellValue("A$cell", ($i));
+            $sheet->setCellValue("B$cell", $envio->getFecha()->format('Y-m-d'));
+            $sheet->setCellValue("C$cell", $envio->getNumero());
+            $sheet->setCellValue("D$cell", $envio->getClientes()->getRazonSocial());
+            $sheet->setCellValue("E$cell", $envio->getMunicipio()->getNombre().'('.$envio->getMunicipio()->getDepartamento()->getNombre().')');
+            $sheet->setCellValue("F$cell", $envio->getPeso());
+            $sheet->setCellValue("G$cell", $envio->getDestinatario());
+            $sheet->setCellValue("H$cell", $envio->getValorTotal());
+            if($envio->getFacturaItems()){
+                $sheet->setCellValue("I$cell", $envio->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().$envio->getFacturaItems()->getFacturaClientes()->getNumeroFactura());
+
+            }
+            $sheet->getStyle("H$cell",)
+                ->getNumberFormat()
+                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->setCellValue("J$cell", $envio->getDescripcion());
+            $total += $envio->getTotalACobrar();
+            foreach (range('A', 'J') as $columnID) {
+
+                $sheet->getStyle($columnID . $cell)->applyFromArray($styleArray);
+            }
+
+            // Continuar en una nueva fila
+            $cell++;
+        }
+        $sheet->mergeCells("A$cell:F$cell");
+        $sheet->setCellValue("G$cell", 'TOTAL');
+        $sheet->setCellValue("H$cell", $total);
+        $sheet->getStyle("H$cell",)
+            ->getNumberFormat()
+            ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+        $sheet->getStyle("A$cell:F$cell")->applyFromArray($styleArray);
+        $sheet->getStyle("G$cell")->applyFromArray($styleArray);
+        $sheet->getStyle("H$cell")->applyFromArray($styleArray);
+        $sheet->getStyle("I$cell")->applyFromArray($styleArray);
+        $sheet->getStyle("J$cell")->applyFromArray($styleArray);
+
+
+        $sheet->setTitle("Reporte envios");
+
+        // Crear tu archivo Office 2007 Excel (XLSX Formato)
+        $writer = new Xlsx($spreadsheet);
+
+        // Crear archivo temporal en el sistema
+        $fileName = 'reporte_envios_nacionales.xlsx';
         $temp_file = tempnam(sys_get_temp_dir(), $fileName);
 
         // Guardar el archivo de excel en el directorio temporal del sistema

@@ -153,6 +153,16 @@ class EnviosNacionales
      */
     private $estado;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $facturado;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=FacturaItems::class, inversedBy="enviosNacionales")
+     */
+    private $facturaItems;
+
     public function getId(): ?string
     {
         return $this->id;
@@ -370,6 +380,30 @@ class EnviosNacionales
     public function setEstado(?string $estado): self
     {
         $this->estado = $estado;
+
+        return $this;
+    }
+
+    public function isFacturado(): ?bool
+    {
+        return $this->facturado;
+    }
+
+    public function setFacturado(?bool $facturado): self
+    {
+        $this->facturado = $facturado;
+
+        return $this;
+    }
+
+    public function getFacturaItems(): ?FacturaItems
+    {
+        return $this->facturaItems;
+    }
+
+    public function setFacturaItems(?FacturaItems $facturaItems): self
+    {
+        $this->facturaItems = $facturaItems;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Envio;
+use App\Entity\EnviosNacionales;
 use App\Entity\Factura;
 use App\Entity\FacturaItems;
 use App\Entity\FacturaResolucion;
@@ -186,11 +187,18 @@ class NotaCreditoController extends AbstractController
         
             foreach ($itemsAnulados as $itemAnulado) {
 
-               
-            $envios = $entityManager->getRepository(Envio::class)->createQueryBuilder('e')
+            if($facturaanulada->getTipoFactura() == 'FACTURA_VENTA'){
+                $envios = $entityManager->getRepository(Envio::class)->createQueryBuilder('e')
             ->andWhere('e.facturaItems = :val')
             ->setParameter('val', $itemAnulado->getId())
             ->getQuery()->getResult();
+            }else{
+                $envios = $entityManager->getRepository(EnviosNacionales::class)->createQueryBuilder('e')
+            ->andWhere('e.facturaItems = :val')
+            ->setParameter('val', $itemAnulado->getId())
+            ->getQuery()->getResult();
+            }  
+            
                foreach ( $envios as $envio) {
                 
                     $envio->setFacturado(0);

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\EnviosNacionales;
 use App\Form\DataTransformer\ClientesToNumberTransformer;
+use App\Form\DataTransformer\FacturaItemsToNumberTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -14,10 +15,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class EnviosNacionalesType extends AbstractType
 { 
     private $transformer;
+    private $transformerItems;
 
-    public function __construct(ClientesToNumberTransformer $transformer)
+    public function __construct(ClientesToNumberTransformer $transformer, FacturaItemsToNumberTransformer $transformerItems)
     {
         $this->transformer = $transformer;
+        $this->transformerItems = $transformerItems;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -123,9 +126,18 @@ class EnviosNacionalesType extends AbstractType
                 ]
             ])
             ->add('contraEntrega')
+            ->add('facturado')
+            ->add('facturaItems', TextType::class, [
+                'required'=> false,
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
         ;
         $builder->get('cliente')
         ->addModelTransformer($this->transformer);
+        $builder->get('facturaItems')
+        ->addModelTransformer($this->transformerItems);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

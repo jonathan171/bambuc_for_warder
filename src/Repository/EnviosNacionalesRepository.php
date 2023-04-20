@@ -58,7 +58,7 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
             ->innerJoin(Municipio::class, 'm', Join::WITH,   'm.id = e.municipioDestino')
             ->innerJoin(Municipio::class, 'm1', Join::WITH,  'm1.id = e.municipioOrigen')
             ->innerJoin(Clientes::class,'c' , Join::WITH,  'c.id = e.cliente')
-            ->innerJoin(EnviosNacionalesUnidades::class,'enu' , Join::WITH,  'e.id = enu.envioNacional');;
+            ->innerJoin(EnviosNacionalesUnidades::class,'enu' , Join::WITH,  'e.id = enu.envioNacional');
         if ($options['search']) {
             $shearch = '%' . $options['search'] . '%';
             $query->andWhere('e.numero like :val OR e.fecha like :val  OR c.razonSocial like :val OR c.nit like :val OR e.destinatario like :val OR m.nombre like :val OR m1.nombre like :val OR enu.numeroGuia like :val')

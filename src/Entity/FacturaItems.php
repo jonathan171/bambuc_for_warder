@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -124,6 +126,16 @@ class FacturaItems
      * })
      */
     private $unidad;
+
+    /**
+     * @ORM\OneToMany(targetEntity=EnviosNacionales::class, mappedBy="facturaItems")
+     */
+    private $enviosNacionales;
+
+    public function __construct()
+    {
+        $this->enviosNacionales = new ArrayCollection();
+    }
 
     public function getId(): ?string
     {
@@ -294,6 +306,36 @@ class FacturaItems
     public function setUnidad(?UnidadesMedida $unidad): self
     {
         $this->unidad = $unidad;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EnviosNacionales>
+     */
+    public function getEnviosNacionales(): Collection
+    {
+        return $this->enviosNacionales;
+    }
+
+    public function addEnviosNacionale(EnviosNacionales $enviosNacionale): self
+    {
+        if (!$this->enviosNacionales->contains($enviosNacionale)) {
+            $this->enviosNacionales[] = $enviosNacionale;
+            $enviosNacionale->setFacturaItems($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnviosNacionale(EnviosNacionales $enviosNacionale): self
+    {
+        if ($this->enviosNacionales->removeElement($enviosNacionale)) {
+            // set the owning side to null (unless already changed)
+            if ($enviosNacionale->getFacturaItems() === $this) {
+                $enviosNacionale->setFacturaItems(null);
+            }
+        }
 
         return $this;
     }
