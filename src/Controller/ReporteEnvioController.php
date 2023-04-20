@@ -326,7 +326,7 @@ class ReporteEnvioController extends AbstractController
                 ->getNumberFormat()
                 ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
             $sheet->setCellValue("J$cell", $envio->getDescripcion());
-            $total += $envio->getTotalACobrar();
+            $total += $envio->getValorTotal();
             foreach (range('A', 'J') as $columnID) {
 
                 $sheet->getStyle($columnID . $cell)->applyFromArray($styleArray);
