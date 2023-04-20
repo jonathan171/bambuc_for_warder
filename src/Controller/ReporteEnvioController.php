@@ -314,7 +314,7 @@ class ReporteEnvioController extends AbstractController
             $sheet->setCellValue("B$cell", $envio->getFecha()->format('Y-m-d'));
             $sheet->setCellValue("C$cell", $envio->getNumero());
             $sheet->setCellValue("D$cell", $envio->getCliente()->getRazonSocial());
-            $sheet->setCellValue("E$cell", $envio->getMunicipio()->getNombre().'('.$envio->getMunicipio()->getDepartamento()->getNombre().')');
+            $sheet->setCellValue("E$cell", $envio->getMunicipioDestino()->getNombre().'('.$envio->getMunicipioDestino()->getDepartamento()->getNombre().')');
             $sheet->setCellValue("F$cell", $envio->getPeso());
             $sheet->setCellValue("G$cell", $envio->getDestinatario());
             $sheet->setCellValue("H$cell", $envio->getValorTotal());
