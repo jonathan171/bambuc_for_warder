@@ -383,7 +383,7 @@
 		</td>
 
 		<td colspan="2" style="border-top: 2px solid black;">
-			${{(factura.total -(factura.totalReteIva + factura.totalReteIca + factura.totalReteFuente + factura.totalReteFuenteG))|number_format(2, '.', ',') }}
+			${{(factura.total -(factura.totalReteIva + factura.totalReteIca + factura.totalReteFuente + factura.totalReteFuenteG - factura.descuento))|number_format(2, '.', ',') }}
 		</td>
 	</tr>
 	<tr>
