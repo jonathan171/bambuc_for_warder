@@ -65,7 +65,7 @@ class FacturaType extends AbstractType
             ->add('formaDePago', ChoiceType::class, [
                 'choices'  => [
                     'Contado' => 'DEBITO',
-                    'Crédito' => 'CRÉDITO'
+                    'Crédito' => 'CREDITO'
                 ],
                 'attr' => [
                     'class' => 'form-control',
