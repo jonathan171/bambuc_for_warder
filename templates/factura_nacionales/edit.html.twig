@@ -227,7 +227,7 @@
 
             } else {
                  ParaEnvios = '{{ path('app_envios_nacionales_listado_envios')}}';
-                 $('#divenvios').load(ParaEnvios,{factura_id: factura_id,envia: envia });
+                 $('#divenvios').load(ParaEnvios,{factura_id: factura_id,envia: envia,filtro:filtro });
                  $("#envios").dialog({ width: 800, height: 500});
             }
 
