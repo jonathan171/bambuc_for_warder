@@ -333,7 +333,7 @@ class EnviosNacionalesController extends AbstractController
                 ->andWhere('e.fecha <= :val1')
                 ->setParameter('val1', $request->request->get('fecha_fin'));
         }
-        if ($request->get('quien_envia')) {
+        if ($request->get('envia')) {
 
             $query->andWhere(' e.cliente = :cliente')
                 ->setParameter('cliente', $request->get('quien_envia'));
