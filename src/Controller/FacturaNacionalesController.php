@@ -130,7 +130,7 @@ class FacturaNacionalesController extends AbstractController
 
             $item = new FacturaItems();
             $item->setCantidad($envio->getUnidades());
-            $item->setDescripcion('TRANSPORTE COURRIER');
+            $item->setDescripcion('TRANSPORTE NACIONAL');
             $item->setValorUnitario($envio->getValorTotal()/$envio->getUnidades());
             $item->setSubtotal($envio->getValorTotal());
             $item->setIva(0);
