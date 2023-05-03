@@ -336,7 +336,7 @@ class EnviosNacionalesController extends AbstractController
         
 
         if ($request->request->get('filtro')) {
-            $query->andWhere('e.numero like :val OR e.fecha like :val   OR e.destinatario like :val OR m.nombre like :val OR m1.nombre like :val OR enu.numeroGuia like :val OR c.razonSocial like :val c.nit like :val')
+            $query->andWhere('e.numero like :val OR e.fecha like :val   OR e.destinatario like :val OR m.nombre like :val OR m1.nombre like :val OR enu.numeroGuia like :val OR c.razonSocial like :val OR  c.nit like :val')
                 ->setParameter('val', $shearch);
         }
         $envios = $query->andWhere('e.facturado = 0')
