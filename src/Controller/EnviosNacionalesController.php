@@ -336,7 +336,7 @@ class EnviosNacionalesController extends AbstractController
         if ($request->get('envia')) {
 
             $query->andWhere(' e.cliente = :cliente')
-                ->setParameter('cliente', $request->get('quien_envia'));
+                ->setParameter('cliente', $request->get('envia'));
         }
 
         if ($request->request->get('filtro')) {
