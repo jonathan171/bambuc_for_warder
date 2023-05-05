@@ -126,6 +126,7 @@ class EnviosNacionalesType extends AbstractType
                 ]
             ])
             ->add('contraEntrega')
+            ->add('estado')
             ->add('facturado')
             ->add('facturaItems', TextType::class, [
                 'required'=> false,
