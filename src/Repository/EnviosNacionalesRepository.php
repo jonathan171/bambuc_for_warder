@@ -101,8 +101,8 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
                         "entregado"=> "entregado");
 
                     $colores = array(
-                        "1"=> '#FFEEBA',
-                        "2"=> '#C3E6CB');
+                        "transito"=> '#FFEEBA',
+                        "entregado"=> '#C3E6CB');
                     $color = '#FFFFFF';
                      foreach ($estados as $key => $value){
                         
