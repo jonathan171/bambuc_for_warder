@@ -60,6 +60,17 @@ class EnviosNacionalesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $numeroQuery = $entityManager->getRepository(EnviosNacionales::class)->createQueryBuilder('e')
+            ->orderBy('e.numero', 'DESC')
+            ->setMaxResults(1);
+
+            $consulta = $numeroQuery->getQuery()->getOneOrNullResult();
+
+            if ($consulta) {
+                $enviosNacionale->setNumero($consulta->getNumero() + 1);
+            } else {
+                $enviosNacionale->setNumero(1);
+            }
             $entityManager->persist($enviosNacionale);
             $entityManager->flush();
 
