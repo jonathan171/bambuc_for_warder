@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Clientes;
 use App\Entity\Envio;
 use App\Entity\EnviosNacionales;
+use App\Entity\EnviosNacionalesUnidades;
 use App\Entity\Pais;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
@@ -231,6 +232,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getCell('H4')->setValue("VALOR \n DEL \n ENVÍO");
         $sheet->getCell('I4')->setValue("FACTURA");
         $sheet->getCell('J4')->setValue("DESCRIPCIÓN");
+        $sheet->getCell('K4')->setValue("GUIA");
 
 
         $styleArray = array(
@@ -247,7 +249,7 @@ class ReporteEnvioController extends AbstractController
                 ),
             ),
         );
-        foreach (range('A', 'J') as $columnID) {
+        foreach (range('A', 'K') as $columnID) {
 
             $sheet->getStyle($columnID . '4')->applyFromArray($styleArray);
         }
@@ -260,6 +262,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getColumnDimension('G')->setWidth(30);
         $sheet->getColumnDimension('H')->setWidth(25);
         $sheet->getColumnDimension('J')->setWidth(30);
+        //$sheet->getColumnDimension('k')->setWidth(30);
         $sheet->getStyle('B4')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
         $sheet->getRowDimension('4')->setRowHeight(45, 'pt');
         $sheet->getRowDimension('1')->setRowHeight(100, 'px');
@@ -326,8 +329,19 @@ class ReporteEnvioController extends AbstractController
                 ->getNumberFormat()
                 ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
             $sheet->setCellValue("J$cell", $envio->getDescripcion());
+
+            $items = $entityManager->getRepository(EnviosNacionalesUnidades::class)->createQueryBuilder('fi')
+            ->andWhere('fi.envioNacional = :val')
+            ->setParameter('val', $envio->getId())
+            ->getQuery()->getResult();
+             $guias = '';
+            foreach ($items as $unidad){
+                $guias .= $unidad->getNumeroGuia()."\n";
+            }
+            $sheet->setCellValue("K$cell", $guias);
+            $sheet->getStyle("K$cell")->getAlignment()->setWrapText(true);
             $total += $envio->getValorTotal();
-            foreach (range('A', 'J') as $columnID) {
+            foreach (range('A', 'K') as $columnID) {
 
                 $sheet->getStyle($columnID . $cell)->applyFromArray($styleArray);
             }
@@ -346,6 +360,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getStyle("H$cell")->applyFromArray($styleArray);
         $sheet->getStyle("I$cell")->applyFromArray($styleArray);
         $sheet->getStyle("J$cell")->applyFromArray($styleArray);
+        $sheet->getStyle("K$cell")->applyFromArray($styleArray);
 
 
         $sheet->setTitle("Reporte envios");

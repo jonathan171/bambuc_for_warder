@@ -351,12 +351,18 @@ class EnviosNacionalesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_envios_nacionales_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_envios_nacionales_delete', methods: ['GET'])]
     public function delete(Request $request, EnviosNacionales $enviosNacionale, EnviosNacionalesRepository $enviosNacionalesRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$enviosNacionale->getId(), $request->request->get('_token'))) {
+    {   
+        if ($enviosNacionale->getFacturaItems() == null) {
             $enviosNacionalesRepository->remove($enviosNacionale, true);
+        } else {
+            $this->addFlash(
+                'notice',
+                'No se puede eliminar este envío porque ya se encuentra facturado'
+            );
         }
+        
 
         return $this->redirectToRoute('app_envios_nacionales_index', [], Response::HTTP_SEE_OTHER);
     }
