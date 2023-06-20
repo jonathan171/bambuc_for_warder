@@ -687,7 +687,7 @@
                 </ul>
               </li>
               
-              {% if is_granted('ROLE_ADMIN') %}
+              
               <li class="nav-small-cap">
                 <i class="mdi mdi-dots-horizontal"></i>
                 <span class="hide-menu">Facturación</span>
@@ -695,7 +695,7 @@
               <li class="sidebar-item">
                 <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/factura" aria-expanded="false"><i class="mdi mdi-book"></i><span class="hide-menu">Facturas</span></a>
               </li>
-              {% endif %}
+             
                {% if is_granted('ROLE_ADMIN') %}
               <li class="sidebar-item">
                 <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
