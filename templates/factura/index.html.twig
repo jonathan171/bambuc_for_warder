@@ -11,9 +11,10 @@
             <a class="btn waves-effect waves-light btn-info" href="{{ path('app_factura_nacionales_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Nacionales</a>
          {% if is_granted('ROLE_ADMIN') %}
             <a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Simple</a>
-            <a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}"> <i class=" fas fa-handshake"></i> Clientes</a>
+            
             <a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}"> <i class="fas fa-file-alt"></i> Resoluciones</a>
          {% endif %}
+         <a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}"> <i class=" fas fa-handshake"></i> Clientes</a>
         </div>
     </div>
 
@@ -41,9 +42,10 @@
             <a class="btn waves-effect waves-light btn-info" href="{{ path('app_factura_nacionales_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Nacionales</a>
          {% if is_granted('ROLE_ADMIN') %}
             <a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Simple</a>
-            <a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}"> <i class=" fas fa-handshake"></i> Clientes</a>
+            
             <a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}"> <i class="fas fa-file-alt"></i> Resoluciones</a>
          {% endif %}
+         <a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}"> <i class=" fas fa-handshake"></i> Clientes</a>
    </div>
 </div>
 <div id="erroresDian" title="Errores de la dian" style="display:none;width:800px;height:500px;" >
