@@ -5,11 +5,15 @@
 {% block body %}
  <div class="p-3">
         <div class="form-group ">
-         <a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura</a>
-         <a class="btn waves-effect waves-light btn-info" href="{{ path('app_factura_nacionales_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Nacionales</a>
-         <a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Simple</a>
-         <a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}"> <i class=" fas fa-handshake"></i> Clientes</a>
-         <a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}"> <i class="fas fa-file-alt"></i> Resoluciones</a>
+         {% if is_granted('ROLE_ADMIN') %}
+            <a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura</a>
+         {% endif %}
+            <a class="btn waves-effect waves-light btn-info" href="{{ path('app_factura_nacionales_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Nacionales</a>
+         {% if is_granted('ROLE_ADMIN') %}
+            <a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Simple</a>
+            <a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}"> <i class=" fas fa-handshake"></i> Clientes</a>
+            <a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}"> <i class="fas fa-file-alt"></i> Resoluciones</a>
+         {% endif %}
         </div>
     </div>
 
@@ -31,11 +35,15 @@
     </table>
  <div class="p-3">
    <div class="form-group ">
-   <a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_new') }}"> <i class=" fas fa-paste"> </i> Nueva Factura</a>
-   <a class="btn waves-effect waves-light btn-info" href="{{ path('app_factura_nacionales_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Nacionales</a>
-   <a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Simple</a>
-   <a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}"> <i class=" fas fa-handshake"></i> Clientes</a>
-   <a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}"> <i class="fas fa-file-alt"></i> Resoluciones</a>
+         {% if is_granted('ROLE_ADMIN') %}
+            <a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura</a>
+         {% endif %}
+            <a class="btn waves-effect waves-light btn-info" href="{{ path('app_factura_nacionales_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Nacionales</a>
+         {% if is_granted('ROLE_ADMIN') %}
+            <a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Simple</a>
+            <a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}"> <i class=" fas fa-handshake"></i> Clientes</a>
+            <a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}"> <i class="fas fa-file-alt"></i> Resoluciones</a>
+         {% endif %}
    </div>
 </div>
 <div id="erroresDian" title="Errores de la dian" style="display:none;width:800px;height:500px;" >
@@ -59,12 +67,17 @@
 
     </div>
 </div>
+
 {% endblock %}
 {% block javascripts %} 
 <script>
-    
+     {% if is_granted('ROLE_NACIONAL') %}
+            {% set is_nacional = 1 %}
+     {% else %}
+      {% set is_nacional = 0 %}
+     {% endif %}
   $(document).ready(function() {
-   
+
       $('#data_table_facturas').DataTable({
             serverSide: true,
             responsive: true,
@@ -74,7 +87,7 @@
                 "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
             },
             ajax: {
-                "url": '/factura/table',
+                "url": '{{ path('app_factura_table')}}'+'?nacional={{is_nacional}}',
                 "type": "POST"
             },
             columns: [

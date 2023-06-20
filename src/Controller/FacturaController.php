@@ -158,10 +158,10 @@ class FacturaController extends AbstractController
         $start = $request->request->get('start');
         $length = $request->request->get('length');
         $order = $request->request->get('order');
+        $nacional = $request->query->get('nacional');
 
 
-
-        $data_table  = $facturaRepository->findByDataTable(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'], 'order' => $order]);
+        $data_table  = $facturaRepository->findByDataTable(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'], 'order' => $order, 'nacional'=> $nacional]);
 
         // Objeto requerido por Datatables
 
