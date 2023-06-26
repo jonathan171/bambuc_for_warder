@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Empresa;
 use App\Entity\Envio;
 use App\Entity\EnviosNacionales;
 use App\Entity\Factura;
@@ -63,8 +64,9 @@ class NotaCreditoController extends AbstractController
         $numeroQuery = $entityManager->getRepository(NotaCredito::class)->createQueryBuilder('nc')
                         ->innerJoin(Factura::class, 'f', Join::WITH,   'f.id = nc.facturaCliente')
                         ->innerJoin(FacturaResolucion::class,'fr', Join::WITH,   'fr.id = f.facturaResolucion')
-                        ->where('fr.id = :val')
-                        ->setParameter('val',$factura->getFacturaResolucion()->getId())
+                        ->innerJoin(Empresa::class, 'e', Join::WITH, 'fr.empresa = e.id')
+                        ->where('e.id = :val')
+                        ->setParameter('val',$factura->getFacturaResolucion()->getEmpresa()->getId())
                         ->orderBy('nc.numeroNota', 'DESC')
                         ->setMaxResults(1);
         
@@ -333,7 +335,23 @@ class NotaCreditoController extends AbstractController
                 array_push($CuerpoJson[$x_nota]['items'], $itemJ);
             }
 
+            if ($nota->getReteFuente() > 0) {
 
+                if (array_key_exists('retentions', $CuerpoJson[$x_nota])) {
+    
+                    array_push($CuerpoJson[$x_nota]['retentions'], array(
+                        "tax_category" => "RET_FUENTE",
+                        "tax_rate" => $nota->getReteFuente()
+                    ));
+                } else {
+    
+                    $CuerpoJson[$x_nota]['retentions'] = array();
+                    array_push($CuerpoJson[$x_nota]['retentions'], array(
+                        "tax_category" => "RET_FUENTE",
+                        "tax_rate" => $nota->getReteFuente()
+                    ));
+                }
+            }
             $CuerpoJson[$x_nota]['dataico_account_id'] = $empresa->getUsuario();
             $CuerpoJson[$x_nota]['env'] = 'PRODUCCION';
         
