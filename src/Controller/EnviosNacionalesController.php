@@ -10,6 +10,7 @@ use App\Form\ClientesType;
 use App\Form\EnviosNacionalesType;
 use App\Repository\EnviosNacionalesRepository;
 use DateTime;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -54,7 +55,8 @@ class EnviosNacionalesController extends AbstractController
 
         }
         $enviosNacionale->setObservacion('LLAMAR AL REMITENTE ANTES DE REALIZAR LA DEVOLUCIÓN');
-        $fecha = new DateTime();
+        $timezone = new DateTimeZone('America/Bogota');
+        $fecha = new DateTime('now', $timezone);
         $enviosNacionale->setFecha($fecha);
         $form = $this->createForm(EnviosNacionalesType::class, $enviosNacionale);
         $form->handleRequest($request);
