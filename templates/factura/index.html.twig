@@ -147,22 +147,7 @@
 
             var dataparse = JSON.parse(data);
             //console.log(itt['xml']);
-            if (dataparse['xml'] == 'fallo') {
-
-                alertify.error('la nota no se puede reportar porque aun no se reporta la factura a la que esta asociada');
-
-            } else if (dataparse[0]['errors'])
-            {
-                alertify.error(dataparse['0']['errors'][0]['error']);
-            } else
-            {
-                alertify.success('Nota Reportada ');
-                //console.log(dataparse);
-            }
-
-
-
-
+           
 
 
         });
