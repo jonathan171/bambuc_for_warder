@@ -763,7 +763,7 @@ class ImpresionController extends AbstractController
         $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
         // set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, 10);
+        $pdf->SetAutoPageBreak(TRUE, 20);
 
         // set image scale factor
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
