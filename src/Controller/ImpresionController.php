@@ -405,7 +405,7 @@ class ImpresionController extends AbstractController
         $remision = $entityManager->getRepository(EnviosNacionales::class)->find($request->query->get('id'));
 
         // create new PDF document
-        $pdf = new TCPDF('L', PDF_UNIT, 'A5', true, 'UTF-8', false);
+        $pdf = new TCPDF('P', PDF_UNIT, 'A4', true, 'UTF-8', false);
 
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
@@ -426,7 +426,7 @@ class ImpresionController extends AbstractController
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
         // set margins
-        $pdf->SetMargins(3, 3, 2, 0);
+        $pdf->SetMargins(3, 10, 2);
         $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
         $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 

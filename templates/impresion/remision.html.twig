@@ -6,11 +6,12 @@
 			<b style="color:#4F4F4F;">RÉGIMEN SIMPLIFICADO</b><br>
 			<b style="color:#4F4F4F;">NIT: 1098754989-1</b><br>
 			Avenida 87 #23c-26 diamante 2<br>
-			Bucaramanga-Santander
+			Bucaramanga-Santander<br>
+			Tel: 6806331 - Cel: +57 3106922847
 		</td>
 		<td rowspan="2" style=" text-align:center; ">
 
-			<img src="{{ asset('assets/images/facturas/2.png')}}" alt="user" width="80">
+			<img src="{{ asset('assets/images/facturas/2-100.jpg')}}" alt="user" width="80">
 		</td>
 		<td>
 			<h2 style=" text-align:right;">Remisión
@@ -26,7 +27,7 @@
 	</tr>
 	<tr>
 		<td colspan="2">
-			Tel: 6806331 - Cel: +57 3106922847
+			
 		</td>
 
 	</tr>
@@ -34,83 +35,83 @@
 </table>
 <table >
 	<tr>
-		<td style="background-color: #D6D6D6; width:11%; ">
+		<td style="background-color: #FFFFFF; width:11%; ">
 			<b>Destinatario:
 			</b>
 		</td>
-		<td style="background-color: #D6D6D6; width:40%;">{{remision.destinatario}}</td>
-		<td style="background-color: #D6D6D6; width:10%;">
+		<td style="background-color: #FFFFFF; width:40%;">{{remision.destinatario}}</td>
+		<td style="background-color: #FFFFFF; width:10%;">
 			<b>Destino:</b>
 		</td>
-		<td style="background-color: #D6D6D6; width:40%;">
+		<td style="background-color: #FFFFFF; width:40%;">
 			<b>{{remision.municipioDestino.departamento.nombre }}({{remision.municipioDestino.nombre }})</b>
 		</td>
 	</tr>
 	<tr>
-		<td style="background-color: #D6D6D6;  ">
+		<td style="background-color: #FFFFFF;  ">
 			<b>Fecha:
 			</b>
 		</td>
-		<td style="background-color: #D6D6D6;">{{remision.fecha|date('d/m/Y')}}</td>
-		<td style="background-color: #D6D6D6; ">
+		<td style="background-color: #FFFFFF;">{{remision.fecha|date('d/m/Y')}}</td>
+		<td style="background-color: #FFFFFF; ">
 			<b>Dirección:</b>
 		</td>
-		<td style="background-color: #D6D6D6; ">{{remision.direccionDestino}}</td>
+		<td style="background-color: #FFFFFF; ">{{remision.direccionDestino}}</td>
 	</tr>
 	<tr>
-		<td style="background-color: #D6D6D6;">
+		<td style="background-color: #FFFFFF;">
 			<b>Remitente:
 			</b>
 		</td>
-		<td style="background-color: #D6D6D6;">{{remision.cliente.razonSocial}}</td>
-		<td style="background-color: #D6D6D6;">
+		<td style="background-color: #FFFFFF;">{{remision.cliente.razonSocial}}</td>
+		<td style="background-color: #FFFFFF;">
 			<b>TEL:</b>
 		</td>
-		<td style="background-color: #D6D6D6;">{{remision.telefonoDestinatario}}</td>
+		<td style="background-color: #FFFFFF;">{{remision.telefonoDestinatario}}</td>
 	</tr>
 	<tr>
-		<td style="background-color: #D6D6D6;">
+		<td style="background-color: #FFFFFF;">
 			<b>Origen:
 			</b>
 		</td>
-		<td style="background-color: #D6D6D6;">{{remision.municipioOrigen.departamento.nombre}}({{remision.municipioOrigen.nombre }})</td>
-		<td style="background-color: #D6D6D6;">
+		<td style="background-color: #FFFFFF;">{{remision.municipioOrigen.departamento.nombre}}({{remision.municipioOrigen.nombre }})</td>
+		<td style="background-color: #FFFFFF;">
 			<b>Peso (kilos):</b>
 		</td>
-		<td style="background-color: #D6D6D6;">{{remision.peso}}</td>
+		<td style="background-color: #FFFFFF;">{{remision.peso}}</td>
 	</tr>
 	<tr>
-		<td style="background-color: #D6D6D6;">
+		<td style="background-color: #FFFFFF;">
 			<b>Dirección:
 			</b>
 		</td>
-		<td style="background-color: #D6D6D6;">{{remision.direccionOrigen}}</td>
-		<td style="background-color: #D6D6D6;">
+		<td style="background-color: #FFFFFF;">{{remision.direccionOrigen}}</td>
+		<td style="background-color: #FFFFFF;">
 			<b>Descripción:</b>
 		</td>
-		<td style="background-color: #D6D6D6;">{{remision.descripcion}}</td>
+		<td style="background-color: #FFFFFF;">{{remision.descripcion}}</td>
 	</tr>
 	<tr>
-		<td style="background-color: #D6D6D6;">
+		<td style="background-color: #FFFFFF;">
 			<b>Unidades:
 			</b>
 		</td>
-		<td style="background-color: #D6D6D6;">{{remision.unidades}}</td>
-		<td style="background-color: #D6D6D6;">
+		<td style="background-color: #FFFFFF;">{{remision.unidades}}</td>
+		<td style="background-color: #FFFFFF;">
 			<b>Seguro:</b>
 		</td>
-		<td style="background-color: #D6D6D6;">${{remision.seguro|number_format(2, '.', ',')}}</td>
+		<td style="background-color: #FFFFFF;">${{remision.seguro|number_format(2, '.', ',')}}</td>
 	</tr>
 	<tr>
-		<td style="background-color: #D6D6D6;">
+		<td style="background-color: #FFFFFF;">
 			<b>Valor Total:
 			</b>
 		</td>
-		<td style="background-color: #D6D6D6;">${{remision.valorTotal|number_format(2, '.', ',')}}</td>
-		<td style="background-color: #D6D6D6;">
+		<td style="background-color: #FFFFFF;">${{remision.valorTotal|number_format(2, '.', ',')}}</td>
+		<td style="background-color: #FFFFFF;">
 			<b>Forma Pago:</b>
 		</td>
-		<td style="background-color: #D6D6D6;">{{remision.formaPago}}</td>
+		<td style="background-color: #FFFFFF;">{{remision.formaPago}}</td>
 	</tr>
 	<tr>
 		<td colspan="4"><br>
