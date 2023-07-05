@@ -426,7 +426,7 @@ class ImpresionController extends AbstractController
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
         // set margins
-        $pdf->SetMargins(3, 4, 2, 0);
+        $pdf->SetMargins(3, 3, 2, 0);
         $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
         $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
@@ -760,7 +760,7 @@ class ImpresionController extends AbstractController
         // set margins
         $pdf->SetMargins(3, 10, 2);
         $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $pdf->SetFooterMargin(2);
 
         // set auto page breaks
         $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
