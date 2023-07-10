@@ -352,6 +352,25 @@ class NotaCreditoController extends AbstractController
                     ));
                 }
             }
+            $porIca = ($factura->getTotalReteIca() * 100) / $factura->getSubtotal();
+            if ($porIca > 0) {
+
+
+                if (array_key_exists('retentions', $CuerpoJson[$x_nota])) {
+
+                    array_push($CuerpoJson[$x_nota]['retentions'], array(
+                        "tax_category" => "RET_ICA",
+                        "tax_rate" => ($factura->getTotalReteIca() * 100) / $factura->getSubtotal()
+                    ));
+                } else {
+
+                    $CuerpoJson[$x_nota]['retentions'] = array();
+                    array_push($CuerpoJson[$x_nota]['retentions'], array(
+                        "tax_category" => "RET_ICA",
+                        "tax_rate" => ($factura->getTotalReteIca() * 100) / $factura->getSubtotal()
+                    ));
+                }
+            }
             $CuerpoJson[$x_nota]['dataico_account_id'] = $empresa->getUsuario();
             $CuerpoJson[$x_nota]['env'] = 'PRODUCCION';
         
