@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\CondicionPago;
+use App\Entity\Empresa;
 use App\Entity\Envio;
 use App\Entity\Factura;
 use App\Entity\FacturaItems;
@@ -36,9 +37,10 @@ class FacturaController extends AbstractController
         // usually you'll want to make sure the user is authenticated first,
         // see "Authorization" below
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $companys = $entityManager->getRepository(Empresa::class)->findAll();
 
         return $this->render('factura/index.html.twig', [
-            
+            'companys' => $companys
         ]);
     }
 
@@ -161,7 +163,8 @@ class FacturaController extends AbstractController
         $nacional = $request->query->get('nacional');
 
 
-        $data_table  = $facturaRepository->findByDataTable(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'], 'order' => $order, 'nacional'=> $nacional]);
+
+        $data_table  = $facturaRepository->findByDataTable(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'], 'order' => $order, 'nacional'=> $nacional, 'company'=>   $request->query->get('company')]);
 
         // Objeto requerido por Datatables
 
