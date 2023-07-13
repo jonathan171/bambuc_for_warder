@@ -64,10 +64,12 @@ class FacturaRepository extends ServiceEntityRepository
 
         $currentPage = isset($options['page']) ? $options['page'] : 0;
         $pageSize = isset($options['pageSize']) ? $options['pageSize'] : 10;
+         
 
         $query = $this->createQueryBuilder('f')
             ->innerJoin(FacturaResolucion::class, 'fr', Join::WITH,   'fr.id = f.facturaResolucion')
             ->innerJoin(Clientes::class, 'c', Join::WITH,  'c.id = f.cliente');
+           
         if($options['nacional']){
             $query->andWhere('f.tipoFactura = :tipo')
                 ->setParameters(['tipo' => 'FACTURA_VENTA_NACIONAL']);
@@ -77,7 +79,8 @@ class FacturaRepository extends ServiceEntityRepository
             $query->andWhere('f.numeroFactura like :val OR f.fecha like :val OR fr.prefijo like :val OR c.razonSocial like :val OR c.nit like :val')
                 ->setParameters(['val' => $shearch]);
         }
-
+        $query->andWhere('fr.empresa  = :empresa')
+                ->setParameter('empresa',$options['company']);
 
         $query->orderBy("f.{$campos[$options['order'][0]['column']]}", "{$options['order'][0]['dir']}");
 

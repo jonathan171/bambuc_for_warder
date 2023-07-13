@@ -19,7 +19,16 @@
     </div>
 
     <h1>Listado de Facturas</h1>
+    <div class="card-options">
+		<select class="form-control" id="company" name="company">
+			{% for company in companys %}
+				<option value="{{company.id}}"> {{company.nombre}} </option>
 
+			{% endfor %}
+		</select>
+	</div>
+    <br>
+    <br>
     <table class="table" id="data_table_facturas">
         <thead>
             <tr>
@@ -89,7 +98,7 @@
                 "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
             },
             ajax: {
-                "url": '{{ path('app_factura_table')}}'+'?nacional={{is_nacional}}',
+                "url": '{{ path('app_factura_table')}}'+'?nacional={{is_nacional}} &company='+$("#company").val(),
                 "type": "POST"
             },
             columns: [
