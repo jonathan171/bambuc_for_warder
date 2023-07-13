@@ -114,6 +114,14 @@
             ],
             order: [[ 0, "desc" ]]
         });
+
+        $('#company').change(function(){
+       
+                let url = {{ path('app_factura_table')}}'+'?nacional={{is_nacional}} &company='+$("#company").val();
+              $('#data_table_facturas').DataTable().ajax.url( url).load();
+        
+            });
+
    });
 
    function Reportar(id){
