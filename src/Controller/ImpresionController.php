@@ -11,6 +11,9 @@ use App\Entity\NotaCredito;
 use App\Entity\NotaCreditoItems;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\PdfPersonalisado;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Mpdf\Mpdf;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -405,66 +408,29 @@ class ImpresionController extends AbstractController
         $remision = $entityManager->getRepository(EnviosNacionales::class)->find($request->query->get('id'));
 
         // create new PDF document
-        $pdf = new TCPDF('P', PDF_UNIT, 'A4', true, 'UTF-8', false);
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
+        $pdf = new Dompdf($options);
+        // Enable the loading of remote resources
+        $path = 'assets/images/facturas/2.png';
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
-        // set document information
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('Jonathan Cruz');
-        $pdf->SetTitle('Impresion Remisión');
-        $pdf->SetSubject('TCPDF Tutorial');
-        $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+        $path_vertical_origen = 'assets/images/facturas/origen-vertical.png';
+        $type_vertical_origen = pathinfo($path_vertical_origen, PATHINFO_EXTENSION);
+        $data_vertical_origen = file_get_contents($path_vertical_origen);
+        $base64_vertical_origen = 'data:image/' . $type_vertical_origen . ';base64,' . base64_encode($data_vertical_origen);
+       
+        $path_vertical_destino = 'assets/images/facturas/destino-vertical.png';
+        $type_vertical_destino = pathinfo($path_vertical_destino, PATHINFO_EXTENSION);
+        $data_vertical_destino = file_get_contents($path_vertical_destino);
+        $base64_vertical_destino = 'data:image/' . $type_vertical_destino . ';base64,' . base64_encode($data_vertical_destino);
 
-        // set default header data
-        // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE . ' 001', PDF_HEADER_STRING, array(0, 64, 255), array(0, 64, 128));
-        $pdf->setFooterData(array(0, 64, 0), array(0, 0, 128));
-
-        // set header and footer fonts
-        $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-        $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-
-        // set default monospaced font
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
-        // set margins
-        $pdf->SetMargins(3, 10, 2);
-        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-
-        // set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-
-        // set image scale factor
-        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-
-
-        // ---------------------------------------------------------
-
-        // set default font subsetting mode
-        $pdf->setFontSubsetting(true);
-
-        // Set font
-        // dejavusans is a UTF-8 Unicode font, if you only need to
-        // print standard ASCII chars, you can use core fonts like
-        // helvetica or times to reduce file size.
-        $pdf->SetFont('Helvetica', '', 9, '', true);
-
-        // Add a page
-        // This method has several options, check the source code documentation for more information.
-        $pdf->SetPrintHeader(false);
-        $pdf->setPrintFooter(false);
-
-
-
-        $pdf->AddPage();
-
-        
-
-
-        // set text shadow effect
-        $pdf->setTextShadow(array('enabled' => false, 'depth_w' => 0.2, 'depth_h' => 0.2, 'color' => array(196, 196, 196), 'opacity' => 1, 'blend_mode' => 'Normal'));
-
-        // Set some content to 
+        $path_flecha = 'assets/images/facturas/flecha.png';
+        $type_flecha = pathinfo($path_flecha, PATHINFO_EXTENSION);
+        $data_flecha = file_get_contents($path_flecha);
+        $base64_flecha = 'data:image/' . $type_flecha . ';base64,' . base64_encode($data_flecha);
         
         
        
@@ -472,21 +438,32 @@ class ImpresionController extends AbstractController
 
             return $this->render('impresion/remision.html.twig', [
                 'remision' => $remision,
+                'base64' =>  $base64,
+                'base64_vertical_origen' =>$base64_vertical_origen,
+                'base64_vertical_destino' =>$base64_vertical_destino,
+                'base64_flecha' => $base64_flecha
             ]);
         }
 
         $html = $this->renderView('impresion/remision.html.twig', [
             'remision' => $remision,
+            'base64' =>  $base64,
+            'base64_vertical_origen' =>$base64_vertical_origen,
+            'base64_vertical_destino' =>$base64_vertical_destino,
+            'base64_flecha' => $base64_flecha
         ]);
 
         // Print text using writeHTMLCell()
-        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        $pdf->loadHtml($html);
+        $pdf->setPaper('A4', '');
+       
+        $pdf->render();
 
         // ---------------------------------------------------------
 
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
-        $pdf->Output('remision.pdf', 'I');
+        $pdf->stream('remision.pdf', ['Attachment' => false]);
     }
 
     #[Route('/impresion_stiker', name: 'app_impresion_stiker', methods: ['GET'])]
@@ -737,64 +714,29 @@ class ImpresionController extends AbstractController
        
 
         // create new PDF document
-        $pdf = new TCPDF('P', PDF_UNIT, 'A4', true, 'UTF-8', false);
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
+        $pdf = new Dompdf($options);
+        // Enable the loading of remote resources
+        $path = 'assets/images/facturas/2.png';
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
-        // set document information
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('Jonathan Cruz');
-        $pdf->SetTitle('Impresion Remisión');
-        $pdf->SetSubject('TCPDF Tutorial');
-        $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+        $path_vertical_origen = 'assets/images/facturas/origen-vertical.png';
+        $type_vertical_origen = pathinfo($path_vertical_origen, PATHINFO_EXTENSION);
+        $data_vertical_origen = file_get_contents($path_vertical_origen);
+        $base64_vertical_origen = 'data:image/' . $type_vertical_origen . ';base64,' . base64_encode($data_vertical_origen);
+       
+        $path_vertical_destino = 'assets/images/facturas/destino-vertical.png';
+        $type_vertical_destino = pathinfo($path_vertical_destino, PATHINFO_EXTENSION);
+        $data_vertical_destino = file_get_contents($path_vertical_destino);
+        $base64_vertical_destino = 'data:image/' . $type_vertical_destino . ';base64,' . base64_encode($data_vertical_destino);
 
-        // set default header data
-        // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE . ' 001', PDF_HEADER_STRING, array(0, 64, 255), array(0, 64, 128));
-        $pdf->setFooterData(array(0, 64, 0), array(0, 0, 128));
-
-        // set header and footer fonts
-        $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-        $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-
-        // set default monospaced font
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
-        // set margins
-        $pdf->SetMargins(3, 10, 2);
-        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-
-        // set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-
-        // set image scale factor
-        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-
-
-        // ---------------------------------------------------------
-
-        // set default font subsetting mode
-        $pdf->setFontSubsetting(true);
-
-        // Set font
-        // dejavusans is a UTF-8 Unicode font, if you only need to
-        // print standard ASCII chars, you can use core fonts like
-        // helvetica or times to reduce file size.
-        $pdf->SetFont('Helvetica', '', 9, '', true);
-
-        // Add a page
-        // This method has several options, check the source code documentation for more information.
-        $pdf->SetPrintHeader(false);
-        $pdf->setPrintFooter(false);
-
-
-
-        $pdf->AddPage();
-
-        
-
-
-        // set text shadow effect
-        $pdf->setTextShadow(array('enabled' => false, 'depth_w' => 0.2, 'depth_h' => 0.2, 'color' => array(196, 196, 196), 'opacity' => 1, 'blend_mode' => 'Normal'));
+        $path_flecha = 'assets/images/facturas/flecha.png';
+        $type_flecha = pathinfo($path_flecha, PATHINFO_EXTENSION);
+        $data_flecha = file_get_contents($path_flecha);
+        $base64_flecha = 'data:image/' . $type_flecha . ';base64,' . base64_encode($data_flecha);
 
         // Set some content to 
         $html='';
@@ -802,28 +744,28 @@ class ImpresionController extends AbstractController
         foreach($datos as $dato){
             $remision = $entityManager->getRepository(EnviosNacionales::class)->find($dato['remision']);
 
-            /*if($request->query->get('html')){
-
-                return $this->render('impresion/remision.html.twig', [
-                    'remision' => $remision,
-                ]);
-            }*/
-    
-            $html .= $this->renderView('impresion/remision.html.twig', [
+            $html.= $this->renderView('impresion/remision.html.twig', [
                 'remision' => $remision,
+                'base64' =>  $base64,
+                'base64_vertical_origen' =>$base64_vertical_origen,
+                'base64_vertical_destino' =>$base64_vertical_destino,
+                'base64_flecha' => $base64_flecha
             ]);
 
         }
        
        
 
-        // Print text using writeHTMLCell()
-        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+       // Print text using writeHTMLCell()
+       $pdf->loadHtml($html);
+       $pdf->setPaper('A4', '');
+      
+       $pdf->render();
 
-        // ---------------------------------------------------------
+       // ---------------------------------------------------------
 
-        // Close and output PDF document
-        // This method has several options, check the source code documentation for more information.
-        $pdf->Output('remision.pdf', 'I');
+       // Close and output PDF document
+       // This method has several options, check the source code documentation for more information.
+       $pdf->stream('remision.pdf', ['Attachment' => false]);
     }
 }
