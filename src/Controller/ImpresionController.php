@@ -716,6 +716,12 @@ class ImpresionController extends AbstractController
         // create new PDF document
         $options = new Options();
         $options->set('isRemoteEnabled', true);
+        $options->set('defaultPaperSize', 'A4'); // Tamaño del papel (opcional)
+       // $options->set('defaultFont', 'Arial'); // Fuente predeterminada (opcional)
+        $options->set('marginTop', '100mm'); // Margen superior
+        $options->set('marginBottom', '20mm'); // Margen inferior
+        $options->set('marginLeft', '20mm'); // Margen izquierdo
+        $options->set('marginRight', '20mm'); // Margen derecho
         $pdf = new Dompdf($options);
         // Enable the loading of remote resources
         $path = 'assets/images/facturas/2.png';
@@ -758,7 +764,7 @@ class ImpresionController extends AbstractController
 
        // Print text using writeHTMLCell()
        $pdf->loadHtml($html);
-       $pdf->setPaper('A4', '');
+      
       
        $pdf->render();
 
