@@ -6,6 +6,9 @@
   .derecha{
 	font-size: 9px;
   }
+  .centrada{
+	font-size: 14px;
+  }
 </style>
 
 
@@ -39,10 +42,10 @@
 <table  style="width:100%;  border-spacing: 0px; border-radius: 5px;  border: 1px solid black; ">
 	<tr>
 		<td rowspan="10"   style="text-align:center; width:2%; background-color: black;"><img src="{{base64_vertical_origen}}" alt="user" width="15"></td>
-		<td rowspan="2" style="text-align:center;  width:25%;" >
+		<td rowspan="2" style="text-align:center;  width:25%;"  class="centrada">
 			{{remision.cliente.razonSocial}}</td>
 		<td rowspan="8"   style="text-align:center; width:2%; background-color: black;"><img src="{{base64_vertical_destino}}" alt="user" width="15"></td>
-		<td rowspan="2" style= " border-right: 1px solid black; text-align:center;   width:25%">
+		<td rowspan="2" style= " border-right: 1px solid black; text-align:center;   width:25%" class="centrada">
 			{{remision.destinatario}}</td>
 		<td style="border-right: 1px solid black; text-align:center;  width:6%;" class="derecha"><b>UNIDADES</b></td>
 		<td style= " width:25%" class="derecha"><b>DICE CONTENER</b></td>
@@ -52,16 +55,16 @@
 	<tr>
 		
 		<td style="border-right: 1px solid black;"></td>
-		<td>{{remision.descripcion}}</td>
+		<td class="derecha">{{remision.descripcion}}</td>
 		
 		
 	</tr>
 	<tr>
 		
-		<td rowspan="4" style="text-align:center; font-size: 12px;">
+		<td rowspan="4" style="text-align:center;" class="centrada">
 			{{remision.direccionOrigen}}</td>
 		
-		<td rowspan="4" style= " border-right: 1px solid black; text-align:center; font-size: 12px;">
+		<td rowspan="4" style= " border-right: 1px solid black; text-align:center;" class="centrada">
 			{{remision.direccionDestino}}</td>
 		<td style= "border-right: 1px solid black; text-align:center;">{{remision.unidades}}</td>
 		<td style= "border-top: 1px solid black; " class="derecha">
@@ -92,10 +95,10 @@
 	</tr>
 	<tr>
 		
-		<td rowspan="2" style="text-align:center; font-size: 12px;">
+		<td rowspan="2" style="text-align:center; " class="centrada">
 			{{remision.cliente.telefono}}</td>
 		
-		<td rowspan="2" style="  border-right: 1px solid black; text-align:center; font-size: 12px;">
+		<td rowspan="2" style="  border-right: 1px solid black; text-align:center; " class="centrada">
 			{{remision.telefonoDestinatario}}</td>
 		<td style="  border-right: 1px solid black; text-align:center;">{{remision.peso}}</td>
 		<td style= "border-top: 1px solid black; "><b>VALOR TOTAL</b></td>
