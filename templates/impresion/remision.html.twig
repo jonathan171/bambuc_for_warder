@@ -3,6 +3,9 @@
 	font-size:12px;
 	 font-family: Helvetica, Arial, sans-serif;
   }
+  .derecha{
+	font-size: 9px;
+  }
 </style>
 
 
@@ -13,36 +16,36 @@
 
 			<img src="{{base64}}" alt="user" width="90">
 		</td>
-		<td style=" text-align:center; width:50%; font-size: 14px;"><b>COMERCIALIZADORA BAMBUC SAS</b></td>
-		<td style="text-align:center; border-bottom: 1px solid black;  border-left: 1px solid black; border-top: 1px solid black; border-radius: 5px 0 0 0; width:5%;"><b>REMISIÓN</b></td>
-		<td style="text-align:center;  border: 1px solid black;  border-radius: 0 5px 0 0; width:15%;"><b>F{{remision.numero}}</b></td>
+		<td style=" text-align:center; width:45%; font-size: 14px;"><b>COMERCIALIZADORA BAMBUC SAS</b></td>
+		<td style="text-align:center; border-bottom: 1px solid black;  border-left: 1px solid black; border-top: 1px solid black; border-radius: 5px 0 0 0; width:8%; " class="derecha"><b>REMISIÓN</b></td>
+		<td style="text-align:center;  border: 1px solid black;  border-radius: 0 5px 0 0; width:17%;" class="derecha"><b>F{{remision.numero}}</b></td>
 	</tr>
 	<tr>
 		<td style=" text-align:center; ">901.677.550-3
 			<br>
 			Avenidad 87 #22 - 11 int 2</td>
-		<td style="text-align:center;  border-bottom: 1px solid black;  border-left: 1px solid black;"><b>FORMA DE PAGO</b></td>
-		<td style="text-align:center;  border-bottom: 1px solid black; border-left: 1px solid black; border-right: 1px solid black;"> {{remision.formaPago}}</td>
+		<td style="text-align:center;  border-bottom: 1px solid black;  border-left: 1px solid black; " class="derecha"><b>FORMA DE PAGO</b></td>
+		<td style="text-align:center;  border-bottom: 1px solid black; border-left: 1px solid black; border-right: 1px solid black;" class="derecha"> {{remision.formaPago}}</td>
 	</tr>
 	<tr>
 		<td style=" text-align:center; ">Bucaramanga - Santander
 			<br>
 			Tel: (607) 6806331 -Cel: 3147128855</td>
-		<td style="text-align:center;  border-bottom: 1px solid black;  border-left: 1px solid black; border-radius: 0 0 0 5px;">FECHA</td>
-		<td style="text-align:center;  border: 1px solid black; border-radius: 0 0 5px 0;">{{remision.fecha|date('d/m/Y')}}</td>
+		<td style="text-align:center;  border-bottom: 1px solid black;  border-left: 1px solid black; border-radius: 0 0 0 5px;" class="derecha" >FECHA</td>
+		<td style="text-align:center;  border: 1px solid black; border-radius: 0 0 5px 0;" class="derecha">{{remision.fecha|date('d/m/Y')}}</td>
 	</tr>
 </table>
 <br>
 <table  style="width:100%;  border-spacing: 0px; border-radius: 5px;  border: 1px solid black; ">
 	<tr>
 		<td rowspan="10"   style="text-align:center; width:2%; background-color: black;"><img src="{{base64_vertical_origen}}" alt="user" width="15"></td>
-		<td rowspan="2" style="text-align:center; width:33%; font-size: 12px;">
+		<td rowspan="2" style="text-align:center;  width:25%;" >
 			{{remision.cliente.razonSocial}}</td>
 		<td rowspan="8"   style="text-align:center; width:2%; background-color: black;"><img src="{{base64_vertical_destino}}" alt="user" width="15"></td>
-		<td rowspan="2" style= " border-right: 1px solid black; text-align:center;  width:33%; font-size: 12px;">
+		<td rowspan="2" style= " border-right: 1px solid black; text-align:center;   width:25%">
 			{{remision.destinatario}}</td>
-		<td style="border-right: 1px solid black; text-align:center;  width:10%"><b>UNIDADES</b></td>
-		<td style= " width:20%"><b>DICE CONTENER</b></td>
+		<td style="border-right: 1px solid black; text-align:center;  width:6%;" class="derecha"><b>UNIDADES</b></td>
+		<td style= " width:25%" class="derecha"><b>DICE CONTENER</b></td>
 		
 		
 	</tr>
@@ -61,7 +64,7 @@
 		<td rowspan="4" style= " border-right: 1px solid black; text-align:center; font-size: 12px;">
 			{{remision.direccionDestino}}</td>
 		<td style= "border-right: 1px solid black; text-align:center;">{{remision.unidades}}</td>
-		<td style= "border-top: 1px solid black; ">
+		<td style= "border-top: 1px solid black; " class="derecha">
 			<b>VALOR DECLARADO</b></td>
 		
 		
@@ -75,15 +78,15 @@
 	</tr>
 	<tr>
 		
-		<td style=" border-top: 1px solid black; border-right: 1px solid black; text-align:center;"><b>PESO (KG)</b></td>
-		<td style= "border-top: 1px solid black; "><b> FLETE</b>  ${{(remision.valorTotal - remision.seguro)|number_format(2, '.', ',')}}</td>
+		<td style=" border-top: 1px solid black; border-right: 1px solid black; text-align:center;" class="derecha"><b>PESO (KG)</b></td>
+		<td style= "border-top: 1px solid black; "><b class="derecha"> FLETE</b>  ${{(remision.valorTotal - remision.seguro)|number_format(2, '.', ',')}}</td>
 		
 		
 	</tr>
 	<tr>
 		
 		<td style=" border-right: 1px solid black;"></td>
-		<td style= "border-top: 1px solid black; "><b>SEGURO</b> ${{(remision.seguro * 0.05 )|number_format(2, '.', ',')}} </td>
+		<td style= "border-top: 1px solid black; "><b class="derecha">SEGURO</b> ${{(remision.seguro * 0.05 )|number_format(2, '.', ',')}} </td>
 		
 		
 	</tr>
@@ -114,7 +117,7 @@
 		<td rowspan="2"  style=" border-top: 1px solid black; border-right: 1px solid black;">
 			<b>{{remision.municipioDestino.departamento.nombre }}({{remision.municipioDestino.nombre }})</b></td>
 		
-		<td colspan= "2" style=" border-top: 1px solid black; ">
+		<td colspan= "2" style=" border-top: 1px solid black; " class="derecha">
 			<b>RECIBIDO</b></td>
 		
 		
@@ -127,8 +130,8 @@
 	
 	<tr>
 		
-		<td colspan="4" style=" border-top: 1px solid black; border-right: 1px solid black; font-size: 10px;"><b>DOCUMENTO NO VALIDO COMO FACTURA SOLICITE SU FACTURA: Bambuc.nacional@gmail.com</b></td>
-		<td colspan="2"><b> Nombre y Cedula</b></td>
+		<td colspan="4" style=" border-top: 1px solid black; border-right: 1px solid black; font-size: 9px;"><b>DOCUMENTO NO VALIDO COMO FACTURA SOLICITE SU FACTURA: bambuc.nacional@gmail.com</b></td>
+		<td colspan="2" class="derecha"><b> Nombre y Cedula</b></td>
 		
 		
 	</tr>
