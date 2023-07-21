@@ -83,7 +83,7 @@
 	<tr>
 		
 		<td style="border-right: 1px solid black;"></td>
-		<td >${{remision.seguro|number_format(2, '.', ',')}}</td>
+		<td >${{remision.seguro|number_format(0, '.', ',')}}</td>
 		
 		
 	</tr>
@@ -104,7 +104,7 @@
 	<tr>
 		
 	
-		<td style="  border-right: 1px solid black; text-align:center;">{{remision.peso}}</td>
+		<td style="  border-right: 1px solid black; text-align:center;">{{remision.peso|number_format(0, '.', '.')}}</td>
 		<td style= "border-top: 1px solid black; "><b>VALOR TOTAL</b></td>
 		
 		
