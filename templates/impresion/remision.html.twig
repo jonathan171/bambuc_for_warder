@@ -90,14 +90,14 @@
 	<tr>
 		
 		<td style=" border-top: 1px solid black; border-right: 1px solid black; text-align:center;" class="derecha">PESO (KG)</td>
-		<td style= "border-top: 1px solid black; " class="derecha">FLETE  ${{(remision.valorTotal - (remision.seguro * 0.05 ))|number_format(2, '.', ',')}}</td>
+		<td style= "border-top: 1px solid black; " class="derecha">FLETE  ${{(remision.valorTotal - (remision.seguro * 0.005 ))|number_format(2, '.', ',')}}</td>
 		
 		
 	</tr>
 	<tr>
 		
 		<td style=" border-right: 1px solid black;"></td>
-		<td style= "border-top: 1px solid black; "  class="derecha">SEGURO ${{(remision.seguro * 0.05 )|number_format(2, '.', ',')}} </td>
+		<td style= "border-top: 1px solid black; "  class="derecha">SEGURO ${{(remision.seguro * 0.005 )|number_format(2, '.', ',')}} </td>
 		
 		
 	</tr>
