@@ -117,6 +117,14 @@ class FacturaRepository extends ServiceEntityRepository
                      </a>';
                 }
             }
+            if($factura->getSoportePago()){
+                $soporte_pago= '<input type="file"  name="archivo_excel" data-id="'.$factura->getId().'" class="form-control file_forma_de_pago"/>  ';
+                $soporte_pago.='<a href="/uploads/images/'.$factura->getSoportePago().'" class="btn btn-dark" target="_blank">
+                <i class="fa fa-clipboard"></i>'.$factura->getSoportePago().'
+            </a>';
+            }else{
+                $soporte_pago= '<input type="file" id="archivo_excel" data-id="'.$factura->getId().'" name="archivo_excel" class="form-control file_forma_de_pago"/>';
+            }
 
 
             $list[] = [
@@ -124,7 +132,8 @@ class FacturaRepository extends ServiceEntityRepository
                 'numero' => $factura->getFacturaResolucion()->getPrefijo() . $factura->getNumeroFactura(),
                 'cliente' => $factura->getCliente()->getRazonSocial() . '(' . $factura->getCliente()->getNit() . ')',
                 'total' => $factura->getTotal(),
-                'actions' => $reportar . $actions
+                'actions' => $reportar . $actions,
+                'soporte_pago' =>$soporte_pago
             ];
             // echo $item->getZona()->getNombre();
         }

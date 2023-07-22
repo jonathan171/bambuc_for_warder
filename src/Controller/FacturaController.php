@@ -13,6 +13,7 @@ use App\Form\FacturaType;
 use App\Repository\ClientesRepository;
 use App\Repository\FacturaRepository;
 use App\Service\EnviarCorreo;
+use App\Service\FileUploader;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,6 +28,7 @@ use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Label\Font\NotoSans;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 #[Route('/factura')]
 class FacturaController extends AbstractController
@@ -752,4 +754,31 @@ class FacturaController extends AbstractController
             }
         }
     }
+
+    #[Route('/saveSoporte', name: 'app_factura_save_soporte', methods: ['GET', 'POST'])]
+    public function executeSaveSoporte(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        FileUploader $fileUploader,
+        ParameterBagInterface $params
+    ) {
+        $archivo = $request->files->get('file');
+        $factura = $entityManager->getRepository(Factura::class)->find($request->request->get('data_id'));
+
+        if ($archivo) {
+            $fileName = $fileUploader
+                    ->setTargetDirectory($params->get("upload_dir_images"))
+                    ->upload($archivo);
+
+                $factura->setSoportePago($fileName);
+                $entityManager->persist($factura);
+                $entityManager->flush();
+        } 
+       
+        $responseData = array(
+            "results" =>  $fileName,
+        );
+        return $this->json($responseData);
+    }
+
 }

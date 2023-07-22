@@ -267,6 +267,15 @@ class Factura
      */
     private $cliente;
 
+    
+
+     /**
+     * @var string|null
+     *
+     * @ORM\Column(name="soporte_pago", type="text", length=0, nullable=true)
+     */
+    private $soportePago;
+
     /**
      * @var \FacturaResolucion
      *
@@ -662,6 +671,18 @@ class Factura
     public function setRespuestaCorreo(?string $respuestaCorreo): self
     {
         $this->respuestaCorreo = $respuestaCorreo;
+
+        return $this;
+    }
+
+    public function getSoportePago(): ?string
+    {
+        return $this->soportePago;
+    }
+
+    public function setSoportePago(?string $soportePago): self
+    {
+        $this->soportePago = $soportePago;
 
         return $this;
     }

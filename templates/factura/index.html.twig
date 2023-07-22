@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import "macros/redirect.html.twig" as macroRedirect %}
 
 {% block title %}Factura index{% endblock %}
 
@@ -37,6 +38,7 @@
                 <th>Cliente</th>
                 <th>Total</th>
                 <th>Acciones</th>
+                <th>soporte Pago</th>
             </tr>
         </thead>
         <tbody>
@@ -81,6 +83,7 @@
 
 {% endblock %}
 {% block javascripts %} 
+{{ macroRedirect.scriptRedirect}}
 <script>
      {% if is_granted('ROLE_NACIONAL') %}
             {% set is_nacional = 1 %}
@@ -106,7 +109,8 @@
                 {data: 'numero'},
                 {data: 'cliente'},
                 {data: 'total'},
-                {data: 'actions'}
+                {data: 'actions'},
+                {data: 'soporte_pago'}
                 
                 ],
             columnDefs: [
@@ -114,6 +118,37 @@
             ],
             order: [[ 0, "desc" ]]
         });
+
+        $('#data_table_facturas tbody').on('change', '.file_forma_de_pago', function (event) {
+                     const dataId = $(this).data('id');
+					 const file = event.target.files[0];
+
+                    if (file) {
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        formData.append('data_id', dataId);
+                       
+                       $.ajax({
+					context: this,
+						url: '{{path('app_factura_save_soporte')}}',
+						data: formData,
+						type: 'POST',
+						processData: false,
+                        contentType: false,
+						success: function (json) {
+							
+							 alertify.success('Archivo guardado Correctamente');
+                            $("#data_table_facturas").DataTable().ajax.reload(null,false);
+				
+
+							},
+							error: function (xhr, status) {
+							alert('Disculpe, existió un problema');
+							}
+							});
+                    }  
+			
+            });
 
         $('#company').change(function(){
        

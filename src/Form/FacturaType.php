@@ -157,7 +157,7 @@ class FacturaType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',  
                 ]
-              ]);
+              ])->add('soportePago');
 
         $builder->get('cliente')
             ->addModelTransformer($this->transformer);
