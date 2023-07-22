@@ -21,7 +21,7 @@
 
     <h1>Listado de Facturas</h1>
     <div class="card-options">
-		<select class="form-control" id="company" name="company">
+		<select  id="company" name="company" style="width:100%;">
 			{% for company in companys %}
 				<option value="{{company.id}}"> {{company.nombre}} </option>
 
