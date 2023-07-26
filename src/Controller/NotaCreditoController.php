@@ -157,7 +157,7 @@ class NotaCreditoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_nota_credito_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_nota_credito_edit', ['id'=>$notaCredito->getId()], Response::HTTP_SEE_OTHER);
         }
         $items = $entityManager->getRepository(NotaCreditoItems::class)->createQueryBuilder('nci')
             ->andWhere('nci.notaCredito = :val')
