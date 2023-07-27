@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Clientes;
+use App\Entity\Departamento;
 use App\Entity\EnviosNacionales;
 use App\Entity\EnviosNacionalesUnidades;
 use App\Entity\Municipio;
