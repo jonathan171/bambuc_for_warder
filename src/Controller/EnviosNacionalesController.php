@@ -356,6 +356,7 @@ class EnviosNacionalesController extends AbstractController
                 ->setParameter('val', $shearch);
         }
         $envios = $query->andWhere('e.facturado = 0')
+            ->orderBy('e.numero', 'ASC')
             ->setMaxResults(200)
             ->getQuery()->getResult();
 
