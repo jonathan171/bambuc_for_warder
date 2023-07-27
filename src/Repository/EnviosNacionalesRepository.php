@@ -56,12 +56,14 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
 
         $query = $this->createQueryBuilder('e')
             ->innerJoin(Municipio::class, 'm', Join::WITH,   'm.id = e.municipioDestino')
+            ->innerJoin(Departamento::class, 'd', Join::WITH, 'm.departamento = d.id')
             ->innerJoin(Municipio::class, 'm1', Join::WITH,  'm1.id = e.municipioOrigen')
+            ->innerJoin(Departamento::class, 'd1', Join::WITH, 'm1.departamento = d1.id')
             ->innerJoin(Clientes::class,'c' , Join::WITH,  'c.id = e.cliente')
             ->innerJoin(EnviosNacionalesUnidades::class,'enu' , Join::WITH,  'e.id = enu.envioNacional');
         if ($options['search']) {
             $shearch = '%' . $options['search'] . '%';
-            $query->andWhere('e.numero like :val OR e.fecha like :val  OR c.razonSocial like :val OR c.nit like :val OR e.destinatario like :val OR e.estado like :val OR m.nombre like :val OR m1.nombre like :val OR enu.numeroGuia like :val')
+            $query->andWhere('e.numero like :val OR e.fecha like :val  OR c.razonSocial like :val OR c.nit like :val OR e.destinatario like :val OR e.estado like :val OR m.nombre like :val OR m1.nombre like :val OR enu.numeroGuia like :val OR  d.nombre like :val OR  d1.nombre like :val')
                 ->setParameter('val', $shearch);
         }
         if ($options['order']['column']) {
