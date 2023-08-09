@@ -344,8 +344,8 @@ class EnviosNacionalesController extends AbstractController
 
         if ($request->request->get('fecha_inicio')) {
 
-            $query->andWhere('e.fecha >= :val')
-                ->setParameter('val', $request->request->get('fecha_inicio'))
+            $query->andWhere('e.fecha >= :val2')
+                ->setParameter('val2', $request->request->get('fecha_inicio'))
                 ->andWhere('e.fecha <= :val1')
                 ->setParameter('val1', $request->request->get('fecha_fin'));
         }
