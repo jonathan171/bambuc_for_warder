@@ -235,5 +235,17 @@
         var checkboxes = $('#data_table_envios').find(':checkbox').not($(this));
         checkboxes.prop('checked', $(this).is(':checked'));
       });
+
+    function copyToClipboard(select_1) {
+    const selectElement = select_1;
+    const selectedText = selectElement.options[selectElement.selectedIndex].text;
+    
+    const tempInput = document.createElement("input");
+    document.body.appendChild(tempInput);
+    tempInput.value = selectedText;
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+}
 </script>   
 {% endblock %}

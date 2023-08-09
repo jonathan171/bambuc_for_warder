@@ -92,10 +92,11 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
            ->getQuery()->getResult();
 
            
-           $guias = '';
+           $guias = '<select class="copiable form-control" onclick="copyToClipboard(this)">';
            foreach($items as $unidad){
+            $guia = strlen($unidad->getNumeroGuia())> 13  ? substr($unidad->getNumeroGuia(), 0, 12): $unidad->getNumeroGuia();
             
-            $guias.= strlen($unidad->getNumeroGuia())> 13  ? substr($unidad->getNumeroGuia(), 0, 12).'<br>':$unidad->getNumeroGuia().'<br>';
+            $guias.= '<option value="'.$guia.'">'.$guia.'</option>';
            }
            $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_remision?id='.$item->getId().'" title="Imprimir"><span class="fas fa-print"></span></a>';
            $actions .= '&nbsp;<input name="envId[]" id="checkBoxImprimir" value="'.$item->getId().'" type="checkbox">';
@@ -128,7 +129,7 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
                      $select .='</select>';
 
             $list[] = [
-                'numero' =>  $item->getNumero().'<br>'.$guias,
+                'numero' =>  $item->getNumero().'<br>'.$guias.'</select>',
                 'valorTotal' => $item->getValorTotal(),
                 'fecha' => $item->getFecha()->format('Y-m-d'),
                 'cliente' => $item->getCliente()->getRazonSocial(),
