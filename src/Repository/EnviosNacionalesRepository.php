@@ -92,7 +92,8 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
            ->getQuery()->getResult();
 
            
-           $guias = '<select class="copiable form-control" onclick="copyToClipboard(this)">';
+           $guias = '<select class="copiable form-control" onchange="copyToClipboard(this)">';
+           $guias.= '<option value=""></option>';
            foreach($items as $unidad){
             $guia = strlen($unidad->getNumeroGuia())> 13  ? substr($unidad->getNumeroGuia(), 0, 12): $unidad->getNumeroGuia();
             
