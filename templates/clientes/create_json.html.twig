@@ -1,4 +1,12 @@
 
+<style>
+    .select2-container--open {
+        z-index: 10001 !important;
+    }
+    .select2-container {
+        width: 100% !important;
+    }
+</style>
 <div class="card-body">
 {{ form_start(form,{'attr': {'id': 'form_clientes'}}) }}
     <div class="form-group mb-3 row pb-3">
@@ -84,8 +92,8 @@
 {{ form_end(form) }}
 </div>
 <script>
-     $("#clientes_municipio").select2();
-      $(document).on('select2:open', () => {
-            document.querySelector('.select2-search__field').focus();
-        });
+     $("#clientes_municipio").select2({
+            width: '100%',
+            dropdownParent: $('#clientes')});
+      
 </script>
