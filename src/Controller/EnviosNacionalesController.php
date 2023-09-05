@@ -58,6 +58,8 @@ class EnviosNacionalesController extends AbstractController
         $enviosNacionale->setObservacion('LLAMAR AL REMITENTE ANTES DE REALIZAR LA DEVOLUCIÓN');
         $timezone = new DateTimeZone('America/Bogota');
         $fecha = new DateTime('now', $timezone);
+        echo $fecha->format('Y-m-d H:i:s');
+        die();
         $enviosNacionale->setFecha($fecha);
         $form = $this->createForm(EnviosNacionalesType::class, $enviosNacionale);
         $form->handleRequest($request);
