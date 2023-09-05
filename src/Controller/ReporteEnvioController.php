@@ -233,6 +233,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getCell('I4')->setValue("FACTURA");
         $sheet->getCell('J4')->setValue("DESCRIPCIÓN");
         $sheet->getCell('K4')->setValue("GUIA");
+        $sheet->getCell('L4')->setValue("FORMA PAGO");
 
 
         $styleArray = array(
@@ -263,6 +264,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getColumnDimension('H')->setWidth(25);
         $sheet->getColumnDimension('J')->setWidth(30);
         $sheet->getColumnDimension('k')->setWidth(30);
+        $sheet->getColumnDimension('L')->setWidth(30);
         $sheet->getStyle('B4')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
         $sheet->getRowDimension('4')->setRowHeight(45, 'pt');
         $sheet->getRowDimension('1')->setRowHeight(100, 'px');
@@ -339,9 +341,10 @@ class ReporteEnvioController extends AbstractController
                 $guias .= $unidad->getNumeroGuia()."\n";
             }
             $sheet->setCellValue("K$cell", $guias);
+            $sheet->setCellValue("L$cell", $envio->getFormaPago());
             $sheet->getStyle("K$cell")->getAlignment()->setWrapText(true);
             $total += $envio->getValorTotal();
-            foreach (range('A', 'K') as $columnID) {
+            foreach (range('A', 'L') as $columnID) {
 
                 $sheet->getStyle($columnID . $cell)->applyFromArray($styleArray);
             }
@@ -361,6 +364,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getStyle("I$cell")->applyFromArray($styleArray);
         $sheet->getStyle("J$cell")->applyFromArray($styleArray);
         $sheet->getStyle("K$cell")->applyFromArray($styleArray);
+        $sheet->getStyle("L$cell")->applyFromArray($styleArray);
 
 
         $sheet->setTitle("Reporte envios");
