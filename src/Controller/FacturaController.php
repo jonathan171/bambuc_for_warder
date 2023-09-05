@@ -39,7 +39,9 @@ class FacturaController extends AbstractController
         // usually you'll want to make sure the user is authenticated first,
         // see "Authorization" below
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $companys = $entityManager->getRepository(Empresa::class)->findAll();
+        $companys = $entityManager->getRepository(Empresa::class)->createQueryBuilder('e')
+        ->orderBy('e.id', 'DESC')
+        ->getQuery()->getResult();
 
         return $this->render('factura/index.html.twig', [
             'companys' => $companys
