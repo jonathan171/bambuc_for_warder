@@ -97,10 +97,14 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
            
            $guias = '<select class="copiable form-control" onchange="copyToClipboard(this)">';
            $guias.= '<option value=""></option>';
+           $bandera_guia = 0;
            foreach($items as $unidad){
             $guia = strlen($unidad->getNumeroGuia())> 13  ? substr($unidad->getNumeroGuia(), 0, 12): $unidad->getNumeroGuia();
             
             $guias.= '<option value="'.$guia.'">'.$guia.'</option>';
+            if($guia){
+                $bandera_guia = 1;
+            }
            }
            $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_remision?id='.$item->getId().'" title="Imprimir"><span class="fas fa-print"></span></a>';
            $actions .= '&nbsp;<input name="envId[]" id="checkBoxImprimir" value="'.$item->getId().'" type="checkbox">';
@@ -131,6 +135,12 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
          
                      }
                      $select .='</select>';
+                    
+                    if(!$bandera_guia){
+                        $color='#F3B5B5';
+                    }
+
+
 
             $list[] = [
                 'numero' =>  $item->getNumero().'<br>'.$guias.'</select>',
