@@ -140,7 +140,7 @@ class EnviosNacionalesController extends AbstractController
         
     }
 
-    #[Route('/{id}/show', name: 'app_envios_nacionales_show', methods: ['GET'])]
+    #[Route('/{id}/show', name: 'app_envios_nacionales_show', methods: ['GET', 'POST'])]
     public function show(EnviosNacionales $enviosNacionale): Response
     {
         return $this->render('envios_nacionales/show.html.twig', [
