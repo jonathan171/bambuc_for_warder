@@ -355,6 +355,10 @@ class EnviosNacionalesController extends AbstractController
             $query->andWhere('e.numero like :val OR e.fecha like :val   OR e.destinatario like :val OR m.nombre like :val OR m1.nombre like :val OR enu.numeroGuia like :val OR c.razonSocial like :val OR  c.nit like :val OR  d.nombre like :val OR  d1.nombre like :val')
                 ->setParameter('val', $shearch);
         }
+        if ($request->request->get('pago')) {
+            $query->andWhere('e.formaPago  = :pago')
+                ->setParameter('pago', $shearch);
+        }
         $envios = $query->andWhere('e.facturado = 0')
             ->orderBy('e.numero', 'ASC')
             ->setMaxResults(200)
