@@ -79,14 +79,14 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
             if ($item->getFacturaItems()) {
 
                 $actions = '<a class="btn btn-warning" title="'.$item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().'-'. $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura().'" href="/impresion/impresion_factura?id='.$item->getFacturaItems()->getFacturaClientes()->getId().'" target="_blank"> <i class="fa fa-qrcode"  title="'.$item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().'-'. $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura().'" ></i></a>';
-                $actions .='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut ="ocultarEnvio()" title="Ver Envio">
-                <i class="fa fa-eye text-success" ></i>
-                 </a>';
+               
             }else{
                 $actions = '<a  class="btn waves-effect waves-light btn-warning" href="/envios_nacionales/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
                 $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envios_nacionales/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar esta remisión\')"><i class="fas fa-trash-alt"></i></a>';
             }
-           
+            $actions .='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut ="ocultarEnvio()" title="Ver Envio">
+            <i class="fa fa-eye text-success" ></i>
+             </a>';
            // $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envios_nacionales/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')"><i class="fas fa-trash-alt"></i></a>';
             
            $items = $this->entityManager->getRepository(EnviosNacionalesUnidades::class)->createQueryBuilder('en')
