@@ -84,9 +84,7 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
                 $actions = '<a  class="btn waves-effect waves-light btn-warning" href="/envios_nacionales/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
                 $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envios_nacionales/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar esta remisión\')"><i class="fas fa-trash-alt"></i></a>';
             }
-            $actions .='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut ="ocultarEnvio()" title="Ver Envio">
-            <i class="fa fa-eye text-success" ></i>
-             </a>';
+            
            // $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envios_nacionales/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')"><i class="fas fa-trash-alt"></i></a>';
             
            $items = $this->entityManager->getRepository(EnviosNacionalesUnidades::class)->createQueryBuilder('en')
@@ -140,7 +138,12 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
                         $color='#F3B5B5';
                     }
 
-
+                    $informacion = '<b>Dirección: </b> <br>'.$item->getDireccionDestino().
+                                    '<br><b>V Declarado: </b><br>'.$item->getSeguro().
+                                    '<br><b>Unidades: </b>'.$item->getUnidades().
+                                    '<br><b>Telefono: </b><br>'.$item->getTelefonoDestinatario().
+                                    '<br><b>Forma Pago: </b><br>'.$item->getFormaPago().
+                                    '<br><b>Valor Total: </b><br>'.$item->getValorTotal();
 
             $list[] = [
                 'numero' =>  $item->getNumero().'<br>'.$guias.'</select>',
@@ -149,6 +152,7 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
                 'cliente' => $item->getCliente()->getRazonSocial(),
                 'destinatario' => $item->getDestinatario(),
                 'municipioDestino' => $item->getMunicipioDestino()->getNombre(),
+                'informacion' => $informacion,
                 'estado' => $select,
                 'actions' => $actions,
                 'color' => $color
