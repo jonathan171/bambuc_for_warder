@@ -43,5 +43,25 @@
       $(document).on('select2:open', () => {
             document.querySelector('.select2-search__field').focus();
         });
+
+function validarExistencia(){
+        var id = $('#clientes_nit').val();
+       $.ajax({
+        url : '{{ path('app_clientes_verificar')}}',
+        data : { id : id},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+            if(!json.results){
+                    alertify.success('No existe ningun cliente con este nit');
+                }else{
+                    alertify.error('Ya existe un cliente con este nit');
+                }
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+}
 </script>
 {% endblock %}

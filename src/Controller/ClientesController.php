@@ -147,7 +147,7 @@ class ClientesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_clientes_show', methods: ['GET'])]
+    #[Route('/{id}/show', name: 'app_clientes_show', methods: ['GET'])]
     public function show(Clientes $cliente): Response
     {
         return $this->render('clientes/show.html.twig', [
@@ -177,7 +177,7 @@ class ClientesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_clientes_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_clientes_delete', methods: ['POST'])]
     public function delete(Request $request, Clientes $cliente, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$cliente->getId(), $request->request->get('_token'))) {
@@ -186,5 +186,27 @@ class ClientesController extends AbstractController
         }
 
         return $this->redirectToRoute('app_clientes_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/verificar', name: 'app_clientes_verificar', methods: ['GET', 'POST'])]
+    public function  verificar(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ) {
+        
+
+       $cliente =   $entityManager->getRepository(Clientes::class)->findOneBy(['nit' => $request->request->get('id')]);
+       
+        if($cliente){
+            $resultado = 1;
+        }else{
+            $resultado = 0;
+        }
+       
+   
+        $responseData = array(
+        "results" => $resultado,
+        );
+         return $this->json($responseData);
     }
 }
