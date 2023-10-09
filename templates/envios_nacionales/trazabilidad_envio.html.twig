@@ -14,7 +14,7 @@
 									<p>
 										<small class="text-muted">
 											<i class="ri-time-line align-middle"></i>
-											 {{trazabilidad.fecha|date('Y-m-d')}}</small>
+											{{trazabilidad.fecha|date('Y-m-d')}}</small>
 									</p>
 								</div>
 								<div class="timeline-body">
@@ -25,9 +25,10 @@
 							</div>
 						</li>
 					{% else %}
-						<h2>
-							No se encontró un envío con este número de Guía.</h2>
-
+						<li>
+							<h2>
+								No se encontró un envío con este número de Guía.</h2>
+						</li>
 					{% endfor %}
 				</ul>
 			</div>
