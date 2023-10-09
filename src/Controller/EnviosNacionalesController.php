@@ -7,6 +7,7 @@ use App\Entity\Departamento;
 use App\Entity\EnviosNacionales;
 use App\Entity\EnviosNacionalesUnidades;
 use App\Entity\Municipio;
+use App\Entity\TrazabilidadEnvioNacional;
 use App\Form\ClientesType;
 use App\Form\EnviosNacionalesType;
 use App\Repository\EnviosNacionalesRepository;
@@ -56,9 +57,11 @@ class EnviosNacionalesController extends AbstractController
 
         }
         $enviosNacionale->setObservacion('LLAMAR AL REMITENTE ANTES DE REALIZAR LA DEVOLUCIÓN');
-        $timezone = new DateTimeZone('America/Bogota');
-        $fecha = new DateTime('now', $timezone);
+      
+        $fecha = new DateTime('now', new DateTimeZone('America/Bogota'));
+        
         $enviosNacionale->setFecha($fecha);
+        $enviosNacionale->setEstado('recolectado');
         $form = $this->createForm(EnviosNacionalesType::class, $enviosNacionale);
         $form->handleRequest($request);
 
@@ -75,6 +78,17 @@ class EnviosNacionalesController extends AbstractController
                 $enviosNacionale->setNumero(1);
             }
             $entityManager->persist($enviosNacionale);
+            $entityManager->flush();
+
+            /** trazabilidad
+             */
+            $trazabilidaEnvio = New TrazabilidadEnvioNacional();
+            $trazabilidaEnvio->setFecha($fecha);
+            $trazabilidaEnvio->setEnvioNacional( $enviosNacionale);
+            $trazabilidaEnvio->setEstado('recolectado');
+           // $trazabilidaEnvio->setQuienRecibe($request->request->get('quien_recibe'));
+
+            $entityManager->persist ($trazabilidaEnvio);
             $entityManager->flush();
 
             for($i=1; $i<=$enviosNacionale->getUnidades(); $i++ ){
@@ -314,6 +328,21 @@ class EnviosNacionalesController extends AbstractController
 
         $envioNacional->setEstado($request->request->get('estado_id'));
 
+        $trazabilidaEnvio = New TrazabilidadEnvioNacional();
+
+        if($request->request->get('fecha')){
+            $fecha = new DateTime($request->request->get('fecha'),new DateTimeZone('America/Bogota'));
+        }else{
+            $fecha = new DateTime('now', new DateTimeZone('America/Bogota'));
+        }
+        $trazabilidaEnvio->setFecha($fecha);
+        $trazabilidaEnvio->setEnvioNacional($envioNacional);
+        $trazabilidaEnvio->setEstado($request->request->get('estado_id'));
+        $trazabilidaEnvio->setQuienRecibe($request->request->get('quien_recibe'));
+
+        $entityManager->persist ($trazabilidaEnvio);
+        $entityManager->flush();
+
         $entityManager->persist($envioNacional);
         $entityManager->flush();
 
@@ -386,5 +415,19 @@ class EnviosNacionalesController extends AbstractController
         
 
         return $this->redirectToRoute('app_envios_nacionales_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/', name: 'app_envios_nacionales_trazabilidad', methods: ['GET','POST'])]
+    public function trazabilidad(Request $request, EntityManagerInterface $entityManager): Response
+    {   
+        $trazabilidaEnvio = $entityManager->getRepository(TrazabilidadEnvioNacional::class)->createQueryBuilder('t')
+        ->innerJoin(EnviosNacionales::class, 'e', Join::WITH,   'e.id = t.envio_nacional')
+        ->andWhere('e.numero= :val')
+        ->setParameter('val', $request->request->get('search'))
+        ->getQuery()->getResult();
+        
+        return $this->render('envios_nacionales/trazabilidad_envio.html.twig', [
+            'trazabilidades' => $trazabilidaEnvio
+        ]);
     }
 }

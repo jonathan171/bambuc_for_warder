@@ -1,0 +1,87 @@
+{% extends 'base_landing.html.twig' %}
+
+{% block title %}Bambuc{% endblock %}
+
+{% block body %}
+    <div width="100%" style="
+        background: #f8f8f8;
+        padding: 0px 0px;
+        font-family: arial;
+        line-height: 28px;
+        height: 100%;
+        width: 100%;
+        color: #514d6a;
+      ">
+      <div style="
+          max-width: 80%;
+          padding: 50px 0;
+          margin: 0px auto;
+          font-size: 14px;
+        ">
+
+        <div style="padding: 40px; background: #fff" >
+          <table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
+            <tbody>
+              <tr>
+                <td>
+                  <h2>Rastrear guía</b></h2>
+                  <p>
+                   Ingresa en este campo el número de tu guía nacional.
+                  </p>
+                  <center>
+                   
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="EJ: 4511244" aria-label="Recipient's username" aria-describedby="basic-addon2" id="search_guia">
+                        <button class="btn btn-light-secondary text-secondary font-weight-medium" type="button" onclick="buscar()">RASTREAR</button>
+                     
+                    </div>
+                
+                  </center>
+                 
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <br>
+          <div class="col-sm-12" id="content">
+          </div>
+        </div>
+        <div style="
+            text-align: center;
+            font-size: 12px;
+            color: #b2b2b5;
+            margin-top: 20px;
+          ">
+          <p>
+            Bambuc for warder
+            <br>
+            <a href="javascript: void(0);" style="color: #b2b2b5; text-decoration: underline"></a>
+          </p>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+{% block javascripts %} 
+ 
+<script>
+function buscar(){
+    $.ajax({
+       url: '{{path('app_envios_nacionales_trazabilidad')}}',
+						data: {
+						search: $('#search_guia').val()
+						},
+        type : 'POST',
+        dataType : 'html',
+        success : function(html) {
+
+            $('#content').html(html);
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+}
+  
+</script>
+{% endblock %}

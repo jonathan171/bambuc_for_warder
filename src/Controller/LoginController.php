@@ -34,10 +34,7 @@ class LoginController extends AbstractController
             }
          }
 
-        return $this->render('login/index.html.twig', [
-            'controller_name' => 'LoginController',
-            'last_username' => $lastUsername,
-             'error'         => $error,
+        return $this->render('login/landing.html.twig', [
         ]);
     }
     #[Route('/login', name: 'app_login')]

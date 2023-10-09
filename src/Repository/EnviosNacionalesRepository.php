@@ -110,15 +110,19 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
                          <i class="fa fa-eye text-success" ></i>
                      </a>';*/
 
-                     $select ='<select class="form-select" data-id="'.$item->getId().'">';
+                     $select ='<select class="form-select" data-id="'.$item->getId().'" id="select'.$item->getId().'">';
                      $select .='<option value= ""> </option>';
 
                      $estados = array(
+                        "recolectado" => "recolectado",
                         "transito"=> "transito",
+                        "reparto"=> "reparto",
                         "entregado"=> "entregado");
 
                     $colores = array(
+                        "recolectado" => '#00B9FF',
                         "transito"=> '#FFEEBA',
+                        "reparto" => '#7973FF',
                         "entregado"=> '#C3E6CB');
                     $color = '#FFFFFF';
                      foreach ($estados as $key => $value){
@@ -133,7 +137,10 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
          
                      }
                      $select .='</select>';
-                    
+                     $select .= '<div class="hide" id="'.$item->getId().'divfecha"> <b >Fecha: </b><input  class="form-control" type="date" id="fecha'.$item->getId().'"></div>';
+                     $select .= '<div class="hide" id="'.$item->getId().'divrecibe"> <b > Quien Recibio:  </b><input  class="form-control" type="text" id="recibe'.$item->getId().'"></div>';
+                     $select .= '<button type="button" class="btn waves-effect waves-light btn-info hide" id="button_'.$item->getId().'" onclick="enviarEstado('.$item->getId().')"> Enviar</button>';
+
                     if(!$bandera_guia){
                         $color='#F3B5B5';
                     }

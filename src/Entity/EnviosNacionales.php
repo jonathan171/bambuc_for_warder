@@ -22,8 +22,7 @@ class EnviosNacionales
     private $id;
 
     /**
-     * @var \DateTime
-     *
+
      * @ORM\Column(name="fecha", type="date", nullable=false)
      */
     private $fecha;
@@ -162,6 +161,7 @@ class EnviosNacionales
      * @ORM\ManyToOne(targetEntity=FacturaItems::class, inversedBy="enviosNacionales")
      */
     private $facturaItems;
+
 
     public function getId(): ?string
     {

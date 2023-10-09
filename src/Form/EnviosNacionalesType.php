@@ -5,8 +5,11 @@ namespace App\Form;
 use App\Entity\EnviosNacionales;
 use App\Form\DataTransformer\ClientesToNumberTransformer;
 use App\Form\DataTransformer\FacturaItemsToNumberTransformer;
+use DateTime;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -31,12 +34,13 @@ class EnviosNacionalesType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('fecha', null, [
+            ->add('fecha', DateTimeType::class, [
                 'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd',
+                //'format' => 'yyyy-MM-dd',
                 'attr' => [
                     'class' => 'form-control',
                 ],
+                //'data' => new DateTime(),
                 'html5' => true
             ])
             ->add('numero', TextType::class, [

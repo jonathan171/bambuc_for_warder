@@ -119,7 +119,18 @@
 
         
 		$('#data_table_envios tbody').on('change', '.form-select', function () {
-					
+
+            if($(this).val()=='reparto'){
+                $('#'+ $(this).data('id')+'divfecha').show();
+                $('#button_'+ $(this).data('id')).show();
+                return false;
+            }	
+            if($(this).val()=='entregado'){
+                $('#'+ $(this).data('id')+'divfecha').show();
+                 $('#'+ $(this).data('id')+'divrecibe').show();
+                $('#button_'+ $(this).data('id')).show();
+                return false;
+            }		
 			$.ajax({
 					context: this,
 						url: '{{path('app_envios_nacionales_save_estado')}}',
@@ -132,25 +143,8 @@
 						success: function (json) {
 							
 							
-						toastr.options = {
-								"closeButton": true,
-								"debug": false,
-								"newestOnTop": false,
-								"progressBar": false,
-								"positionClass": "toast-bottom-right",
-								"preventDuplicates": false,
-								"onclick": null,
-								"showDuration": 300,
-								"hideDuration": 1000,
-								"timeOut": 5000,
-								"extendedTimeOut": 1000,
-								"showEasing": "swing",
-								"hideEasing": "linear",
-								"showMethod": "fadeIn",
-								"hideMethod": "fadeOut"
-								}
-
-							Command: toastr["success"]("carga Actualizada Correctamente");
+                             alertify.success('Estado Actualizado');
+                             $("#data_table_envios").DataTable().ajax.reload(null,false);
 
 							},
 							error: function (xhr, status) {
@@ -250,5 +244,31 @@
     document.execCommand("copy");
     document.body.removeChild(tempInput);
 }
+
+    function enviarEstado(id){
+        
+       $.ajax({
+       url: '{{path('app_envios_nacionales_save_estado')}}',
+						data: {
+						id: $('#select'+id).data('id'),
+						estado_id: $('#select'+id).val(),
+                        fecha : $('#fecha'+id).val(),
+                        quien_recibe: $('#recibe'+id).val(),
+						},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+         alertify.success('Estado Actualizado');
+         $("#data_table_envios").DataTable().ajax.reload(null,false);
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    }
+
 </script>   
 {% endblock %}

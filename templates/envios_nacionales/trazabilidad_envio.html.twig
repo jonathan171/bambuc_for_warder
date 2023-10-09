@@ -1,0 +1,36 @@
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+				<ul class="timeline timeline-left">
+					{% for trazabilidad in trazabilidades %}
+						<li class="timeline-inverted timeline-item">
+							<div class="timeline-badge success">
+								<h2>{{loop.index}}</h2>
+							</div>
+							<div class="timeline-panel">
+								<div class="timeline-heading">
+									<h4 class="timeline-title">{{trazabilidad.estado}}</h4>
+									<p>
+										<small class="text-muted">
+											<i class="ri-time-line align-middle"></i>
+											 {{trazabilidad.fecha|date('Y-m-d')}}</small>
+									</p>
+								</div>
+								<div class="timeline-body">
+									<p>
+										{{trazabilidad.quienRecibe}}
+									</p>
+								</div>
+							</div>
+						</li>
+					{% else %}
+						<h2>
+							No se encontro un envio con este numero de Guia</h2>
+
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
