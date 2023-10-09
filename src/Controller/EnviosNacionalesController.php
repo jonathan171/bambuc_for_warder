@@ -15,6 +15,7 @@ use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -405,7 +406,17 @@ class EnviosNacionalesController extends AbstractController
     public function delete(Request $request, EnviosNacionales $enviosNacionale, EnviosNacionalesRepository $enviosNacionalesRepository): Response
     {   
         if ($enviosNacionale->getFacturaItems() == null) {
-            $enviosNacionalesRepository->remove($enviosNacionale, true);
+
+            try {
+                $enviosNacionalesRepository->remove($enviosNacionale, true);
+            } catch (Exception $e) {
+                $this->addFlash(
+                    'notice',
+                    'No se pudo eliminar el envio nacional  porque ya tiene relaciones en el sistema'
+                );
+               
+            }
+           
         } else {
             $this->addFlash(
                 'notice',
@@ -420,6 +431,7 @@ class EnviosNacionalesController extends AbstractController
     #[Route('/', name: 'app_envios_nacionales_trazabilidad', methods: ['GET','POST'])]
     public function trazabilidad(Request $request, EntityManagerInterface $entityManager): Response
     {   
+        
         $trazabilidaEnvio = $entityManager->getRepository(TrazabilidadEnvioNacional::class)->createQueryBuilder('t')
         ->innerJoin(EnviosNacionales::class, 'e', Join::WITH,   'e.id = t.envio_nacional')
         ->andWhere('e.numero= :val')
