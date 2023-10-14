@@ -1,240 +1,268 @@
 {% extends 'base.html.twig' %}
 {% import "macros/redirect.html.twig" as macroRedirect %}
 
-{% block title %}Factura index{% endblock %}
+{% block title %}Factura index
+{% endblock %}
 
 {% block body %}
- <div class="p-3">
-        <div class="form-group ">
-         {% if is_granted('ROLE_ADMIN') %}
-            <a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura</a>
-         {% endif %}
-            <a class="btn waves-effect waves-light btn-info" href="{{ path('app_factura_nacionales_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Nacionales</a>
-         {% if is_granted('ROLE_ADMIN') %}
-            <a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Simple</a>
-            
-            <a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}"> <i class="fas fa-file-alt"></i> Resoluciones</a>
-         {% endif %}
-         <a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}"> <i class=" fas fa-handshake"></i> Clientes</a>
-        </div>
-    </div>
+	<div class="p-3">
+		<div class="form-group ">
+			{% if is_granted('ROLE_ADMIN')  %}
+				<a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_new') }}">
+					<i class="  fas fa-paste"></i>
+					Nueva Factura</a>
+			{% endif %}
+			<a class="btn waves-effect waves-light btn-info" href="{{ path('app_factura_nacionales_new') }}">
+				<i class="  fas fa-paste"></i>
+				Nueva Factura Nacionales</a>
+			{% if is_granted('ROLE_ADMIN') %}
+				<a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}">
+					<i class="fas fa-file-alt"></i>
+					Resoluciones</a>
+			{% endif %}
 
-    <h1>Listado de Facturas</h1>
-    <div class="card-options">
-		<select  id="company" name="company" style="width:100%;">
+			{% if is_granted('ROLE_ADMIN')  or is_granted('ROLE_AUXILIAR_NACIONAL') %}
+				<a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}">
+					<i class="  fas fa-paste"></i>
+					Nueva Factura Simple</a>
+			{% endif %}
+			<a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}">
+				<i class=" fas fa-handshake"></i>
+				Clientes</a>
+		</div>
+	</div>
+
+	<h1>Listado de Facturas</h1>
+	<div class="card-options">
+		<select id="company" name="company" style="width:100%;">
 			{% for company in companys %}
-				<option value="{{company.id}}"> {{company.nombre}} </option>
+				<option value="{{company.id}}">
+					{{company.nombre}}
+				</option>
 
 			{% endfor %}
 		</select>
 	</div>
-    <br>
-    <br>
-    <table class="table" id="data_table_facturas">
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>N°</th>
-                <th>Cliente</th>
-                <th>Total</th>
-                <th>Acciones</th>
-                <th>soporte Pago</th>
-            </tr>
-        </thead>
-        <tbody>
-        
-        </tbody>
-    </table>
- <div class="p-3">
-   <div class="form-group ">
-         {% if is_granted('ROLE_ADMIN') %}
-            <a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura</a>
-         {% endif %}
-            <a class="btn waves-effect waves-light btn-info" href="{{ path('app_factura_nacionales_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Nacionales</a>
-         {% if is_granted('ROLE_ADMIN') %}
-            <a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Simple</a>
-            
-            <a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}"> <i class="fas fa-file-alt"></i> Resoluciones</a>
-         {% endif %}
-         <a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}"> <i class=" fas fa-handshake"></i> Clientes</a>
-   </div>
-</div>
-<div id="erroresDian" title="Errores de la dian" style="display:none;width:800px;height:500px;" >
+	<br>
+	<br>
+	<table class="table" id="data_table_facturas">
+		<thead>
+			<tr>
+				<th>Fecha</th>
+				<th>N°</th>
+				<th>Cliente</th>
+				<th>Total</th>
+				<th>Acciones</th>
+				<th>soporte Pago</th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+	<div class="p-3">
+		<div class="form-group ">
+			{% if is_granted('ROLE_ADMIN') %}
+				<a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_new') }}">
+					<i class="  fas fa-paste"></i>
+					Nueva Factura</a>
+			{% endif %}
+			<a class="btn waves-effect waves-light btn-info" href="{{ path('app_factura_nacionales_new') }}">
+				<i class="  fas fa-paste"></i>
+				Nueva Factura Nacionales</a>
+			{% if is_granted('ROLE_ADMIN') %}
+				<a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}">
+					<i class="fas fa-file-alt"></i>
+					Resoluciones</a>
+			{% endif %}
+			{% if is_granted('ROLE_ADMIN')  or is_granted('ROLE_AUXILIAR_NACIONAL') %}
+				<a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}">
+					<i class="  fas fa-paste"></i>
+					Nueva Factura Simple</a>
+			{% endif %}
+			<a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}">
+				<i class=" fas fa-handshake"></i>
+				Clientes</a>
+		</div>
+	</div>
+	<div id="erroresDian" title="Errores de la dian" style="display:none;width:800px;height:500px;">
 
-    <div class="input-group">
-    </div>
+		<div class="input-group"></div>
 
-    <div id="diverrores" >
-    </div>
+		<div id="diverrores"></div>
 
-</div>
-<div id="notascredito" title="Notas credito" style="display:none;width:800px;height:500px;z-index: auto !important;" >
+	</div>
+	<div id="notascredito" title="Notas credito" style="display:none;width:800px;height:500px;z-index: auto !important;">
 
-    <div id="divnotascredito" >
+		<div id="divnotascredito"></div>
+	</div>
+	<div id="notasdebito" title="Notas debito" style="display:none;width:800px;height:500px;z-index: auto !important;">
 
-    </div>
-</div>
-<div id="notasdebito" title="Notas debito" style="display:none;width:800px;height:500px;z-index: auto !important;" >
-
-    <div id="divnotasdebito" >
-
-    </div>
-</div>
+		<div id="divnotasdebito"></div>
+	</div>
 
 {% endblock %}
-{% block javascripts %} 
-{{ macroRedirect.scriptRedirect}}
-<script>
-     {% if is_granted('ROLE_NACIONAL') %}
-            {% set is_nacional = 1 %}
-     {% else %}
-      {% set is_nacional = 0 %}
-     {% endif %}
-  $(document).ready(function() {
+{% block javascripts %}
+	{{ macroRedirect.scriptRedirect}}
+	<script>
+		{% if is_granted('ROLE_NACIONAL') or  is_granted('ROLE_AUXILIAR_NACIONAL') %}
+{% set is_nacional = 1 %}
+{% else %}
+{% set is_nacional = 0 %}
+{% endif %}
+$(document).ready(function () {
 
-      $('#data_table_facturas').DataTable({
-            serverSide: true,
-            responsive: true,
-            pageLength: 50,
-            sPaginationType: "full_numbers",
-            language: {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-            },
-            ajax: {
-                "url": '{{ path('app_factura_table')}}'+'?nacional={{is_nacional}}&company='+$("#company").val(),
-                "type": "POST"
-            },
-            columns: [
-                {data: 'fecha'},
-                {data: 'numero'},
-                {data: 'cliente'},
-                {data: 'total'},
-                {data: 'actions'},
-                {data: 'soporte_pago'}
-                
-                ],
-            columnDefs: [
-                
-            ],
-            order: [[ 0, "desc" ]]
-        });
+$('#data_table_facturas').DataTable({
+serverSide: true,
+responsive: true,
+pageLength: 50,
+sPaginationType: "full_numbers",
+language: {
+"url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+},
+ajax: {
+"url": '{{ path('app_factura_table') }}' + '?nacional= {{ is_nacional }}&company=' + $("#company").val(),
+"type": "POST"
+},
+columns: [
+{
+data: 'fecha'
+},
+{
+data: 'numero'
+},
+{
+data: 'cliente'
+},
+{
+data: 'total'
+}, {
+data: 'actions'
+}, {
+data: 'soporte_pago'
+}
 
-        $('#data_table_facturas tbody').on('change', '.file_forma_de_pago', function (event) {
-                     const dataId = $(this).data('id');
-					 const file = event.target.files[0];
+],
+columnDefs: [],
+order: [
+[0, "desc"]
+]
+});
 
-                    if (file) {
-                        const formData = new FormData();
-                        formData.append('file', file);
-                        formData.append('data_id', dataId);
-                       
-                       $.ajax({
-					context: this,
-						url: '{{path('app_factura_save_soporte')}}',
-						data: formData,
-						type: 'POST',
-						processData: false,
-                        contentType: false,
-						success: function (json) {
-							
-							 alertify.success('Archivo guardado Correctamente');
-                            $("#data_table_facturas").DataTable().ajax.reload(null,false);
-				
+$('#data_table_facturas tbody').on('change', '.file_forma_de_pago', function (event) {
+const dataId = $(this).data('id');
+const file = event.target.files[0];
 
-							},
-							error: function (xhr, status) {
-							alert('Disculpe, existió un problema');
-							}
-							});
-                    }  
-			
-            });
+if (file) {
+const formData = new FormData();
+formData.append('file', file);
+formData.append('data_id', dataId);
 
-        $('#company').change(function(){
-       
-                let url = '{{ path('app_factura_table')}}'+'?nacional={{is_nacional}}&company='+$("#company").val();
-              $('#data_table_facturas').DataTable().ajax.url( url).load();
-        
-            });
+$.ajax({
+context: this,
+url: '{{ path('app_factura_save_soporte') }}',
+data: formData,
+type: 'POST',
+processData: false,
+contentType: false,
+success: function (json) {
 
-   });
-
-   function Reportar(id){
-       $('#reportar'+id).hide();
-       $.ajax({
-        url : '{{ path('app_factura_reportar')}}',
-        data : { id : id},
-        type : 'POST',
-        dataType : 'json',
-        success : function(json) {
-
-         alertify.success('Factura enviada correctamente por favor  verifica la respuesta de la Dian');
-        location.reload();
-
-            },
-       error : function(xhr, status) {
-        alert('Disculpe, existió un problema');
-       }
-          });
-
-    }
-
-    function ReportarNotacrData(id) {
+alertify.success('Archivo guardado Correctamente');
+$("#data_table_facturas").DataTable().ajax.reload(null, false);
 
 
-        var idFactura = id;
+},
+error: function (xhr, status) {
+alert('Disculpe, existió un problema');
+}
+});
+}
+
+});
+
+$('#company').change(function () {
+
+let url = '{{ path('app_factura_table') }}' + '?nacional= {{ is_nacional }}&company=' + $("#company").val();
+$('#data_table_facturas').DataTable().ajax.url(url).load();
+
+});
+
+});
+
+function Reportar(id) {
+$('#reportar' + id).hide();
+$.ajax({
+url: '{{ path('app_factura_reportar') }}',
+data: {
+id: id
+},
+type: 'POST',
+dataType: 'json',
+success: function (json) {
+
+alertify.success('Factura enviada correctamente por favor  verifica la respuesta de la Dian');
+location.reload();
+
+},
+error: function (xhr, status) {
+alert('Disculpe, existió un problema');
+}
+});
+
+}
+
+function ReportarNotacrData(id) {
 
 
-
-        var url = '{{ path('app_nota_credito_reportar')}}';
-
-        $.ajax({
-            method: 'POST',
-            url: url,
-            data: {'id': idFactura, 'tipo': '91'}
-        }).error(function (e) {
-            alertify.error('Hubo un Error con el reporte de Notas Porfavor verifica los datos o Ponte en contacto con el area de soporte');
-        }).success(function (data) {
-            //si todo sale bien en la consulta
-
-            var dataparse = JSON.parse(data);
-            //console.log(itt['xml']);
-           
+var idFactura = id;
 
 
-        });
-        setTimeout(function () {
-            location.reload();
-        }, 5000);
-        //console.log('hola');
+var url = '{{ path('app_nota_credito_reportar') }}';
 
-    }
+$.ajax({
+method: 'POST',
+url: url,
+data: {
+'id': idFactura,
+'tipo': '91'
+}
+}).error(function (e) {
+alertify.error('Hubo un Error con el reporte de Notas Porfavor verifica los datos o Ponte en contacto con el area de soporte');
+}).success(function (data) { // si todo sale bien en la consulta
 
-    function verErrores(idFactura) {
+var dataparse = JSON.parse(data);
+// console.log(itt['xml']);
 
-        ParaError = "{{ path('app_factura_error_dian')}}";
+
+});
+setTimeout(function () {
+location.reload();
+}, 5000);
+// console.log('hola');
+
+}
+
+function verErrores(idFactura) {
+
+ParaError = "{{ path('app_factura_error_dian') }}";
 
 
-        $('#diverrores').load(ParaError, {idFactura: idFactura});
+$('#diverrores').load(ParaError, {idFactura: idFactura});
 
-        $("#erroresDian").dialog({ width: 800, height: 500});
+$("#erroresDian").dialog({width: 800, height: 500});
 
-    }
+}
 
-     function mostrarNotasDebito(factura_id)
-    {
-        Paratarifas = '{{ path('app_nota_credito_index')}}';
-        jQuery('#divnotasdebito').load(Paratarifas,{factura_id: factura_id });
-        $("#notasdebito").dialog({ width: 800, height: 500});
+function mostrarNotasDebito(factura_id) {
+Paratarifas = '{{ path('app_nota_credito_index') }}';
+jQuery('#divnotasdebito').load(Paratarifas, {factura_id: factura_id});
+$("#notasdebito").dialog({width: 800, height: 500});
 
-    }
-    
-    function mostrarNotasCredito(factura_id)
-    {
-        Paratarifas = '{{ path('app_nota_credito_index')}}';
-        jQuery('#divnotascredito').load(Paratarifas,{factura_id: factura_id });
-        $("#notascredito").dialog({ width: 800, height: 500});
+}
 
-    }
-</script>   
+function mostrarNotasCredito(factura_id) {
+Paratarifas = '{{ path('app_nota_credito_index') }}';
+jQuery('#divnotascredito').load(Paratarifas, {factura_id: factura_id});
+$("#notascredito").dialog({width: 800, height: 500});
+
+}
+	</script>
 {% endblock %}

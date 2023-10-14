@@ -67,6 +67,8 @@ class RegistrationFormType extends AbstractType
                     'Supervisor' => 'ROLE_SUPERVISOR',
                     'Administrador' => 'ROLE_ADMIN',
                     'Envios nacionales' => 'ROLE_NACIONAL',
+                    'Auxiliar envios nacionales' => 'ROLE_AUXILIAR_NACIONAL',
+                    'Contador' => 'ROLE_CONTADOR',
                 ],
                 'attr' => [
                     'class' => 'form-control',

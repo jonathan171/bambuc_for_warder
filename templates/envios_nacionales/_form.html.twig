@@ -198,8 +198,9 @@
 	</div>
 	<div class="p-3">
 		<div class="form-group text-end">
-
+			{% if not  is_granted('ROLE_AUXILIAR_NACIONAL') %}
 			<button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
+			{% endif %}
 			<a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_envios_nacionales_index') }}">regresar</a>
 		</div>
 	</div>

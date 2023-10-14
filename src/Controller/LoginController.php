@@ -32,6 +32,12 @@ class LoginController extends AbstractController
             if($this->isGranted('ROLE_NACIONAL')){
                 return $this->redirectToRoute('app_admind');  
             }
+            if($this->isGranted('ROLE_AUXILIAR_NACIONAL')){
+                return $this->redirectToRoute('app_admind');  
+            }
+            if($this->isGranted('ROLE_CONTADOR')){
+                return $this->redirectToRoute('app_admind');  
+            }
          }
 
         return $this->render('login/landing.html.twig', [
@@ -58,6 +64,13 @@ class LoginController extends AbstractController
                 return $this->redirectToRoute('app_supervisor');  
             }
             if($this->isGranted('ROLE_NACIONAL')){
+                return $this->redirectToRoute('app_admind');  
+            }
+
+            if($this->isGranted('ROLE_AUXILIAR_NACIONAL')){
+                return $this->redirectToRoute('app_admind');  
+            }
+            if($this->isGranted('ROLE_CONTADOR')){
                 return $this->redirectToRoute('app_admind');  
             }
          }
