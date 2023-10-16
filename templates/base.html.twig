@@ -678,12 +678,14 @@
                       </a>
                     </li>
                   {% endif %}
+                  {% if  app.user.id != 12 and  app.user.id != 9 %}
                   <li class="sidebar-item">
                     <a href="{{ path('app_reporte_envio_nacional') }}" class="sidebar-link">
                       <i class="mdi mdi-view-quilt"></i>
                       <span class="hide-menu"> Reporte Envios  Nacionales</span>
                     </a>
                   </li>
+                  {% endif %}
                 </ul>
               </li>
               
