@@ -72,12 +72,12 @@ class FacturaRepository extends ServiceEntityRepository
            
         if($options['nacional']){
             $query->andWhere('f.tipoFactura = :tipo')
-                ->setParameters(['tipo' => 'FACTURA_VENTA_NACIONAL']);
+                ->setParameter('tipo', 'FACTURA_VENTA_NACIONAL');
         }
         if ($options['search']) {
             $shearch = '%' . $options['search'] . '%';
             $query->andWhere('f.numeroFactura like :val OR f.fecha like :val OR fr.prefijo like :val OR c.razonSocial like :val OR c.nit like :val')
-                ->setParameters(['val' => $shearch]);
+                ->setParameter('val',$shearch);
         }
         $query->andWhere('fr.empresa  = :empresa')
                 ->setParameter('empresa',$options['company']);
