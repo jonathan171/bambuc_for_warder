@@ -62,6 +62,8 @@ class FacturaRepository extends ServiceEntityRepository
             "total"
         );
 
+       
+
         $currentPage = isset($options['page']) ? $options['page'] : 0;
         $pageSize = isset($options['pageSize']) ? $options['pageSize'] : 10;
          
@@ -70,7 +72,8 @@ class FacturaRepository extends ServiceEntityRepository
             ->innerJoin(FacturaResolucion::class, 'fr', Join::WITH,   'fr.id = f.facturaResolucion')
             ->innerJoin(Clientes::class, 'c', Join::WITH,  'c.id = f.cliente');
            
-        if($options['nacional']){
+        if($options['nacional'] != 0){
+           
             $query->andWhere('f.tipoFactura = :tipo')
                 ->setParameter('tipo', 'FACTURA_VENTA_NACIONAL');
         }
