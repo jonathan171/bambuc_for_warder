@@ -139,6 +139,11 @@ class EnviosNacionalesType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
+            ->add('numero_guia',null,[
+                'attr' => [
+                    'class' => 'form-control',
+                ]
+            ])
         ;
         $builder->get('cliente')
         ->addModelTransformer($this->transformer);

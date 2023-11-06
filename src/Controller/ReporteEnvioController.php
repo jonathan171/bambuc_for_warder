@@ -341,9 +341,14 @@ class ReporteEnvioController extends AbstractController
             ->setParameter('val', $envio->getId())
             ->getQuery()->getResult();
              $guias = '';
-            foreach ($items as $unidad){
-                $guias .= $unidad->getNumeroGuia()."\n";
-            }
+             if($envio->getNumeroGuia()){
+                $guias = $envio->getNumeroGuia();
+             }else {
+                foreach ($items as $unidad){
+                    $guias .= $unidad->getNumeroGuia()."\n";
+                }
+             }
+            
             $sheet->setCellValue("K$cell", $guias);
             $sheet->setCellValue("L$cell", $envio->getFormaPago());
             $sheet->setCellValue("M$cell", $envio->getUnidades());

@@ -162,6 +162,11 @@ class EnviosNacionales
      */
     private $facturaItems;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $numero_guia;
+
 
     public function getId(): ?string
     {
@@ -404,6 +409,18 @@ class EnviosNacionales
     public function setFacturaItems(?FacturaItems $facturaItems): self
     {
         $this->facturaItems = $facturaItems;
+
+        return $this;
+    }
+
+    public function getNumeroGuia(): ?string
+    {
+        return $this->numero_guia;
+    }
+
+    public function setNumeroGuia(?string $numero_guia): self
+    {
+        $this->numero_guia = $numero_guia;
 
         return $this;
     }
