@@ -556,6 +556,7 @@ class ImpresionController extends AbstractController
             return $this->render('impresion/stiker.html.twig', [
                 'unidad'  => $unidad,
                 'remision' => $unidad->getEnvioNacional(),
+                'numero_guia' => $unidad->getEnvioNacional()->getNumeroGuia() ? $unidad->getEnvioNacional()->getNumeroGuia() : $unidad->getNumeroGuia(),
                 'base_64'  => $base_64,
                 'key' => $found_key+1,
             ]); 
@@ -687,6 +688,7 @@ class ImpresionController extends AbstractController
                 $html .= $this->renderView('impresion/stiker.html.twig', [
                     'unidad'  => $unidad,
                     'remision' => $unidad->getEnvioNacional(),
+                    'numero_guia' => $unidad->getEnvioNacional()->getNumeroGuia() ? $unidad->getEnvioNacional()->getNumeroGuia() : $unidad->getNumeroGuia(),
                     'base_64'  => '@'.$base_64,
                     'key' => ($found_key+1).'/'.$totalItem,
                 ]);
