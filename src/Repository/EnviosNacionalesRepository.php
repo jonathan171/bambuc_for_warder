@@ -7,11 +7,13 @@ use App\Entity\Departamento;
 use App\Entity\EnviosNacionales;
 use App\Entity\EnviosNacionalesUnidades;
 use App\Entity\Municipio;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @extends ServiceEntityRepository<EnviosNacionales>
@@ -24,10 +26,12 @@ use Doctrine\Persistence\ManagerRegistry;
 class EnviosNacionalesRepository extends ServiceEntityRepository
 {
     private $entityManager;
+    private $tokenStorage;
 
-    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage)
     {
         $this->entityManager = $entityManager;
+        $this->tokenStorage = $tokenStorage;
         parent::__construct($registry, EnviosNacionales::class);
     }
 
@@ -74,6 +78,8 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
         $paginator = new Paginator($query);
         $totalItems = $paginator->count();
         $paginator->getQuery()->setFirstResult($pageSize * $currentPage)->setMaxResults($pageSize)->getResult();
+        $usuario = $this->getUsuarioActual();
+
         $list = [];
         foreach ($paginator as $item) {
             if ($item->getFacturaItems()) {
@@ -81,10 +87,9 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
                 $actions = '<a class="btn btn-warning" title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" href="/impresion/impresion_factura?id=' . $item->getFacturaItems()->getFacturaClientes()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" ></i></a>';
             } else {
                 $actions = '<a  class="btn waves-effect waves-light btn-warning" href="/envios_nacionales/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
-              // if($this->getUser()->getId() ==8){
-                $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envios_nacionales/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar esta remisión\')"><i class="fas fa-trash-alt"></i></a>';
-             //  }
-                
+                if ($usuario->getId() == 8) {
+                    $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envios_nacionales/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar esta remisión\')"><i class="fas fa-trash-alt"></i></a>';
+                }
             }
 
             // $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envios_nacionales/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')"><i class="fas fa-trash-alt"></i></a>';
@@ -176,5 +181,23 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
             // echo $item->getZona()->getNombre();
         }
         return ['data' => $list, 'totalRecords' => $totalItems];
+    }
+
+    public function getUsuarioActual()
+    {
+        $token = $this->tokenStorage->getToken();
+
+        // Verifica si hay un token válido
+        if (null !== $token) {
+            // Obtén el usuario actual
+            $user = $token->getUser();
+
+            // Asegúrate de que el usuario sea una instancia de User (o tu entidad de usuario)
+            if ($user instanceof User) {
+                return $user;
+            }
+        }
+
+        return null; // En caso de que no haya un usuario autenticado
     }
 }
