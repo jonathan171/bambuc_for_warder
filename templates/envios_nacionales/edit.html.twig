@@ -40,37 +40,37 @@
       <label class="col-sm-12">Peso</label>
        <br>
        <br>
-      <input class="form-control" type="number" id="peso{{unidad.id}}" value="{{unidad.peso}}"  onkeyup="ActualizarUnidades({{unidad.id}})" />
+      <input class="form-control esconder" type="number" id="peso{{unidad.id}}" value="{{unidad.peso}}"  onkeyup="ActualizarUnidades({{unidad.id}})" />
     </div>
     <div class="col-sm-12 col-lg-2">
     <label class="col-sm-12">valor declarado</label>
        <br>
        <br>
-       <input class="form-control" type="number" id="valor_declarado{{unidad.id}}" value="{{unidad.valorDeclarado}}"  onkeyup="ActualizarUnidades({{unidad.id}})" />
+       <input class="form-control esconder" type="number" id="valor_declarado{{unidad.id}}" value="{{unidad.valorDeclarado}}"  onkeyup="ActualizarUnidades({{unidad.id}})" />
     </div>
     <div class="col-sm-12 col-lg-2">
         <label class="col-sm-12">número Referencia</label>
         <br>
         <br>
-        <input class="form-control" type="number" id="numero_referencia{{unidad.id}}" value="{{unidad.numeroReferencia}}" disabled="disabled" />
+        <input class="form-control esconder" type="number" id="numero_referencia{{unidad.id}}" value="{{unidad.numeroReferencia}}" disabled="disabled" />
     </div>
      <div class="col-sm-12 col-lg-2">
     <label class="col-sm-12">largo</label>
        <br>
        <br>
-        <input class="form-control" type="number" id="largo{{unidad.id}}" value="{{unidad.largo}}" onkeyup="ActualizarUnidades({{unidad.id}})" />
+        <input class="form-control esconder" type="number" id="largo{{unidad.id}}" value="{{unidad.largo}}" onkeyup="ActualizarUnidades({{unidad.id}})" />
     </div>
     <div class="col-sm-12 col-lg-1">
         <label class="col-sm-12">alto</label>
         <br>
         <br>
-        <input class="form-control" type="text" id="alto{{unidad.id}}" value="{{unidad.alto}}"  onkeyup="ActualizarUnidades({{unidad.id}})"/>
+        <input class="form-control esconder" type="text" id="alto{{unidad.id}}" value="{{unidad.alto}}"  onkeyup="ActualizarUnidades({{unidad.id}})"/>
     </div>
     <div class="col-sm-12 col-lg-1">
         <label class="col-sm-12">ancho</label>
         <br>
         <br>
-        <input class="form-control" type="text" id="ancho{{unidad.id}}" value="{{unidad.ancho}}"  onkeyup="ActualizarUnidades({{unidad.id}})"/>
+        <input class="form-control esconder" type="text" id="ancho{{unidad.id}}" value="{{unidad.ancho}}"  onkeyup="ActualizarUnidades({{unidad.id}})"/>
     </div>
     <div class="col-sm-12 col-lg-2">
         <label class="col-sm-12">N° Guia</label>
@@ -289,6 +289,25 @@
     $(document).on('select2:open', () => {
         document.querySelector('.select2-search__field').focus();
     });
-      
+
+    {% if is_granted('ROLE_AUXILIAR_NACIONAL') or app.user.id == 10 %}  
+        $('#input-buscador-clientes').prop('disabled', true);
+        $('#envios_nacionales_numero').prop('readonly', true);
+        $('#envios_nacionales_fecha').prop('readonly', true);
+        $('#envios_nacionales_direccionOrigen').prop('readonly', true);
+        $('#envios_nacionales_destinatario').prop('readonly', true);
+        $('#envios_nacionales_direccionDestino').prop('readonly', true);
+        $('#envios_nacionales_telefonoDestinatario').prop('readonly', true);
+        $('#envios_nacionales_unidades').prop('readonly', true);
+        $('#envios_nacionales_seguro').prop('readonly', true);
+        $('#envios_nacionales_descripcion').prop('readonly', true);
+        $('#envios_nacionales_observacion').prop('readonly', true);
+        $('#envios_nacionales_valorTotal').prop('readonly', true);
+        $('#envios_nacionales_peso').prop('readonly', true);
+         $('.esconder').prop('readonly', true);
+        
+    {% endif %}
+
+    
 </script>
 {% endblock %}

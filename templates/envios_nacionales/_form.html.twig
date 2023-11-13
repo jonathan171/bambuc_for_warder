@@ -51,7 +51,16 @@
 					Municipio Origen
 				</label>
 				<div class="col-sm-9">
-					{{form_widget(form.municipioOrigen) }}
+					{% if form.vars.data.id %}
+						{% if is_granted('ROLE_AUXILIAR_NACIONAL') or app.user.id == 10 %}
+							{{ form.vars.data.municipioOrigen }}
+						{% else %}
+							{{form_widget(form.municipioOrigen) }}
+						{% endif %}
+					{% else %}
+						{{form_widget(form.municipioOrigen) }}
+					{% endif %}
+
 				</div>
 			</div>
 		</div>
@@ -96,7 +105,16 @@
 					Municipio Destino
 				</label>
 				<div class="col-sm-9">
-					{{form_widget(form.municipioDestino) }}
+
+					{% if form.vars.data.id %}
+						{% if is_granted('ROLE_AUXILIAR_NACIONAL') or app.user.id == 10 %}
+							{{ form.vars.data.municipioDestino }}
+						{% else %}
+							{{form_widget(form.municipioDestino) }}
+						{% endif %}
+					{% else %}
+						{{form_widget(form.municipioDestino) }}
+					{% endif %}
 				</div>
 			</div>
 		</div>
@@ -164,7 +182,16 @@
 				<label class="col-sm-3 text-end control-label col-form-label">
 					Forma de Pago</label>
 				<div class="col-sm-9">
-					{{form_widget(form.formaPago) }}
+					{% if form.vars.data.id %}
+						{% if is_granted('ROLE_AUXILIAR_NACIONAL') or app.user.id == 10 %}
+							{{ form.vars.data.formaPago }}
+						{% else %}
+							{{form_widget(form.formaPago) }}
+						{% endif %}
+					{% else %}
+						{{form_widget(form.formaPago) }}
+					{% endif %}
+					
 				</div>
 			</div>
 		</div>
@@ -203,21 +230,19 @@
 			</div>
 		</div>
 		<div class="col-sm-12 col-lg-6">
-			<div class="form-group mb-3 row">
-				
-			</div>
+			<div class="form-group mb-3 row"></div>
 		</div>
 	</div>
-	
+
 
 	<div class="hide">
 		{{form_rest(form)}}
 	</div>
 	<div class="p-3">
 		<div class="form-group text-end">
-			
+
 			<button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
-			
+
 			<a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_envios_nacionales_index') }}">regresar</a>
 		</div>
 	</div>
