@@ -167,6 +167,11 @@ class EnviosNacionales
      */
     private $numero_guia;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $creador;
+
 
     public function getId(): ?string
     {
@@ -421,6 +426,18 @@ class EnviosNacionales
     public function setNumeroGuia(?string $numero_guia): self
     {
         $this->numero_guia = $numero_guia;
+
+        return $this;
+    }
+
+    public function getCreador(): ?User
+    {
+        return $this->creador;
+    }
+
+    public function setCreador(?User $creador): self
+    {
+        $this->creador = $creador;
 
         return $this;
     }

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\EnviosNacionales;
 use App\Form\DataTransformer\ClientesToNumberTransformer;
 use App\Form\DataTransformer\FacturaItemsToNumberTransformer;
+use App\Form\DataTransformer\UserToNumberTransformer;
 use DateTime;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,11 +20,13 @@ class EnviosNacionalesType extends AbstractType
 { 
     private $transformer;
     private $transformerItems;
+    private $transformerUser;
 
-    public function __construct(ClientesToNumberTransformer $transformer, FacturaItemsToNumberTransformer $transformerItems)
+    public function __construct(ClientesToNumberTransformer $transformer, FacturaItemsToNumberTransformer $transformerItems, UserToNumberTransformer $transformerUser)
     {
         $this->transformer = $transformer;
         $this->transformerItems = $transformerItems;
+        $this->transformerUser = $transformerUser;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -144,11 +147,19 @@ class EnviosNacionalesType extends AbstractType
                     'class' => 'form-control',
                 ]
             ])
+            ->add('creador', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
         ;
         $builder->get('cliente')
         ->addModelTransformer($this->transformer);
         $builder->get('facturaItems')
         ->addModelTransformer($this->transformerItems);
+
+        $builder->get('creador')
+        ->addModelTransformer($this->transformerUser);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

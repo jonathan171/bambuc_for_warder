@@ -62,6 +62,8 @@ class EnviosNacionalesController extends AbstractController
         $fecha = new DateTime('now', new DateTimeZone('America/Bogota'));
         
         $enviosNacionale->setFecha($fecha);
+        $user = $this->getUser();
+        $enviosNacionale->setCreador($user);
         $enviosNacionale->setEstado('recolectado');
         $form = $this->createForm(EnviosNacionalesType::class, $enviosNacionale);
         $form->handleRequest($request);
