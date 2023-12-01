@@ -389,7 +389,7 @@ class EnviosNacionalesController extends AbstractController
         }
         if ($request->request->get('pago')) {
             $query->andWhere('e.formaPago  = :pago')
-                ->setParameter('pago', $shearch);
+                ->setParameter('pago', $request->request->get('pago'));
         }
         $envios = $query->andWhere('e.facturado = 0')
             ->orderBy('e.numero', 'ASC')
