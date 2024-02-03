@@ -289,7 +289,7 @@ class Factura
      /**
      * @var bool
      *
-     * @ORM\Column(name="facturado_transportadora", type="boolean", nullable=false)
+     * @ORM\Column(name="facturado", type="boolean", nullable=false)
      */
     private $facturado;
 
