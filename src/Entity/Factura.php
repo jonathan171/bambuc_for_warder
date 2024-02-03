@@ -286,6 +286,13 @@ class Factura
      */
     private $facturaResolucion;
 
+     /**
+     * @var bool
+     *
+     * @ORM\Column(name="facturado_transportadora", type="boolean", nullable=false)
+     */
+    private $facturado;
+
     public function getId(): ?string
     {
         return $this->id;
@@ -719,6 +726,18 @@ class Factura
     public function setFacturaResolucion(?FacturaResolucion $facturaResolucion): self
     {
         $this->facturaResolucion = $facturaResolucion;
+
+        return $this;
+    }
+
+    public function getFacturado(): ?bool
+    {
+        return $this->facturado;
+    }
+
+    public function setFacturado(bool $facturado): self
+    {
+        $this->facturado = $facturado;
 
         return $this;
     }

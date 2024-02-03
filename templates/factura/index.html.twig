@@ -258,11 +258,49 @@ $("#notasdebito").dialog({width: 800, height: 500});
 
 }
 
-function mostrarNotasCredito(factura_id) {
-Paratarifas = '{{ path('app_nota_credito_index') }}';
-jQuery('#divnotascredito').load(Paratarifas, {factura_id: factura_id});
-$("#notascredito").dialog({width: 800, height: 500});
+	function mostrarNotasCredito(factura_id) {
+		Paratarifas = '{{ path('app_nota_credito_index') }}';
+		jQuery('#divnotascredito').load(Paratarifas, {factura_id: factura_id});
+		$("#notascredito").dialog({width: 800, height: 500});
 
-}
+	}
+	function verificar(id){
+       $('#verificar'+id).hide();
+       $.ajax({
+        url : '{{ path('app_factura_verificar')}}',
+        data : { id : id},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+         alertify.success('Factura Verificada correctamente');
+         $("#data_table_facturas").DataTable().ajax.reload(null,false);
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    }
+    function desverificar(id){
+       $('#desverificar'+id).hide();
+       $.ajax({
+        url : '{{ path('app_factura_desverificar')}}',
+        data : { id : id},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+         alertify.success('Factura fue Desverificada correctamente');
+         $("#data_table_facturas").DataTable().ajax.reload(null,false);
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    }
 	</script>
 {% endblock %}

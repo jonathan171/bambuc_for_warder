@@ -99,6 +99,11 @@ class FacturaRepository extends ServiceEntityRepository
 
             $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_factura?id=' . $factura->getId() . '" title="Imprimir"><span class="fas fa-print"></span></a>';
             $actions .= "<button onclick='mostrarNotasCredito(" . $factura->getId() . ");'  class='btn btn-info'>NC</button>";
+            if ($factura->getFacturado()) {
+                $actions .= '<button class="btn btn-success" id="desverificar'.$factura->getId().'" onClick="desverificar('.$factura->getId().');"> <i class="fas fa-check" ></i></button>';
+            }else {
+                $actions .= '<button class="btn btn-secondary" id="verificar'.$factura->getId().'" onClick="verificar('.$factura->getId().');"> <i class="fas fa-check" ></i></button>';
+            }
             if ($factura->getCufe() == '' || $factura->getCufe() == null) {
 
                 $reportar = '<button type="button" id="reportar' . $factura->getId() . '" class="btn" onclick="Reportar(' . $factura->getId() . ');"title="Reportar Dian"><img src="/assets/images/facturas/dian.png" height="30px" width="30px"></button>';

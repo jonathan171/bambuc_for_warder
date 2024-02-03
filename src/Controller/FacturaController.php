@@ -783,4 +783,42 @@ class FacturaController extends AbstractController
         return $this->json($responseData);
     }
 
+    #[Route('/verificar', name: 'app_factura_verificar', methods: ['GET', 'POST'])]
+    public function  verificar(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ) {
+        
+        $factura = $entityManager->getRepository(Factura::class)->find($request->request->get('id'));
+
+        $factura->setFacturado(1);
+
+        $entityManager->persist( $factura);
+        $entityManager->flush();
+   
+        $responseData = array(
+        "results" => 'success',
+        );
+         return $this->json($responseData);
+    }
+
+    #[Route('/desverificar', name: 'app_factura_desverificar', methods: ['GET', 'POST'])]
+    public function  desverificar(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ) {
+        
+        $factura = $entityManager->getRepository(Factura::class)->find($request->request->get('id'));
+
+        $factura->setFacturado(0);
+
+        $entityManager->persist($factura);
+        $entityManager->flush();
+   
+        $responseData = array(
+        "results" => 'success',
+        );
+         return $this->json($responseData);
+    }
+
 }
