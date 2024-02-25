@@ -156,10 +156,10 @@ class ImpresionController extends AbstractController
         $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
 
         // ---------------------------------------------------------
-
+        $fileName = $factura->getFacturaResolucion()->getPrefijo().'-'.$factura->getNumeroFactura();
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
-        $pdf->Output('factura.pdf', 'I');
+        $pdf->Output($fileName.'.pdf', 'I');
     }
 
     #[Route('/impresion_nota', name: 'app_impresion_nota', methods: ['GET'])]
@@ -302,10 +302,10 @@ class ImpresionController extends AbstractController
         $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
 
         // ---------------------------------------------------------
-
+        $fileName = 'Nota'.$nota->getNumeroNota();
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
-        $pdf->Output('nota.pdf', 'I');
+        $pdf->Output( $fileName.'.pdf', 'I');
     }
 
 
@@ -395,10 +395,10 @@ class ImpresionController extends AbstractController
         $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
 
         // ---------------------------------------------------------
-
+        $fileName = $envio->getNumero();
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
-        $pdf->Output('medidas_envio.pdf', 'I');
+        $pdf->Output('medidas_'.$fileName.'.pdf', 'I');
     }
 
     #[Route('/impresion_remision', name: 'app_impresion_remision', methods: ['GET'])]
@@ -460,10 +460,10 @@ class ImpresionController extends AbstractController
         $pdf->render();
 
         // ---------------------------------------------------------
-
+        $fileName = 'RM'.$remision->getNumero();
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
-        $pdf->stream('remision.pdf', ['Attachment' => false]);
+        $pdf->stream( $fileName.'.pdf', ['Attachment' => false]);
     }
 
     #[Route('/impresion_stiker', name: 'app_impresion_stiker', methods: ['GET'])]
@@ -551,12 +551,14 @@ class ImpresionController extends AbstractController
         file_put_contents ($path, $imageContent);
         echo $path;
         die();*/
+
+        $numero_guia = $unidad->getEnvioNacional()->getNumeroGuia() ? $unidad->getEnvioNacional()->getNumeroGuia() : $unidad->getNumeroGuia();
         if($request->query->get('html')){
 
             return $this->render('impresion/stiker.html.twig', [
                 'unidad'  => $unidad,
                 'remision' => $unidad->getEnvioNacional(),
-                'numero_guia' => $unidad->getEnvioNacional()->getNumeroGuia() ? $unidad->getEnvioNacional()->getNumeroGuia() : $unidad->getNumeroGuia(),
+                'numero_guia' => $numero_guia,
                 'base_64'  => $base_64,
                 'key' => $found_key+1,
             ]); 
@@ -576,7 +578,7 @@ class ImpresionController extends AbstractController
 
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
-        $pdf->Output('stiker.pdf', 'I');
+        $pdf->Output($numero_guia.'.pdf', 'I');
     }
 
     #[Route('/impresion_stiker_todos', name: 'app_impresion_stiker_todos', methods: ['GET','POST'])]
@@ -658,8 +660,15 @@ class ImpresionController extends AbstractController
         echo $path;
         die();*/
         $html = '';
+        $i = 1;
+        $unidad_1 = 0;
+        $unidad_fin = 0;
         foreach($datos as $dato){
-           
+            if($i ==1){
+                $unidad_1 = $dato['remision'];
+                $i++;
+            }
+            $unidad_fin =  $dato['remision'];
             $items = $entityManager->getRepository(EnviosNacionalesUnidades::class)->createQueryBuilder('fi')
             ->andWhere('fi.envioNacional = :val')
             ->setParameter('val', $dato['remision'])
@@ -705,7 +714,7 @@ class ImpresionController extends AbstractController
 
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
-        $pdf->Output('stiker.pdf', 'I');
+        $pdf->Output('stiker'.$unidad_1.'-'.$unidad_fin.'.pdf', 'I');
     }
 
     #[Route('/impresion_remision_todos', name: 'app_impresion_remision_todos', methods: ['GET','POST'])]
@@ -744,7 +753,15 @@ class ImpresionController extends AbstractController
         // Set some content to 
         $html='';
         
+        $i = 1;
+        $unidad_1 = 0;
+        $unidad_fin = 0;
         foreach($datos as $dato){
+            if($i == 1){
+                $unidad_1 = $dato['remision'];
+                $i++;
+            }
+            $unidad_fin = $dato['remision'];
             $remision = $entityManager->getRepository(EnviosNacionales::class)->find($dato['remision']);
 
             $html.= $this->renderView('impresion/remision.html.twig', [
@@ -769,6 +786,6 @@ class ImpresionController extends AbstractController
 
        // Close and output PDF document
        // This method has several options, check the source code documentation for more information.
-       $pdf->stream('remision.pdf', ['Attachment' => false]);
+       $pdf->stream('remision'.$unidad_1.'-'.$unidad_fin.'.pdf', ['Attachment' => false]);
     }
 }

@@ -40,7 +40,7 @@ class FacturaController extends AbstractController
         // see "Authorization" below
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $companys = $entityManager->getRepository(Empresa::class)->createQueryBuilder('e')
-        ->orderBy('e.id', 'DESC')
+        ->orderBy('e.id', 'ASC')
         ->getQuery()->getResult();
 
         return $this->render('factura/index.html.twig', [

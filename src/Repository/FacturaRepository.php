@@ -97,7 +97,7 @@ class FacturaRepository extends ServiceEntityRepository
             $actions = '';
             $reportar = '';
 
-            $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_factura?id=' . $factura->getId() . '" title="Imprimir"><span class="fas fa-print"></span></a>';
+            $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_factura?id=' . $factura->getId() . '" title="Imprimir" target="_blank"><span class="fas fa-print"></span></a>';
             $actions .= "<button onclick='mostrarNotasCredito(" . $factura->getId() . ");'  class='btn btn-info'>NC</button>";
             if ($factura->getFacturado()) {
                 $actions .= '<button class="btn btn-success" id="desverificar'.$factura->getId().'" onClick="desverificar('.$factura->getId().');"> <i class="fas fa-check" ></i></button>';
