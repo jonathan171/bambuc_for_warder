@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Empresa;
 use App\Entity\FacturaResolucion;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -67,8 +69,10 @@ class FacturaResolucionRepository extends ServiceEntityRepository
     public function findActive()
         {
             return $this->createQueryBuilder('fr')
+                ->innerJoin(Empresa::class, 'e', Join::WITH,   'fr.empresa = e.id')   
                 ->andWhere('fr.activo = :val')
                 ->setParameter('val', 1)
+                ->orderBy('e.id', 'ASC')
                 ->getQuery()
                 ->execute()
             ;
