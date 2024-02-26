@@ -395,7 +395,7 @@ class ImpresionController extends AbstractController
         $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
 
         // ---------------------------------------------------------
-        $fileName = $envio->getNumero();
+        $fileName = $envio->getNumeroEnvio();
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
         $pdf->Output('medidas_'.$fileName.'.pdf', 'I');
