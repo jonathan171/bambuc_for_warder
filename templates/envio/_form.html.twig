@@ -1,130 +1,142 @@
- <div class="card-body">
-{{ form_start(form) }}
-    
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">Código</label>
-            <div class="col-sm-9">
-              {{form_widget(form.codigo) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">Estado</label>
-            <div class="col-sm-9">
-              {{form_widget(form.estado) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">Número Envio</label>
-            <div class="col-sm-9">
-              {{form_widget(form.numeroEnvio) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">Descripción</label>
-            <div class="col-sm-9">
-              {{form_widget(form.descripcion) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">Peso Estimado</label>
-            <div class="col-sm-9">
-              {{form_widget(form.PesoEstimado) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">Peso Real</label>
-            <div class="col-sm-9">
-              {{form_widget(form.PesoReal) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">total Peso A Cobrar</label>
-            <div class="col-sm-9">
-              {{form_widget(form.totalPesoCobrar) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">fecha Envio</label>
-            <div class="col-sm-9">
-              {{form_widget(form.fechaEnvio) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">fecha Estimada Entrega</label>
-            <div class="col-sm-9">
-              {{form_widget(form.fechaEstimadaEntrega) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">Empresa</label>
-            <div class="col-sm-9">
-              {{form_widget(form.empresa) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">pais Origen</label>
-            <div class="col-sm-9">
-              {{form_widget(form.paisOrigen) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">pais Destino</label>
-            <div class="col-sm-9">
-              {{form_widget(form.paisDestino) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">Envia</label>
-            <div class="col-sm-9">
-              {{form_widget(form.quienEnvia) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">Recibe </label>
-            <div class="col-sm-9">
-              {{form_widget(form.quienRecibe) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">Verificado </label>
-            <div class="col-sm-9">
-              {{form_widget(form.verificado) }}
-            </div> 
-    </div>
-     <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">total A Cobrar </label>
-            <div class="col-sm-9">
-              {{form_widget(form.totalACobrar) }}
-            </div> 
-    </div>
-    <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">Referencia </label>
-            <div class="col-sm-9">
-              {{form_widget(form.referencia) }}
-            </div> 
-    </div>
-    <div class="hide">
-           
-              {{form_widget(form.jsonRecibido) }}
-              {{form_widget(form.facturado) }}
-              {{form_widget(form.facturaItems) }}
-              {{form_widget(form.facturadoTransportadora) }}
-              {{form_widget(form.facturaTransportadora) }}
-           
-    </div>
-    {{ form_widget(form._token) }}
-   
-    <div class="p-3">
-        <div class="form-group text-end">
-        {% if form.vars.data.id %}
-         <a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_dimension_envio?id={{ form.vars.data.id}}" title="Imprimir" target="_blank"><span class="fas fa-print"></span></a>
-         <a class="btn waves-effect waves-light btn-rounded btn-success" onclick="CambiarValor({{ form.vars.data.id}})">Cobrar Peso Real</a>
-         <a class="btn waves-effect waves-light btn-rounded btn-secondary" onclick="CambiarValorEspecialReal({{ form.vars.data.id}})">Cobrar Peso Real Especial</a>
-         <a class="btn waves-effect waves-light btn-rounded btn-primary" onclick="CambiarValorEspecial({{ form.vars.data.id}})">Tarifa Especial</a>  
-        {% endif %}
-        <button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
-         <a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path(url) }}">regresar</a>
-        </div>
-    </div>
-{{ form_end(form) }}
+<div class="card-body">
+	{{ form_start(form) }}
+
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">Código</label>
+		<div class="col-sm-9">
+			{{form_widget(form.codigo) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">Estado</label>
+		<div class="col-sm-9">
+			{{form_widget(form.estado) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">Número Envio</label>
+		<div class="col-sm-9">
+			{{form_widget(form.numeroEnvio) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">Descripción</label>
+		<div class="col-sm-9">
+			{{form_widget(form.descripcion) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">Peso Estimado</label>
+		<div class="col-sm-9">
+			{{form_widget(form.PesoEstimado) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">Peso Real</label>
+		<div class="col-sm-9">
+			{{form_widget(form.PesoReal) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">total Peso A Cobrar</label>
+		<div class="col-sm-9">
+			{{form_widget(form.totalPesoCobrar) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">fecha Envio</label>
+		<div class="col-sm-9">
+			{{form_widget(form.fechaEnvio) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">fecha Estimada Entrega</label>
+		<div class="col-sm-9">
+			{{form_widget(form.fechaEstimadaEntrega) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">Empresa</label>
+		<div class="col-sm-9">
+			{{form_widget(form.empresa) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">pais Origen</label>
+		<div class="col-sm-9">
+			{{form_widget(form.paisOrigen) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">pais Destino</label>
+		<div class="col-sm-9">
+			{{form_widget(form.paisDestino) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">Envia</label>
+		<div class="col-sm-9">
+			{{form_widget(form.quienEnvia) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">Recibe
+		</label>
+		<div class="col-sm-9">
+			{{form_widget(form.quienRecibe) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">Verificado
+		</label>
+		<div class="col-sm-9">
+			{{form_widget(form.verificado) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">total A Cobrar
+		</label>
+		<div class="col-sm-9">
+			{{form_widget(form.totalACobrar) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">Referencia
+		</label>
+		<div class="col-sm-9">
+			{{form_widget(form.referencia) }}
+		</div>
+	</div>
+	<div class="form-group mb-3 row pb-3">
+		<label class="col-sm-3 text-end control-label col-form-label">Fatura Transportadora
+		</label>
+		<div class="col-sm-9">
+			{{form_widget(form.facturadoTransportadora) }}
+		</div>
+	</div>
+	<div class="hide">
+
+		{{form_widget(form.jsonRecibido) }}
+		{{form_widget(form.facturado) }}
+		{{form_widget(form.facturaItems) }}
+		{{form_widget(form.facturaTransportadora) }}
+
+	</div>
+	{{ form_widget(form._token) }}
+
+	<div class="p-3">
+		<div class="form-group text-end">
+			{% if form.vars.data.id %}
+				<a class="btn waves-effect waves-light btn-info" href="/impresion/impresion_dimension_envio?id={{ form.vars.data.id}}" title="Imprimir" target="_blank">
+					<span class="fas fa-print"></span>
+				</a>
+				<a class="btn waves-effect waves-light btn-rounded btn-success" onclick="CambiarValor({{ form.vars.data.id}})">Cobrar Peso Real</a>
+				<a class="btn waves-effect waves-light btn-rounded btn-secondary" onclick="CambiarValorEspecialReal({{ form.vars.data.id}})">Cobrar Peso Real Especial</a>
+				<a class="btn waves-effect waves-light btn-rounded btn-primary" onclick="CambiarValorEspecial({{ form.vars.data.id}})">Tarifa Especial</a>
+			{% endif %}
+			<button class="btn btn-info rounded-pill px-4 waves-effect waves-light">{{ button_label|default('Guardar') }}</button>
+			<a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path(url) }}">regresar</a>
+		</div>
+	</div>
+	{{ form_end(form) }}
 </div>
