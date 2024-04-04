@@ -285,6 +285,7 @@ class ReporteEnvioController extends AbstractController
 
         $query = $entityManager->getRepository(EnviosNacionales::class)->createQueryBuilder('e')
             ->innerJoin(Clientes::class, 'c', Join::WITH,   'c.id = e.cliente')
+            ->innerJoin(EnviosNacionalesUnidades::class, 'enu', Join::WITH,  'e.id = enu.envioNacional')
             ->andWhere('e.fecha >= :val')
             ->setParameter('val', $request->get('fecha_inicio'))
             ->andWhere('e.fecha <= :val1')
