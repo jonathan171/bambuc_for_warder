@@ -103,13 +103,22 @@ class IntegracionController extends AbstractController
             $total_peso_real = 0;
             $total_dimension = 0;
             $total_peso = 0;
+            $peso_real = 0;
+            $total_peso_real_cobrado = 0;
+            $total_peso_estimado_cobrado = 0;
             foreach ($array_envio['pieces'] as $pieza) {
                 $dimension = (($pieza['dimensions']['length'] * $pieza['dimensions']['width'] * $pieza['dimensions']['height']) / 5000);
                 $total_dimension += $dimension;
                 $total_peso += $pieza['weight'];
+                if( $dimension > $pieza['weight']){
+                    $total_peso_estimado_cobrado += $dimension;
+                }else {
+                    $total_peso_estimado_cobrado += $pieza['weight'];
+                }
                 //pesos reales de la transportadora
                 if (array_key_exists('actualWeight', $pieza)) {
                     $total_peso_real += $pieza['actualWeight'];
+                    $peso_real = $pieza['actualWeight'];
                 } else {
                     $total_peso_real = 0;
                 }
@@ -121,46 +130,26 @@ class IntegracionController extends AbstractController
 
                     $total_dimension_real = 0;
                 }
-            }
-            if ($total_dimension > $total_peso) {
-
-                if ($total_dimension < 10) {
-                    $envio->setPesoEstimado($total_dimension);
-                    if (fmod($total_dimension, 1) != 0.5) {
-                        $envio->setTotalPesoCobrar($this->roundUp($total_dimension, 0.5));
-                    } else {
-                        $envio->setTotalPesoCobrar($total_dimension);
-                    }
-                } else {
-                    $envio->setPesoEstimado($total_dimension);
-                    $envio->setTotalPesoCobrar(ceil($total_dimension));
-                }
-            } else {
-
-
-                if ($total_peso < 10) {
-
-                    if (fmod($total_peso, 1) != 0.5) {
-                        $envio->setTotalPesoCobrar($this->roundUp($total_peso, 0.5));
-                    } else {
-                        $envio->setTotalPesoCobrar($total_peso);
-                    }
-                    $envio->setPesoEstimado($total_peso);
-                } else {
-                    $envio->setPesoEstimado($total_peso);
-                    $envio->setTotalPesoCobrar(ceil($total_peso));
+                if( $dimension_real >  $peso_real){
+                    $total_peso_real_cobrado = $dimension_real;
+                }else{
+                    $total_peso_real_cobrado = $ $peso_real;
                 }
             }
-
-            if ($total_dimension_real > $total_peso_real) {
-
-
-                $envio->setPesoReal($total_dimension_real);
+            
+            if ($total_peso_estimado_cobrado < 10) {
+                $envio->setPesoEstimado($total_peso_estimado_cobrado);
+                if (fmod($total_peso_estimado_cobrado, 1) != 0.5) {
+                    $envio->setTotalPesoCobrar($this->roundUp($total_peso_estimado_cobrado, 0.5));
+                } else {
+                    $envio->setTotalPesoCobrar($total_peso_estimado_cobrado);
+                }
             } else {
-
-                $envio->setPesoReal($total_peso_real);
+                $envio->setPesoEstimado($total_peso_estimado_cobrado);
+                $envio->setTotalPesoCobrar(ceil($total_peso_estimado_cobrado));
             }
-
+            $envio->setPesoReal($total_peso_real_cobrado);
+           
             $fecha_envio = new DateTime($array_envio['shipmentTimestamp']);
             $envio->setFechaEnvio($fecha_envio);
 
