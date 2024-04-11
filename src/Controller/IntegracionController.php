@@ -134,7 +134,7 @@ class IntegracionController extends AbstractController
                 if( $dimension_real >  $peso_real){
                     $total_peso_real_cobrado = $dimension_real;
                 }else{
-                    $total_peso_real_cobrado = $ $peso_real;
+                    $total_peso_real_cobrado =  $peso_real;
                 }
             }
             
@@ -142,6 +142,7 @@ class IntegracionController extends AbstractController
                 $envio->setPesoEstimado($total_peso_estimado_cobrado);
                 if (fmod($total_peso_estimado_cobrado, 1) != 0.5) {
                     $envio->setTotalPesoCobrar($this->roundUp($total_peso_estimado_cobrado, 0.5));
+
                 } else {
                     $envio->setTotalPesoCobrar($total_peso_estimado_cobrado);
                 }
@@ -153,17 +154,24 @@ class IntegracionController extends AbstractController
            
             $fecha_envio = new DateTime($array_envio['shipmentTimestamp']);
             $envio->setFechaEnvio($fecha_envio);
-
+           
+            
             if (array_key_exists('estimatedDeliveryDate', $array_envio)) {
                 $fecha = new DateTime($array_envio['estimatedDeliveryDate']);
                 $envio->setFechaEstimadaEntrega($fecha);
                 $envio->setEstado(1);
             } else {
-                $ultimo_evento = end($array_envio['events']);
-
+                if($array_envio['events']){
+                    $ultimo_evento = end($array_envio['events']);
+                    $fecha = new DateTime($ultimo_evento['date']);
+                    $envio->setFechaEstimadaEntrega($fecha);
+                }else{
+                    $fecha = new DateTime($array_envio['shipmentTimestamp']);
+                    $envio->setFechaEstimadaEntrega($fecha);
+                }
+        
                 $envio->setEstado(3);
-                $fecha = new DateTime($ultimo_evento['date']);
-                $envio->setFechaEstimadaEntrega($fecha);
+                
             }
             $envio->setEmpresa('DHL');
             $envio->setVerificado(0);
