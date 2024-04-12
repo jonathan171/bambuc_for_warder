@@ -132,9 +132,9 @@ class IntegracionController extends AbstractController
                     $total_dimension_real = 0;
                 }
                 if( $dimension_real >  $peso_real){
-                    $total_peso_real_cobrado = $dimension_real;
+                    $total_peso_real_cobrado += $dimension_real;
                 }else{
-                    $total_peso_real_cobrado =  $peso_real;
+                    $total_peso_real_cobrado +=  $peso_real;
                 }
             }
             
