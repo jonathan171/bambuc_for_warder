@@ -103,11 +103,13 @@ class IntegracionController extends AbstractController
             $total_peso_real = 0;
             $total_dimension = 0;
             $total_peso = 0;
-            $peso_real = 0;
+            
             $total_peso_real_cobrado = 0;
             $total_peso_estimado_cobrado = 0;
-            $dimension_real = 0;
+            
             foreach ($array_envio['pieces'] as $pieza) {
+                $dimension_real = 0;
+                $peso_real = 0;
                 $dimension = (($pieza['dimensions']['length'] * $pieza['dimensions']['width'] * $pieza['dimensions']['height']) / 5000);
                 $total_dimension += $dimension;
                 $total_peso += $pieza['weight'];
