@@ -430,14 +430,14 @@ class EnviosNacionalesController extends AbstractController
         return $this->redirectToRoute('app_envios_nacionales_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/', name: 'app_envios_nacionales_trazabilidad', methods: ['GET','POST'])]
+    #[Route('/trazabilidad_envio', name: 'app_envios_nacionales_trazabilidad', methods: ['GET','POST'])]
     public function trazabilidad(Request $request, EntityManagerInterface $entityManager): Response
     {   
         
         $trazabilidaEnvio = $entityManager->getRepository(TrazabilidadEnvioNacional::class)->createQueryBuilder('t')
         ->innerJoin(EnviosNacionales::class, 'e', Join::WITH,   'e.id = t.envio_nacional')
         ->andWhere('e.numero= :val')
-        ->setParameter('val', $request->request->get('search'))
+        ->setParameter('val', $request->query->get('search'))
         ->getQuery()->getResult();
         
         return $this->render('envios_nacionales/trazabilidad_envio.html.twig', [

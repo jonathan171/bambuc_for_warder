@@ -61,7 +61,7 @@
 {% block javascripts %}
 	<script>
 		function buscar() {
-            $.ajax({
+           /* $.ajax({
                 url: '{{ path('app_envios_nacionales_trazabilidad') }}',
                 data: {
                 search: $('#search_guia').val()
@@ -74,7 +74,8 @@
                 error: function (xhr, status) {
                     alert('Disculpe, existió un problema');
                 }
-            });
+            });*/
+			window.location.href = '{{ path('app_envios_nacionales_trazabilidad') }}?search='+$('#search_guia').val();
         }
 	</script>
 {% endblock %}
