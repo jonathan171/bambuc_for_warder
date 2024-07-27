@@ -1,56 +1,139 @@
-<div class="row">
-	<div class="col-12">
-		<div class="card">
-			<div class="card-body">
-				<ul class="timeline timeline-left">
-					{% for trazabilidad in trazabilidades %}
-						<li class="timeline-inverted timeline-item">
-							<div class="timeline-badge success">
-								<h2>{{loop.index}}</h2>
-							</div>
-							<div class="timeline-panel">
-								<div class="timeline-heading">
-									<h4 class="timeline-title">{{trazabilidad.estado}}</h4>
-									<p>
-										<small class="text-muted">
-											<i class="ri-time-line align-middle"></i>
-											{{trazabilidad.fecha|format_datetime('none', 'short', locale='es', pattern="EEEE d 'de' LLLL 'del' yyyy " ) }}</small>
-									</p>
-								</div>
-								<div class="timeline-body">
-									<p> {% if trazabilidad.quienRecibe %}
+{% extends 'base_landing.html.twig' %}
 
-										<h2> Quien Recibió: {{trazabilidad.quienRecibe}}</h2>
+{% block title %}Bambuc
+{% endblock %}
 
-										{% endif %}
-									</p>
+{% block body %}
+	<style>
+		.div_rastreos {
+			padding: 90px;
+			background: #fff
+		}
+		.div_general_rastreos {
+			background: #f8f8f8;
+			padding: 0;
+			font-family: arial;
+			line-height: 28px;
+			width: 100%;
+			color: #514d6a;
+		}
+		/* Media query para pantallas pequeñas */
+		@media screen and(max-width: 600px) {
+			.div_rastreos {
+				padding: 0; /* Quita el padding en pantallas pequeñas */
+			}
+		}
+	</style>
+	<div width="100%" class="div_general_rastreos">
+		<div style="max-width: 100%; padding:0; margin: 0px auto; font-size: 14px; ">
+			<div class="div_rastreos">
+				<table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
+					<thead>
+						<tr>
+							<td>
+								<h2>Rastrear guía</h2>
+							</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<p>
+									Ingresa en este campo el número de tu guía nacional.
+								</p>
+								<center>
+									<div class="input-group">
+										<input type="text" class="form-control" placeholder="EJ: 4511244" aria-label="Recipient's username" aria-describedby="basic-addon2" id="search_guia">
+										<button class="btn btn-light-secondary text-secondary font-weight-medium" type="button" onclick="buscar()">RASTREAR</button>
+
+									</div>
+								</center>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<br>
+				<div class=" col-lg-12 col-sm-12" id="content">
+					<div class="row">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body">
+									<ul class="timeline timeline-left">
+										{% for trazabilidad in trazabilidades %}
+											<li class="timeline-inverted timeline-item">
+												<div class="timeline-badge success">
+													<h2>{{loop.index}}</h2>
+												</div>
+												<div class="timeline-panel">
+													<div class="timeline-heading">
+														<h4 class="timeline-title">{{trazabilidad.estado}}</h4>
+														<p>
+															<small class="text-muted">
+																<i class="ri-time-line align-middle"></i>
+																{{trazabilidad.fecha|format_datetime('none', 'short', locale='es', pattern="EEEE d 'de' LLLL 'del' yyyy " ) }}</small>
+														</p>
+													</div>
+													<div class="timeline-body">
+														<p>
+															{% if trazabilidad.quienRecibe %}
+
+																<h2>
+																	Quien Recibió:
+																	{{trazabilidad.quienRecibe}}</h2>
+
+															{% endif %}
+														</p>
+													</div>
+												</div>
+											</li>
+										{% else %}
+											<li class="timeline-inverted timeline-item">
+												<div class="timeline-badge success">
+													<h2>{{loop.index}}</h2>
+												</div>
+												<div class="timeline-panel">
+													<div class="timeline-heading">
+														<h4 class="timeline-title">No se encontró un envío con este número de Guía.</h4>
+														<p>
+															<small class="text-muted">
+																<i class="ri-time-line align-middle"></i>
+															</small>
+														</p>
+													</div>
+													<div class="timeline-body">
+														<p></p>
+													</div>
+												</div>
+											</li>
+										{% endfor %}
+									</ul>
 								</div>
 							</div>
-						</li>
-					{% else %}
-						<li class="timeline-inverted timeline-item">
-							<div class="timeline-badge success">
-								<h2>{{loop.index}}</h2>
-							</div>
-							<div class="timeline-panel">
-								<div class="timeline-heading">
-									<h4 class="timeline-title">No se encontró un envío con este número de Guía.</h4>
-									<p>
-										<small class="text-muted">
-											<i class="ri-time-line align-middle"></i>
-											</small>
-									</p>
-								</div>
-								<div class="timeline-body">
-									<p>
-										
-									</p>
-								</div>
-							</div>
-						</li>
-					{% endfor %}
-				</ul>
+						</div>
+					</div>
+				</div>
 			</div>
+			<div style="text-align: center; font-size: 12px; color: #b2b2b5; margin-top: 20px;"></div>
 		</div>
 	</div>
-</div>
+{% endblock %}
+{% block javascripts %}
+	<script>
+		function buscar() { /* $.ajax({
+                url: '{{ path('app_envios_nacionales_trazabilidad') }}',
+                data: {
+                search: $('#search_guia').val()
+                },
+                type: 'POST',
+                dataType: 'html',
+                success: function (html) {
+                    $('#content').html(html);
+                },
+                error: function (xhr, status) {
+                    alert('Disculpe, existió un problema');
+                }
+            });*/
+			window.location.href = '{{ path('app_envios_nacionales_trazabilidad') }}?search=' + $('#search_guia').val();
+}
+	</script>
+{% endblock %}
