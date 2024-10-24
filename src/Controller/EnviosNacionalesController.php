@@ -400,7 +400,8 @@ class EnviosNacionalesController extends AbstractController
 
         return $this->render('envios_nacionales/listado_envios.html.twig', [
             'envios'     => $envios,
-            'factura_id' => $request->request->get('factura_id')
+            'factura_id' => $request->request->get('factura_id'),
+            'recibo' => $request->request->get('recibo'),
         ]);
     }
 

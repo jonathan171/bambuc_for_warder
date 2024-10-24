@@ -71,6 +71,20 @@ class FacturaResolucionRepository extends ServiceEntityRepository
             return $this->createQueryBuilder('fr')
                 ->innerJoin(Empresa::class, 'e', Join::WITH,   'fr.empresa = e.id')   
                 ->andWhere('fr.activo = :val')
+                ->andWhere('fr.id != 10')
+                ->setParameter('val', 1)
+                ->orderBy('e.id', 'ASC')
+                ->getQuery()
+                ->execute()
+            ;
+        }
+
+        public function findAlternate()
+        {
+            return $this->createQueryBuilder('fr')
+                ->innerJoin(Empresa::class, 'e', Join::WITH,   'fr.empresa = e.id')   
+                ->andWhere('fr.activo = :val')
+                ->andWhere('fr.id = 10 OR fr.id = 11')
                 ->setParameter('val', 1)
                 ->orderBy('e.id', 'ASC')
                 ->getQuery()

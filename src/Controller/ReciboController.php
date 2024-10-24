@@ -17,18 +17,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/factura_nacionales')]
-class FacturaNacionalesController extends AbstractController
+#[Route('/recibo')]
+class ReciboController extends AbstractController
 {
-    #[Route('/', name: 'app_factura_nacionales_index', methods: ['GET'])]
+    #[Route('/', name: 'app_recibo_index', methods: ['GET'])]
     public function index(FacturaRepository $facturaRepository): Response
     {
-        return $this->render('factura_nacionales/index.html.twig', [
+        return $this->render('recibo/index.html.twig', [
             'facturas' => $facturaRepository->findAll(),
         ]);
     }
 
-    #[Route('/new', name: 'app_factura_nacionales_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_recibo_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $factura = new Factura();
@@ -37,11 +37,13 @@ class FacturaNacionalesController extends AbstractController
             ->find(77);
         $hora = new DateTime();
         $factura->setCondDePago($condicionPago);
-        $factura->setTipoFactura('FACTURA_VENTA_NACIONAL');
+        $factura->setTipoFactura('FACTURA_VENTA_RECIBO');
         $factura->setHora($hora);
 
 
-        $form = $this->createForm(FacturaType::class, $factura);
+        $form = $this->createForm(FacturaType::class, $factura, [
+            'use_alternate_function' => true
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -66,28 +68,30 @@ class FacturaNacionalesController extends AbstractController
             $entityManager->persist($factura);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_factura_nacionales_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_recibo_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
         }
 
 
-        return $this->renderForm('factura_nacionales/new.html.twig', [
+        return $this->renderForm('recibo/new.html.twig', [
             'factura' => $factura,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_factura_nacionales_show', methods: ['GET'])]
+    #[Route('/{id}/show', name: 'app_recibo_show', methods: ['GET'])]
     public function show(Factura $factura): Response
     {
-        return $this->render('factura_nacionales/show.html.twig', [
+        return $this->render('recibo/show.html.twig', [
             'factura' => $factura,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_factura_nacionales_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_recibo_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Factura $factura, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(FacturaType::class, $factura);
+        $form = $this->createForm(FacturaType::class, $factura, [
+            'use_alternate_function' => true
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -97,14 +101,14 @@ class FacturaNacionalesController extends AbstractController
             $factura->setTotalReteIva($factura->getTotalIva() * ($factura->getReteIva() / 100));
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_factura_nacionales_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_recibo_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
         }
         $items = $entityManager->getRepository(FacturaItems::class)->createQueryBuilder('fi')
             ->andWhere('fi.facturaClientes = :val')
             ->setParameter('val', $factura->getId())
             ->getQuery()->getResult();
 
-        return $this->renderForm('factura_nacionales/edit.html.twig', [
+        return $this->renderForm('recibo/edit.html.twig', [
             'factura' => $factura,
             'form' => $form,
             'items' => $items,
@@ -114,7 +118,7 @@ class FacturaNacionalesController extends AbstractController
     
     //facturar todos los evios que han sido seleccionados
 
-    #[Route('/facturar_envios', name: 'app_factura_nacionales_facturar_envios', methods: ['GET', 'POST'])]
+    #[Route('/facturar_envios', name: 'app_recibo_facturar_envios', methods: ['GET', 'POST'])]
     public function executeFacturarEnvios(
         Request $request,
         EntityManagerInterface $entityManager
@@ -165,15 +169,11 @@ class FacturaNacionalesController extends AbstractController
             $entityManager->persist($factura);
             $entityManager->flush();
         }
-        if($request->request->get('recibo')){
-            return $this->redirectToRoute('app_recibo_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
-        }else{
-            return $this->redirectToRoute('app_factura_nacionales_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
-        }
-        
+
+        return $this->redirectToRoute('app_recibo_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/cargar_items', name: 'app_factura_nacionales_cargar_items', methods: ['GET', 'POST'])]
+    #[Route('/cargar_items', name: 'app_recibo_cargar_items', methods: ['GET', 'POST'])]
     public function executeCargarItems(
         Request $request,
         EntityManagerInterface $entityManager
@@ -258,7 +258,7 @@ class FacturaNacionalesController extends AbstractController
 
         return $this->json($thearray);
     }
-    #[Route('item_delete/{id}', name: 'app_factura_nacionales_item_delete', methods: ['POST'])]
+    #[Route('item_delete/{id}', name: 'app_recibo_item_delete', methods: ['POST'])]
     public function itemDelete(Request $request, FacturaItems $item, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $item->getId(), $request->request->get('_token'))) {
@@ -287,16 +287,16 @@ class FacturaNacionalesController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_factura_nacionales_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_recibo_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}', name: 'app_factura_nacionales_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_recibo_delete', methods: ['POST'])]
     public function delete(Request $request, Factura $factura, FacturaRepository $facturaRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$factura->getId(), $request->request->get('_token'))) {
             $facturaRepository->remove($factura, true);
         }
 
-        return $this->redirectToRoute('app_factura_nacionales_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_recibo_index', [], Response::HTTP_SEE_OTHER);
     }
 }

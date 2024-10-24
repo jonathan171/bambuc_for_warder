@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% import "macros/select2.html.twig" as macroselect2 %}
+
+{% block title %}Nuevo Recibo{% endblock %}
+
+{% block stylesheets %}
+{{ macroselect2.styleSelect2}}
+{% endblock %}
+
+{% block body %}
+    <h1>Crear Recibo</h1>
+
+    {{ include('recibo/_form.html.twig') }}
+
+
+{% endblock %}
+{% block javascripts %} 
+{{ macroselect2.scriptSelect2}}
+<script>
+
+ function BuscarConsecutivo(){
+       $.ajax({
+        url : '/factura/buscarConsecutivo',
+        data : { resolucion_id : $('#factura_facturaResolucion').val()},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+            $('#factura_numeroFactura').val(json.results);
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    };
+
+ $(function () { 
+     
+    function pad(n, width, z) { z = z || '0'; n = n + ''; return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n; }
+
+     function formatResult (item) {
+            
+
+            var html = [
+                '<div>',
+                    item.text + " <b>" + " (" + item.tipo_documento + " " + item.numero_identificacion + ")" + "</b>",
+                '</div>'
+            ];
+
+            var $state = $(html.join(""));
+
+            return $state;
+        };
+    
+
+       var currentQuery = "";
+
+        $("#input-buscador-clientes").select2({
+            width: '100%',
+             //theme: "bootstrap4",
+             minimumInputLength: 2,
+             delay: 200,
+             placeholder: "Ingrese un término de búsqueda aquí p. ej. número de identificación",
+            ajax: {
+                url: '/factura/buscadorAjaxCliente',
+                dataType: 'json'
+            },
+            templateResult: formatResult
+        }).on('select2:select', function (e) {
+            var data = e.params.data;
+            
+            $('#factura_cliente').val(data.id);
+            $('#factura_regimen').val(data.regimen);
+            $('#factura_taxLevelCode').val(data.obligacion);
+            $('#lblcliente').html(data.text);
+            
+        }).on('select2:open', function() {
+            $('.select2-search input').focus().val(currentQuery).trigger('input');
+        }).on('select2:closing', function() {
+            currentQuery = $('.select2-search input').prop('value');
+        });
+
+        BuscarConsecutivo(); 
+  
+     
+ });
+
+
+   
+   $('#factura_facturaResolucion').change(function ()
+    {
+            BuscarConsecutivo();
+    });
+
+
+    $(document).on('select2:open', () => {
+        document.querySelector('.select2-search__field').focus();
+     });
+</script>
+{% endblock %}

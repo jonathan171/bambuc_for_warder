@@ -26,7 +26,13 @@ class FacturaType extends AbstractType
 
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+    {   
+         // Aquí verificamos si la opción `use_alternate_function` está activada
+         $choices = $options['use_alternate_function'] 
+         ? $this->facturaResolucionRepository->findAlternate() 
+         : $this->facturaResolucionRepository->findActive();
+
+
         $builder
             ->add('numeroFactura', TextType::class, [
                 'attr' => [
@@ -78,7 +84,7 @@ class FacturaType extends AbstractType
                 ]
             ])
             ->add('facturaResolucion',null,[
-                'choices' => $this->facturaResolucionRepository->findActive(),
+                'choices' =>  $choices,
                 'attr' => [
                     'class' => 'form-control',
                 ],
@@ -168,6 +174,7 @@ class FacturaType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Factura::class,
+            'use_alternate_function' => false,
         ]);
     }
 }

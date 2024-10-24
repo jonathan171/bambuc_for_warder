@@ -1,0 +1,186 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Factura index{% endblock %}
+
+{% block body %}
+ <div class="p-3">
+        <div class="form-group ">
+         <a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura</a>
+         <a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Simple</a>
+         <a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}"> <i class=" fas fa-handshake"></i> Clientes</a>
+         <a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}"> <i class="fas fa-file-alt"></i> Resoluciones</a>
+        </div>
+    </div>
+
+    <h1>Listado de Facturas</h1>
+
+    <table class="table" id="data_table_facturas">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>N°</th>
+                <th>Cliente</th>
+                <th>Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        
+        </tbody>
+    </table>
+ <div class="p-3">
+   <div class="form-group ">
+   <a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_new') }}"> <i class=" fas fa-paste"> </i> Nueva Factura</a>
+   <a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}"> <i class="  fas fa-paste"></i> Nueva Factura Simple</a>
+   <a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}"> <i class=" fas fa-handshake"></i> Clientes</a>
+   <a class="btn waves-effect waves-light btn-secondary" href="{{ path('app_factura_resolucion_index') }}"> <i class="fas fa-file-alt"></i> Resoluciones</a>
+   </div>
+</div>
+<div id="erroresDian" title="Errores de la dian" style="display:none;width:800px;height:500px;" >
+
+    <div class="input-group">
+    </div>
+
+    <div id="diverrores" >
+    </div>
+
+</div>
+<div id="notascredito" title="Notas credito" style="display:none;width:800px;height:500px;z-index: auto !important;" >
+
+    <div id="divnotascredito" >
+
+    </div>
+</div>
+<div id="notasdebito" title="Notas debito" style="display:none;width:800px;height:500px;z-index: auto !important;" >
+
+    <div id="divnotasdebito" >
+
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %} 
+<script>
+    
+  $(document).ready(function() {
+   
+      $('#data_table_facturas').DataTable({
+            serverSide: true,
+            responsive: true,
+            pageLength: 50,
+            sPaginationType: "full_numbers",
+            language: {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+            },
+            ajax: {
+                "url": '/factura/table',
+                "type": "POST"
+            },
+            columns: [
+                {data: 'fecha'},
+                {data: 'numero'},
+                {data: 'cliente'},
+                {data: 'total'},
+                {data: 'actions'}
+                
+                ],
+            columnDefs: [
+                
+            ],
+            order: [[ 0, "desc" ]]
+        });
+   });
+
+   function Reportar(id){
+       $('#reportar'+id).hide();
+       $.ajax({
+        url : '{{ path('app_factura_reportar')}}',
+        data : { id : id},
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+
+         alertify.success('Factura enviada correctamente por favor  verifica la respuesta de la Dian');
+        location.reload();
+
+            },
+       error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+       }
+          });
+
+    }
+
+    function ReportarNotacrData(id) {
+
+
+        var idFactura = id;
+
+
+
+        var url = '{{ path('app_nota_credito_reportar')}}';
+
+        $.ajax({
+            method: 'POST',
+            url: url,
+            data: {'id': idFactura, 'tipo': '91'}
+        }).error(function (e) {
+            alertify.error('Hubo un Error con el reporte de Notas Porfavor verifica los datos o Ponte en contacto con el area de soporte');
+        }).success(function (data) {
+            //si todo sale bien en la consulta
+
+            var dataparse = JSON.parse(data);
+            //console.log(itt['xml']);
+            if (dataparse['xml'] == 'fallo') {
+
+                alertify.error('la nota no se puede reportar porque aun no se reporta la factura a la que esta asociada');
+
+            } else if (dataparse[0]['errors'])
+            {
+                alertify.error(dataparse['0']['errors'][0]['error']);
+            } else
+            {
+                alertify.success('Nota Reportada ');
+                //console.log(dataparse);
+            }
+
+
+
+
+
+
+        });
+        setTimeout(function () {
+            location.reload();
+        }, 5000);
+        //console.log('hola');
+
+    }
+
+    function verErrores(idFactura) {
+
+        ParaError = "{{ path('app_factura_error_dian')}}";
+
+
+        $('#diverrores').load(ParaError, {idFactura: idFactura});
+
+        $("#erroresDian").dialog({ width: 800, height: 500});
+
+    }
+
+     function mostrarNotasDebito(factura_id)
+    {
+        Paratarifas = '{{ path('app_nota_credito_index')}}';
+        jQuery('#divnotasdebito').load(Paratarifas,{factura_id: factura_id });
+        $("#notasdebito").dialog({ width: 800, height: 500});
+
+    }
+    
+    function mostrarNotasCredito(factura_id)
+    {
+        Paratarifas = '{{ path('app_nota_credito_index')}}';
+        jQuery('#divnotascredito').load(Paratarifas,{factura_id: factura_id });
+        $("#notascredito").dialog({ width: 800, height: 500});
+
+    }
+</script>   
+{% endblock %}
