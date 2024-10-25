@@ -325,7 +325,7 @@ class ReporteEnvioController extends AbstractController
             $i++;
 
             $sheet->setCellValue("A$cell", ($i));
-            $sheet->setCellValue("B$cell", $envio->getFecha()->format('d/m/Y'));
+            $sheet->setCellValue("B$cell", $envio->getFecha()->format('d-M-y'));
             $sheet->setCellValue("C$cell", $envio->getNumero());
             $items = $entityManager->getRepository(EnviosNacionalesUnidades::class)->createQueryBuilder('fi')
             ->andWhere('fi.envioNacional = :val')
