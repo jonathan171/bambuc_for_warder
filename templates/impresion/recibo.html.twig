@@ -1,364 +1,191 @@
 <style>
-	table,
-	th,
-	td {
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+    }
 
-		border-collapse: collapse;
-	}
+    th, td {
+        padding: 8px;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    h2 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .section-title {
+        text-align: center;
+        font-weight: bold;
+        background-color: #e0e0e0;
+        border-bottom: 2px solid #000;
+    }
+
+    .info-title {
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .value {
+        text-align: right;
+    }
+
+    .highlight {
+        background-color: #f9f9f9;
+    }
+
+    .total {
+        font-weight: bold;
+        font-size: 16px;
+        color: #333;
+        text-align: right;
+    }
+
 </style>
+
 <table>
-	<tr>
-		<td style=" text-align:center; width:45%"><img src="{{ asset('assets/images/facturas/logo.jpg')}}" alt="user" width="90"></td>
-		<td style="width:55%" colspan="3">
-			<dl>
-				<dt>
-					<strong style="font-size: 15px;">Recibo
-					</strong>
-					{{factura.facturaResolucion.prefijo}}-{{factura.numeroFactura}}
-				</dt>
-				<dt>
-					Recibo de Caja
-				</dt>
-				
-
-			</dl>
-		</td>
-
-	</tr>
-	<tr>
-		<td>
-			<dl>
-				<dt style="font-size: 8;">
-					{{empresa.nombre}}
-					{{empresa.tipoDoc}}
-					{{empresa.numero}}
-				</dt>
-				<dt style="font-size: 8;">
-					No somos gran Contribuyente
-				</dt>
-				<dt style="font-size: 8;">
-					{{empresa.iva}}
-				</dt>
-				<dt style="font-size: 8;">
-					No somos Autorretenedor del Impuesto sobre la Renta y Complementarios
-				</dt>
-			</dl>
-		</td>
-		<td>
-			<dl>
-				<dt>
-					Tipo de Operación
-				</dt>
-				<dt>
-					Fecha de Generación
-				</dt>
-				
-				<dt>
-					Forma de Pago
-				</dt>
-				<dt>
-					Medio de Pago
-				</dt>
-				<dt>
-					Moneda
-				</dt>
-			</dl>
-		</td>
-		<td>
-			<dl>
-				<dt style="text-align: right;">
-					Estandar
-				</dt>
-				<dt style="text-align: right;">
-					{{factura.fecha|date('d/m/Y')}}
-				</dt>
-				
-				<dt style="text-align: right;">
+    <tr>
+        <td style="width: 45%; text-align:center;">
+            <img src="{{ asset('assets/images/facturas/logo.jpg') }}" alt="logo" width="90">
+        </td>
+        <td style="width: 55%;" colspan="3">
+            <dl>
+			    <dt>Recibo de Caja</dt>
+                <dt><strong style="font-size: 35px;"> {{ factura.facturaResolucion.prefijo }}-{{ factura.numeroFactura }} </strong></dt>
+               
+            </dl>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <dl>
+                <dt>Tipo de Operación : Estandar</dt>
+                <dt>Fecha de Generación : {{ factura.fecha | date('d/m/Y') }}</dt>
+            </dl>
+        </td>
+        <td colspan="3">
+            <dl>
+                <dt>Forma de Pago: <b style="text-align: right;">
 					{% if factura.formaDePago =='DEBITO' %}
 						Contado
 					{%  else %}
 						Crédito
 					{% endif %}
 
-				</dt>
-				<dt style="text-align: right;">
-					{{factura.condDePago.descripcion}}
-				</dt>
-				<dt style="text-align: right;">
-					COP
-				</dt>
-			</dl>
-		</td>
-		<td style=" width:20%">
-			{% if code %}
-
-				<img src="{{ asset(code)}}" alt="qr" width="250">
-			{% endif %}
-
-		</td>
-
-	</tr>
+				</b></dt>
+                <dt>Medio de Pago : <b> {{factura.condDePago.descripcion}}</b></dt>
+                <dt>Moneda :       <b>COP</b></dt>
+            </dl>
+        </td>
+    </tr>
 </table>
+
 <table>
-	<tr>
-		<td colspan="2" style="text-align: center; border-bottom: 2px solid black; border-right: 2px solid black;">
-			<h2>DATOS DEL EMISOR</h2>
-		</td>
-		<td colspan="2" style="text-align: center; border-bottom: 2px solid black; ">
-			<h2>DATOS DEL CLIENTE</h2>
-		</td>
-	</tr>
-	<tr>
-		<td style="width:20%;">Razón Social</td>
-		<td style="width:30%; border-right: 2px solid black;">{{empresa.nombre}}</td>
-		<td style="width:20%; ">
-			Razón Social</td>
-		<td style="width:30%;">{{factura.cliente.razonSocial}}</td>
-	</tr>
-	<tr>
-		<td style="width:20%;">{{empresa.tipoDoc}}</td>
-		<td style="width:30%; border-right: 2px solid black;">{{empresa.numero}}</td>
-		<td style="width:20%;">
-			{{factura.cliente.tipoDocumento}}</td>
-		<td style="width:30%;">{{factura.cliente.nit}}</td>
-	</tr>
-	
-	<tr>
-		<td style="width:20%;">Email</td>
-		<td style="width:30%; border-right: 2px solid black;">{{empresa.email}}</td>
-		<td style="width:20%;">
-			Email</td>
-		<td style="width:30%;">{{factura.cliente.correo}}</td>
-	</tr>
-	<tr>
-		<td style="width:20%;">Teléfono</td>
-		<td style="width:30%; border-right: 2px solid black;">{{empresa.telefono}}</td>
-		<td style="width:20%;">
-			Teléfono</td>
-		<td style="width:30%;">{{factura.cliente.telefono}}</td>
-	</tr>
-	<tr>
-		<td style="width:20%;">Dirección</td>
-		<td style="width:30%; border-right: 2px solid black;">{{empresa.direccion}}</td>
-		<td style="width:20%;">
-			Dirección</td>
-		<td style="width:30%;">{{factura.cliente.direccion}}</td>
-	</tr>
-	<tr>
-		<td style="width:20%;">Ciudad, Depart.</td>
-		<td style="width:30%; border-right: 2px solid black;">{{empresa.ciudad}}</td>
-		<td style="width:20%;">
-			Ciudad, Depart.</td>
-		<td style="width:30%;">{{factura.cliente.municipio.nombre}},{{factura.cliente.municipio.departamento.nombre}}(CO)</td>
-	</tr>
+    <tr>
+        <td colspan="2" class="section-title">RECIBE</td>
+        <td colspan="2" class="section-title">PAGA</td>
+    </tr>
+    <tr>
+        <td class="info-title">Razón Social</td>
+        <td class="highlight">{{ empresa.nombre }}</td>
+        <td class="info-title">Razón Social</td>
+        <td>{{ factura.cliente.razonSocial }}</td>
+    </tr>
+    <tr>
+        <td class="info-title">{{ empresa.tipoDoc }}</td>
+        <td class="highlight">{{ empresa.numero }}</td>
+        <td class="info-title">{{ factura.cliente.tipoDocumento }}</td>
+        <td>{{ factura.cliente.nit }}</td>
+    </tr>
+    <tr>
+        <td class="info-title">Email</td>
+        <td class="highlight">{{ empresa.email }}</td>
+        <td class="info-title">Email</td>
+        <td>{{ factura.cliente.correo }}</td>
+    </tr>
+    <tr>
+        <td class="info-title">Teléfono</td>
+        <td class="highlight">{{ empresa.telefono }}</td>
+        <td class="info-title">Teléfono</td>
+        <td>{{ factura.cliente.telefono }}</td>
+    </tr>
+    <tr>
+        <td class="info-title">Dirección</td>
+        <td class="highlight">{{ empresa.direccion }}</td>
+        <td class="info-title">Dirección</td>
+        <td>{{ factura.cliente.direccion }}</td>
+    </tr>
+    <tr>
+        <td class="info-title">Ciudad, Depart.</td>
+        <td class="highlight">{{ empresa.ciudad }}</td>
+        <td class="info-title">Ciudad, Depart.</td>
+        <td>{{ factura.cliente.municipio.nombre }}, {{ factura.cliente.municipio.departamento.nombre }} (CO)</td>
+    </tr>
 </table>
+
 <br>
-<br>
+
 <table>
-	<tr>
-		<td style="width:4%; border-top: 2px solid gra; border-bottom: 2px solid gray; ">
-			<b>N°
-			</b>
-		</td>
-		<td style="width:11%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
-			<b>REF
-			</b>
-		</td>
-		<td style="width:29%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
-			<b>DESCRIPCIÓN
-			</b>
-		</td>
-		<td style="width:7%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
-			<b>CANT
-			</b>
-		</td>
-		<td style="width:5%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
-			<b>U/M
-			</b>
-		</td>
-		<td style="width:12%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
-			<b>PRECIO
-			</b>
-		</td>
-		<td style="width:5%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
-			<b>IMP
-			</b>
-		</td>
-		<td style="width:12%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
-			<b>SUBTOTAL
-			</b>
-		</td>
-		<td style="width:15%; border-top: 2px solid gray; border-bottom: 2px solid gray;">
-			<b>TOTAL ITEM
-			</b>
-		</td>
-	</tr>
-	{% set i = 0 %}
-	{% for item in items %}
-		{% set i = i + 1 %}
-
-		<tr>
-			<td>
-				{{i}}
-			</td>
-			<td>
-				{{item.codigo}}
-			</td>
-			<td>
-				{{item.descripcion}}
-			</td>
-			<td>
-				{{item.cantidad}}
-			</td>
-			<td>
-				EA
-			</td>
-			<td>
-				{{item.valorUnitario}}
-			</td>
-			<td>
-				{{item.iva}}
-			</td>
-			<td>
-				{{item.subtotal}}
-			</td>
-			<td>
-				{{item.total}}
-			</td>
-
-		</tr>
-
-
-	{% endfor %}
-	<tr>
-		<td style="border-top: 2px solid grey;">
-			{{i}}
-		</td>
-		<td style="border-top: 2px solid grey;"></td>
-		<td style="border-top: 2px solid grey;"></td>
-		<td style="border-top: 2px solid grey;"></td>
-		<td style="border-top: 2px solid grey;"></td>
-		<td colspan="2" style="border-top: 2px solid grey;"></td>
-
-		<td colspan="2" style="border-top: 2px solid grey;"></td>
-
-
-	</tr>
-	<tr>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td colspan="2">
-			Subtotal
-		</td>
-
-		<td colspan="2">
-			{{factura.subtotal|number_format(2, '.', ',')}}
-		</td>
-	</tr>
-	{% if factura.reteFuente > 0 or factura.totalReteFuente > 0 %}
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td colspan="2">
-				RETE FUENTE
-			</td>
-
-			<td colspan="2">
-				-${{(factura.totalReteFuente + factura.totalReteFuenteG)|number_format(2, '.', ',')}}
-			</td>
-
-
-		</tr>
-
-	{% endif %}
-	{% if factura.reteIca > 0  %}
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td colspan="2">
-				RETE ICA
-			</td>
-
-			<td colspan="2">
-				-${{factura.totalReteIca|number_format(2, '.', ',') }}
-			</td>
-
-
-		</tr>
-
-	{% endif %}
-	{% if factura.reteIva > 0  %}
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td colspan="2">
-				RETE IVA
-			</td>
-
-			<td colspan="2">
-				-${{factura.totalReteIva|number_format(2, '.', ',') }}
-			</td>
-
-
-		</tr>
-
-	{% endif %}
-	{% if factura.descuento > 0  %}
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td colspan="2">
-				DESCUENTO
-			</td>
-
-			<td colspan="2">
-				-${{factura.descuento|number_format(2, '.', ',')}}
-			</td>
-
-
-		</tr>
-
-	{% endif %}
-	<tr>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td colspan="2" style="border-top: 2px solid black;">
-			Total a Pagar
-		</td>
-
-		<td colspan="2" style="border-top: 2px solid black;">
-			${{(factura.total -(factura.totalReteIva + factura.totalReteIca  + factura.totalReteFuenteG + factura.descuento))|number_format(2, '.', ',') }}
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2">Observaciones:
-		</td>
-
-		<td colspan="2">{{factura.observaciones}}</td>
-		<td></td>
-		<td></td>
-		<td colspan="2"></td>
-
-		<td colspan="2"></td>
-	</tr>
+    <tr>
+        <th style="width:4%">N°</th>
+        <th style="width:11%">REF</th>
+        <th style="width:29%">CONCEPTO</th>
+        <th style="width:7%">CANT</th>
+        <th style="width:5%">U/M</th>
+        <th style="width:12%">PRECIO</th>
+        <th style="width:5%">IMP</th>
+        <th style="width:12%">SUBTOTAL</th>
+        <th style="width:15%">TOTAL ITEM</th>
+    </tr>
+    {% set i = 0 %}
+    {% for item in items %}
+    {% set i = i + 1 %}
+    <tr>
+        <td>{{ i }}</td>
+        <td>{{ item.codigo }}</td>
+        <td>{{ item.descripcion }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>EA</td>
+        <td class="value">{{ item.valorUnitario }}</td>
+        <td class="value">{{ item.iva }}</td>
+        <td class="value">{{ item.subtotal }}</td>
+        <td class="value">{{ item.total }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="7" class="total">Subtotal</td>
+        <td colspan="2" class="total">{{ factura.subtotal | number_format(2, '.', ',') }}</td>
+    </tr>
+    {% if factura.reteFuente > 0 %}
+    <tr>
+        <td colspan="7" class="total">RETE FUENTE</td>
+        <td colspan="2" class="total">-{{ (factura.totalReteFuente + factura.totalReteFuenteG) | number_format(2, '.', ',') }}</td>
+    </tr>
+    {% endif %}
+    {% if factura.descuento > 0 %}
+    <tr>
+        <td colspan="7" class="total">DESCUENTO</td>
+        <td colspan="2" class="total">-{{ factura.descuento | number_format(2, '.', ',') }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+        <td colspan="7" class="total" style="border-top: 2px solid #000;">Total a Pagar</td>
+        <td colspan="2" class="total" style="border-top: 2px solid #000;">
+            {{ (factura.total - (factura.totalReteIva + factura.totalReteIca + factura.totalReteFuenteG + factura.descuento)) | number_format(2, '.', ',') }}
+        </td>
+    </tr>
 </table>
 
-
+<table>
+    <tr>
+        <td colspan="2">Observaciones:</td>
+        <td colspan="2">{{ factura.observaciones }}</td>
+    </tr>
+</table>
