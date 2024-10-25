@@ -16,13 +16,8 @@ class PaisController extends AbstractController
 {
     #[Route('/', name: 'app_pais_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
-    {
-        $pais = $entityManager
-            ->getRepository(Pais::class)
-            ->findAll();
-
+    { 
         return $this->render('pais/index.html.twig', [
-            'pais' => $pais,
         ]);
     }
 
