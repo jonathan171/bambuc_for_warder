@@ -83,8 +83,12 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
         $list = [];
         foreach ($paginator as $item) {
             if ($item->getFacturaItems()) {
-
-                $actions = '<a class="btn btn-warning" title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" href="/impresion/impresion_factura?id=' . $item->getFacturaItems()->getFacturaClientes()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" ></i></a>';
+                if($item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getId()=='10'||$item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getId()=='11'){
+                    $actions = '<a class="btn btn-secondary" title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" href="/impresion/impresion_factura?id=' . $item->getFacturaItems()->getFacturaClientes()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" ></i></a>';
+                }else{
+                    $actions = '<a class="btn btn-warning" title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" href="/impresion/impresion_factura?id=' . $item->getFacturaItems()->getFacturaClientes()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" ></i></a>';
+                }
+                
             } else {
                 $actions = '<a  class="btn waves-effect waves-light btn-warning" href="/envios_nacionales/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
                 if ($usuario->getId() == 8) {
