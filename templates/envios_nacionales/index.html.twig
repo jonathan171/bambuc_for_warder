@@ -58,7 +58,7 @@
 <div class="col-lg-2">
   <a class="justify-content-center w-100 btn btn-success d-flex align-items-center" href="{{ path('app_envios_nacionales_new') }}">Nueva Remision</a>
 </div>
-<div id="verEnvio" title="Envio" style="display:none;width:800px;height:500px;" >
+<div id="verEnvio" title="Actualizar Guia" style="display:none;width:800px;height:500px;" >
 
     <div class="input-group">
     </div>
@@ -154,14 +154,14 @@
             });
     
     });
-    function verEnvio(idEnvio) {
+    function editarGuia(idEnvio) {
 
-        ParaEnvio = '/envios_nacionales/'+idEnvio+'/show';
+        ParaEnvio = '/envios_nacionales/guia';
 
 
-        $('#diverEnvio').load(ParaEnvio, {});
+        $('#diverEnvio').load(ParaEnvio, {id:idEnvio});
 
-        $("#verEnvio").dialog({ width: 800, height: 500});
+        $("#verEnvio").dialog({ width: 400, height:250});
 
     }
     function ocultarEnvio(idEnvio) {

@@ -1,0 +1,43 @@
+
+
+<div class="card-body">
+
+    <div class="form-group mb-3 row pb-3">
+            <label  class="col-sm-3 text-end control-label col-form-label">N° Guia</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="numero_guia_edit">
+            </div> 
+    </div>
+    <input type="text" id="envio" style="display:none;" value="{{envio_id}}">
+    <div class="p-3">
+            <div class="form-group text-end">
+            <button  type="button" class="btn btn-info rounded-pill px-4 waves-effect waves-light" onclick="validarGuia()">{{ button_label|default('Guardar') }}</button>
+            
+            </div>
+    </div>
+
+</div>
+<script>
+    function validarGuia(){
+        if ($("#numero_guia_edit").val()==""||$("#numero_guia_edit").val()==null){
+            alert('for favor ingrese un número de guía valido');
+        }else{
+            $.ajax({
+                url : '{{ path('app_envios_nacionales_save_guia')}}',
+                data : { id :$("#envio").val(),numero_guia: $("#numero_guia_edit").val()},
+                type : 'POST',
+                dataType : 'json',
+                success : function(json) {
+
+                alertify.success('Guia actualizada');
+                  $("#verEnvio").dialog('close');
+                   $("#data_table_envios").DataTable().ajax.reload(null,false);  
+                    },
+            error : function(xhr, status) {
+                alert('Disculpe, existió un problema');
+            }
+          });
+        }
+    }
+      
+</script>

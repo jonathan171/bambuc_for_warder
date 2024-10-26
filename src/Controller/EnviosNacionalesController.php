@@ -445,4 +445,30 @@ class EnviosNacionalesController extends AbstractController
             'trazabilidades' => $trazabilidaEnvio
         ]);
     }
+
+    #[Route('/guia', name: 'app_envios_nacionales_guia', methods: ['GET', 'POST'])]
+    public function guia(Request $request): Response
+    {
+        return $this->renderForm('envios_nacionales/guia.html.twig', [
+            'envio_id'=> $request->request->get('id')
+        ]);
+    }
+
+    #[Route('/save_guia', name: 'app_envios_nacionales_save_guia', methods: ['GET', 'POST'])]
+    public function executeSaveGuia(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ) {
+
+        $envioNacional= $entityManager->getRepository(EnviosNacionales::class)->find($request->request->get('id'));
+        $envioNacional->setNumeroGuia($request->request->get('numero_guia'));
+        $entityManager->persist($envioNacional);
+        $entityManager->flush();
+
+
+        $responseData = array(
+            "results" => true,
+        );
+        return $this->json($responseData);
+    }
 }

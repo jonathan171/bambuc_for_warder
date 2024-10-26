@@ -119,7 +119,9 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
             }
 
             $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_remision?id=' . $item->getId() . '" title="Imprimir" target="_blank"><span class="fas fa-print"></span></a>';
+            $actions .= '<a  class="btn waves-effect waves-light btn-success" onClick="(editarGuia('.$item->getId().'))" title="editar guia" target="_blank"><span class="fa fa-podcast"></span></a>';
             $actions .= '&nbsp;<input name="envId[]" id="checkBoxImprimir" value="' . $item->getId() . '" type="checkbox">';
+           
             /* $actions.='<a class="icon-select"  style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut ="ocultarEnvio()" title="Ver Envio">
                          <i class="fa fa-eye text-success" ></i>
                      </a>';*/
