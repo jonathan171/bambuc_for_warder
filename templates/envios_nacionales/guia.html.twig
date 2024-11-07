@@ -1,43 +1,74 @@
 
 
 <div class="card-body">
-
+    <form id="formGuia">
     <div class="form-group mb-3 row pb-3">
-            <label  class="col-sm-3 text-end control-label col-form-label">N° Guia</label>
+        <label class="col-sm-3 text-end control-label col-form-label">N° Guia General</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="numero_guia_general" name="numero_guia_general" value="{{ envio.numero }}">
+        </div>
+    </div>
+    {% for unidad in unidades %}
+        <div class="form-group mb-3 row pb-3">
+            <label class="col-sm-3 text-end control-label col-form-label">N° Guia {{ loop.index }}</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="numero_guia_edit">
-            </div> 
-    </div>
-    <input type="text" id="envio" style="display:none;" value="{{envio_id}}">
-    <div class="p-3">
-            <div class="form-group text-end">
-            <button  type="button" class="btn btn-info rounded-pill px-4 waves-effect waves-light" onclick="validarGuia()">{{ button_label|default('Guardar') }}</button>
-            
+                <input type="text" class="form-control" id="numero_guia_{{ unidad.id }}" name="numero_guia_{{ unidad.id }}" value="{{ unidad.numeroGuia }}">
             </div>
-    </div>
+        </div>
+    {% endfor %}
 
+    <input type="hidden" id="envio_id" name="envio_id" value="{{ envio.id }}">
+    <div class="p-3">
+        <div class="form-group text-end">
+            <button type="button" class="btn btn-info rounded-pill px-4 waves-effect waves-light" id="guardarBtn">{{ button_label|default('Guardar') }}</button>
+        </div>
+    </div>
+</form>
 </div>
 <script>
-    function validarGuia(){
-        if ($("#numero_guia_edit").val()==""||$("#numero_guia_edit").val()==null){
-            alert('for favor ingrese un número de guía valido');
-        }else{
-            $.ajax({
-                url : '{{ path('app_envios_nacionales_save_guia')}}',
-                data : { id :$("#envio").val(),numero_guia: $("#numero_guia_edit").val()},
-                type : 'POST',
-                dataType : 'json',
-                success : function(json) {
+    $(document).ready(function() {
+    $('#guardarBtn').click(function() {
+        // Obtener el ID de envío
+        var envioId = $('#envio_id').val();
+        // Obtener el número de guía general
+        var numeroGuiaGeneral = $('#numero_guia_general').val();
 
-                alertify.success('Guia actualizada');
-                  $("#verEnvio").dialog('close');
-                   $("#data_table_envios").DataTable().ajax.reload(null,false);  
-                    },
-            error : function(xhr, status) {
-                alert('Disculpe, existió un problema');
+        // Obtener todos los inputs de las guías y construir el objeto guías
+        var guias = {};
+        $('[id^="numero_guia_"]').each(function() {
+            var id = $(this).attr('id').replace('numero_guia_', '');
+            if (id !== 'general') { // Excluir la guía general
+                guias[id] = $(this).val();
             }
-          });
-        }
-    }
-      
+        });
+
+        // Construir el objeto de datos
+        var datos = {
+            envio_id: envioId,
+            numero_guia_general: numeroGuiaGeneral,
+            guias: guias
+        };
+
+        // Enviar los datos al backend
+        $.ajax({
+            url: '{{ path('app_envios_nacionales_save_guia')}}',
+            type: 'POST',
+            contentType: 'application/json',
+            headers: {
+                'X-CSRF-Token': '{{ csrf_token("token_name") }}' // Asegúrate de incluir el token CSRF
+            },
+            data: JSON.stringify(datos),
+            success: function(response) {
+                $("#verEnvio").dialog('close');
+                $("#data_table_envios").DataTable().ajax.reload(null,false);  
+
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                alert('Ocurrió un error en el servidor');
+            }
+        });
+    });
+});
+  
 </script>

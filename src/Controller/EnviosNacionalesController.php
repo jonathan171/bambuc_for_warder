@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -447,10 +448,19 @@ class EnviosNacionalesController extends AbstractController
     }
 
     #[Route('/guia', name: 'app_envios_nacionales_guia', methods: ['GET', 'POST'])]
-    public function guia(Request $request): Response
-    {
+    public function guia(Request $request,EntityManagerInterface $entityManager): Response
+    {   
+        $envioNacional= $entityManager->getRepository(EnviosNacionales::class)->find($request->request->get('id'));
+
+        $unidades = $entityManager->getRepository(EnviosNacionalesUnidades::class)->createQueryBuilder('eu')
+            ->andWhere('eu.envioNacional = :val')
+            ->setParameter('val', $envioNacional->getId())
+            ->getQuery()->getResult();
+        
+
         return $this->renderForm('envios_nacionales/guia.html.twig', [
-            'envio_id'=> $request->request->get('id')
+            'envio'=>$envioNacional,
+            'unidades' => $unidades
         ]);
     }
 
@@ -459,16 +469,45 @@ class EnviosNacionalesController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ) {
+       
 
-        $envioNacional= $entityManager->getRepository(EnviosNacionales::class)->find($request->request->get('id'));
-        $envioNacional->setNumeroGuia($request->request->get('numero_guia'));
-        $entityManager->persist($envioNacional);
+
+       // Decodificar la solicitud JSON
+        $data = json_decode($request->getContent(), true);
+
+        // Validar si la data fue recibida correctamente
+        if (!$data || !isset($data['envio_id']) || !isset($data['numero_guia_general']) || !isset($data['guias'])) {
+            return new JsonResponse(['success' => false, 'message' => 'Datos incompletos'], 400);
+        }
+
+        // Obtener los datos
+        $envioId = $data['envio_id'];
+        $numeroGuiaGeneral = $data['numero_guia_general'];
+        $guias = $data['guias']; // Este es un array asociativo con las guías de las unidades
+
+        // Lógica de persistencia (ejemplo)
+        // Suponiendo que tienes un servicio o repositorio para manejar la entidad Envio
+       
+        $envio = $entityManager->getRepository(EnviosNacionales::class)->find($envioId);
+
+        if (!$envio) {
+            return new JsonResponse(['success' => false, 'message' => 'Envío no encontrado'], 404);
+        }
+
+        // Guardar la guía general
+        $envio->setNumeroGuia($numeroGuiaGeneral);
+
+        // Guardar los números de guías de las unidades
+        foreach ($guias as $unidadId => $numeroGuia) {
+            $unidad = $entityManager->getRepository(EnviosNacionalesUnidades::class)->find($unidadId);
+            if ($unidad) {
+                $unidad->setNumeroGuia($numeroGuia);
+            }
+        }
+
+        // Guardar los cambios en la base de datos
         $entityManager->flush();
 
-
-        $responseData = array(
-            "results" => true,
-        );
-        return $this->json($responseData);
+        return new JsonResponse(['success' => true, 'message' => 'Datos guardados exitosamente']);
     }
 }
