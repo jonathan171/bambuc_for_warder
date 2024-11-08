@@ -2,8 +2,8 @@
 
 <div class="card-body">
     <form id="formGuia">
-    <div class="col-sm-12">
-        <div class="col-sm-6 col-lg-6">
+    <div class="row">
+        <div class="col-sm-12 col-lg-6">
             <div class="form-group mb-3 row pb-3">
                 <label class="col-sm-3 text-end control-label col-form-label">N° Guia General</label>
                 <div class="col-sm-9">
@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-6">
+        <div class="col-sm-12 col-lg-6">
         {% for unidad in unidades %}
             <div class="form-group mb-3 row pb-3">
                 <label class="col-sm-3 text-end control-label col-form-label">N° Guia {{ loop.index }}</label>
