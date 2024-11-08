@@ -2,25 +2,30 @@
 
 <div class="card-body">
     <form id="formGuia">
-    <div class="form-group mb-3 row pb-3">
-        <label class="col-sm-3 text-end control-label col-form-label">N° Guia General</label>
-        <div class="col-sm-9">
-            <input type="text" class="form-control" id="numero_guia_general" name="numero_guia_general" value="{{ envio.numero }}">
-        </div>
-    </div>
-    {% for unidad in unidades %}
-        <div class="form-group mb-3 row pb-3">
-            <label class="col-sm-3 text-end control-label col-form-label">N° Guia {{ loop.index }}</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="numero_guia_{{ unidad.id }}" name="numero_guia_{{ unidad.id }}" value="{{ unidad.numeroGuia }}">
+    <div class="col-sm-12">
+        <div class="col-sm-6 col-lg-6">
+            <div class="form-group mb-3 row pb-3">
+                <label class="col-sm-3 text-end control-label col-form-label">N° Guia General</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="numero_guia_general" name="numero_guia_general" value="{{ envio.numero }}">
+                </div>
             </div>
         </div>
-    {% endfor %}
-
-    <input type="hidden" id="envio_id" name="envio_id" value="{{ envio.id }}">
-    <div class="p-3">
-        <div class="form-group text-end">
-            <button type="button" class="btn btn-info rounded-pill px-4 waves-effect waves-light" id="guardarBtn">{{ button_label|default('Guardar') }}</button>
+        <div class="col-sm-6 col-lg-6">
+        {% for unidad in unidades %}
+            <div class="form-group mb-3 row pb-3">
+                <label class="col-sm-3 text-end control-label col-form-label">N° Guia {{ loop.index }}</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="numero_guia_{{ unidad.id }}" name="numero_guia_{{ unidad.id }}" value="{{ unidad.numeroGuia }}">
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+        <input type="hidden" id="envio_id" name="envio_id" value="{{ envio.id }}">
+        <div class="p-3">
+            <div class="form-group text-end">
+                <button type="button" class="btn btn-info rounded-pill px-4 waves-effect waves-light" id="guardarBtn">{{ button_label|default('Guardar') }}</button>
+            </div>
         </div>
     </div>
 </form>

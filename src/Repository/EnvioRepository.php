@@ -173,4 +173,44 @@ class EnvioRepository extends ServiceEntityRepository
 
         return $envios;
     }
+
+    public function getEnviosPorPaisOrigen($fechaInicio = null, $fechaFin = null): array
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('p.nombre as pais', 'COUNT(e.id) as total')
+            ->join('e.paisOrigen', 'p')
+            ->groupBy('p.id');
+        
+        if ($fechaInicio) {
+            $qb->andWhere('e.fechaEnvio >= :fechaInicio')
+            ->setParameter('fechaInicio', $fechaInicio);
+        }
+        
+        if ($fechaFin) {
+            $qb->andWhere('e.fechaEnvio <= :fechaFin')
+            ->setParameter('fechaFin', $fechaFin);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+    
+    public function getEnviosPorPaisDestino($fechaInicio = null, $fechaFin = null): array
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('p.nombre as pais', 'COUNT(e.id) as total')
+            ->join('e.paisDestino', 'p')
+            ->groupBy('p.id');
+        
+        if ($fechaInicio) {
+            $qb->andWhere('e.fechaEnvio >= :fechaInicio')
+            ->setParameter('fechaInicio', $fechaInicio);
+        }
+        
+        if ($fechaFin) {
+            $qb->andWhere('e.fechaEnvio <= :fechaFin')
+            ->setParameter('fechaFin', $fechaFin);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }
