@@ -510,4 +510,19 @@ class EnviosNacionalesController extends AbstractController
 
         return new JsonResponse(['success' => true, 'message' => 'Datos guardados exitosamente']);
     }
+
+    #[Route('/buscar_destinatario', name: 'app_envios_nacionales_buscar_destinatario', methods: ['GET', 'POST'])]
+    public function buscarDestinatario(Request $request, EntityManagerInterface $em): JsonResponse {
+        $query = $request->query->get('q');
+        $resultados = $em->getRepository(EnviosNacionales::class)->createQueryBuilder('e')
+            ->select('DISTINCT e.destinatario, e.direccionDestino, e.telefonoDestinatario, m.id as municipio')
+            ->leftJoin('e.municipioDestino', 'm')
+            ->where('e.destinatario LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+
+        return $this->json($resultados);
+    }
 }
