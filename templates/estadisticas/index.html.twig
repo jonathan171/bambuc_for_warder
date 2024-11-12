@@ -69,11 +69,21 @@
 
 <script>
  $(document).ready(function() {
+        const fechaFin = moment();
+        const fechaInicio = moment().subtract(3, 'months');
         // Configurar el daterangepicker
         $('#fechaRango').daterangepicker({
             opens: 'left',
             locale: {
                 format: 'YYYY-MM-DD' // Formato de fecha que usaremos
+            },
+            startDate: fechaInicio,
+            endDate: fechaFin,
+            ranges: {
+                'Últimos 3 meses': [fechaInicio, fechaFin],
+                'Últimos 6 meses': [moment().subtract(6, 'months'), fechaFin],
+                'Último año': [moment().subtract(1, 'year'), fechaFin],
+                'Este año': [moment().startOf('year'), fechaFin]
             }
         }, function(start, end) {
             // Función que se llama cuando el usuario selecciona un rango de fechas
@@ -125,6 +135,14 @@
             opens: 'left',
             locale: {
                 format: 'YYYY-MM-DD' // Formato de fecha que usaremos
+            },
+            startDate: fechaInicio,
+            endDate: fechaFin,
+            ranges: {
+                'Últimos 3 meses': [fechaInicio, fechaFin],
+                'Últimos 6 meses': [moment().subtract(6, 'months'), fechaFin],
+                'Último año': [moment().subtract(1, 'year'), fechaFin],
+                'Este año': [moment().startOf('year'), fechaFin]
             }
         }, function(start, end) {
             // Función que se llama cuando el usuario selecciona un rango de fechas
@@ -175,6 +193,14 @@
             opens: 'left',
             locale: {
                 format: 'YYYY-MM-DD' // Formato de fecha que usaremos
+            },
+            startDate: fechaInicio,
+            endDate: fechaFin,
+            ranges: {
+                'Últimos 3 meses': [fechaInicio, fechaFin],
+                'Últimos 6 meses': [moment().subtract(6, 'months'), fechaFin],
+                'Último año': [moment().subtract(1, 'year'), fechaFin],
+                'Este año': [moment().startOf('year'), fechaFin]
             }
         }, function(start, end) {
             const fechaInicio = start.format('YYYY-MM-DD');
@@ -200,9 +226,10 @@
             });
         }
         // Cargar gráfico sin filtros al cargar la página
-        cargarGraficoPesoPorDia();
-        cargarGraficoOrigen();
-        cargarGraficoDestino();
+        cargarGraficoOrigen(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
+        cargarGraficoDestino(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
+        //cargarGraficoEmpresa(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
+        cargarGraficoPesoPorDia(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
 
     });
 </script>
