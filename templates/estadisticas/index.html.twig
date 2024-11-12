@@ -170,13 +170,29 @@
                                 text: 'Países'
                             }
                         },
-                        yAxis: {
-                            min: 0,
-                            tickInterval: 20,
-                            title: {
-                                text: 'Cantidad de envíos'
+                        yAxis: [
+                            { // Eje Y principal (para valores bajos)
+                                min: 0,
+                                max: 50, // Limita el rango principal hasta 50
+                                tickInterval: 10, // Intervalos detallados hasta 50
+                                title: { text: 'Cantidad de envíos (valores bajos)' },
+                                labels: {
+                                    style: { color: Highcharts.getOptions().colors[0] }
+                                },
+                                opposite: false // Colocar este eje en el lado izquierdo
+                            },
+                            { // Eje Y secundario (para valores altos)
+                                min: 50,
+                                tickInterval: 100, // Intervalos más grandes para valores altos
+                                title: { text: 'Cantidad de envíos (valores altos)' },
+                                labels: {
+                                    style: { color: Highcharts.getOptions().colors[1] }
+                                },
+                                opposite: true, // Colocar este eje en el lado derecho
+                                linkedTo: 0, // Vincular al eje principal
+                                gridLineWidth: 0 // Opcional: eliminar líneas de cuadrícula duplicadas
                             }
-                        },
+                        ],
                         series: [{
                             name: 'Envíos',
                             data: data.data,
