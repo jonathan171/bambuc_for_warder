@@ -213,4 +213,24 @@ class EnvioRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function getPesoTotalPorDia($fechaInicio = null, $fechaFin = null): array
+    {
+        $qb = $this->createQueryBuilder('e')
+        ->select("SUBSTRING(e.fechaEnvio, 1, 10) as fecha", 'SUM(e.pesoReal) as total_peso')
+        ->groupBy('fecha')
+        ->orderBy('fecha', 'ASC');
+
+        if ($fechaInicio) {
+            $qb->andWhere('e.fechaEnvio >= :fechaInicio')
+            ->setParameter('fechaInicio', $fechaInicio);
+        }
+
+        if ($fechaFin) {
+            $qb->andWhere('e.fechaEnvio <= :fechaFin')
+            ->setParameter('fechaFin', $fechaFin);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

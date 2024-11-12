@@ -49,4 +49,21 @@ class EstadisticasController extends AbstractController
         ]);
     }
 
+    #[Route('/estadisticas_peso_total_por_dia', name: 'app_estadisticas_peso_total_por_dia')]
+    public function pesoTotalPorDia(Request $request, EnvioRepository $envioRepository): JsonResponse
+    {
+        $fechaInicio = $request->query->get('fechaInicio');
+        $fechaFin = $request->query->get('fechaFin');
+        
+        $data = $envioRepository->getPesoTotalPorDia($fechaInicio, $fechaFin);
+
+        $fechas = array_column($data, 'fecha');
+        $totalesPeso = array_map('floatval', array_column($data, 'total_peso'));
+
+        return new JsonResponse([
+            'labels' => $fechas,
+            'data' => $totalesPeso,
+        ]);
+    }
+
 }
