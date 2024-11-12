@@ -233,4 +233,23 @@ class EnvioRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function getEnviosPorEmpresa($fechaInicio = null, $fechaFin = null): array
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('e.empresa as empresa', 'COUNT(e.id) as total')
+            ->groupBy('e.empresa');
+        
+        if ($fechaInicio) {
+            $qb->andWhere('e.fechaEnvio >= :fechaInicio')
+            ->setParameter('fechaInicio', $fechaInicio);
+        }
+        
+        if ($fechaFin) {
+            $qb->andWhere('e.fechaEnvio <= :fechaFin')
+            ->setParameter('fechaFin', $fechaFin);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

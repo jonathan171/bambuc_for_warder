@@ -66,4 +66,21 @@ class EstadisticasController extends AbstractController
         ]);
     }
 
+    #[Route('/estadisticas_envios_por_empresa', name: 'app_estadisticas_envios_por_empresa')]
+    public function enviosPorEmpresa(Request $request, EnvioRepository $envioRepository): JsonResponse
+    {
+        $fechaInicio = $request->query->get('fechaInicio');
+        $fechaFin = $request->query->get('fechaFin');
+        
+        $data = $envioRepository->getEnviosPorEmpresa($fechaInicio, $fechaFin);
+
+        $labels = array_column($data, 'empresa');
+        $totals = array_column($data, 'total');
+
+        return new JsonResponse([
+            'labels' => $labels,
+            'data' => $totals,
+        ]);
+    }
+
 }

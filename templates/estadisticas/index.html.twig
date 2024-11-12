@@ -56,6 +56,23 @@
             </div>
         </div>
     </div>
+    <div class="col-lg-6 col-md-12 d-flex align-items-stretch">
+        <div class="card w-100">
+            <div class="card-body">
+             <div class="d-flex align-items-center">
+                    <div>
+                      <h4 class="card-title">Rango de fechas:</h4>
+                    </div>
+                    <div class="ms-auto">
+                      <div class="">
+                        <input type="text" id="fechaPorEmpresa" name="fechaPorEmpresa" class="form-control"/>
+                      </div>
+                    </div>
+            </div>
+            <div id="enviosPorEmpresaChart" style="width:100%; height:400px;"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -225,10 +242,52 @@
                 }
             });
         }
+        $('#fechaPorEmpresa').daterangepicker({
+            opens: 'left',
+            locale: {
+                format: 'YYYY-MM-DD' // Formato de fecha que usaremos
+            },
+            startDate: fechaInicio,
+            endDate: fechaFin,
+            ranges: {
+                'Últimos 3 meses': [fechaInicio, fechaFin],
+                'Últimos 6 meses': [moment().subtract(6, 'months'), fechaFin],
+                'Último año': [moment().subtract(1, 'year'), fechaFin],
+                'Este año': [moment().startOf('year'), fechaFin]
+            }
+        }, function(start, end) {
+            // Función que se llama cuando el usuario selecciona un rango de fechas
+            const fechaInicio = start.format('YYYY-MM-DD');
+            const fechaFin = end.format('YYYY-MM-DD');
+            cargarGraficoEmpresa(fechaInicio, fechaFin);
+        });
+        function cargarGraficoEmpresa(fechaInicio = '', fechaFin = '') {
+            $.ajax({
+                url: '{{ path('app_estadisticas_envios_por_empresa')}}',
+                method: 'GET',
+                data: { fechaInicio: fechaInicio, fechaFin: fechaFin },
+                success: function(data) {
+                    Highcharts.chart('enviosPorEmpresaChart', {
+                        chart: { type: 'pie' },
+                        title: { text: 'Cantidad de envíos por empresa' },
+                        plotOptions: { 
+                            pie: {
+                                innerSize: '50%', 
+                                dataLabels: { enabled: true, format: '{point.name}: {point.y} envíos ({point.percentage:.1f}%)' }
+                            }
+                        },
+                        series: [{
+                            name: 'Envíos',
+                            data: data.labels.map((label, index) => ({ name: label, y: data.data[index] }))
+                        }]
+                    });
+                }
+            });
+        }
         // Cargar gráfico sin filtros al cargar la página
         cargarGraficoOrigen(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
         cargarGraficoDestino(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
-        //cargarGraficoEmpresa(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
+        cargarGraficoEmpresa(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
         cargarGraficoPesoPorDia(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
 
     });
