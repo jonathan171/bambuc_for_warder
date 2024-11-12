@@ -214,10 +214,10 @@ class EnvioRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getPesoTotalPorDia($fechaInicio = null, $fechaFin = null): array
+    public function getPesoEIngresosPorDia($fechaInicio = null, $fechaFin = null): array
     {
         $qb = $this->createQueryBuilder('e')
-        ->select("SUBSTRING(e.fechaEnvio, 1, 10) as fecha", 'SUM(e.pesoReal) as total_peso')
+        ->select("SUBSTRING(e.fechaEnvio, 1, 10) as fecha", 'SUM(e.pesoReal) as peso_total', 'SUM(e.totalACobrar) as ingresos')
         ->groupBy('fecha')
         ->orderBy('fecha', 'ASC');
 

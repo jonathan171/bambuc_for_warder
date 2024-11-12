@@ -52,7 +52,7 @@
                       </div>
                     </div>
             </div>
-            <div id="pesoTotalPorDiaChart" style="width:100%; height:400px;"></div>
+            <div id="pesoYIngresosPorDiaChart" style="width:100%; height:400px;"></div>
             </div>
         </div>
     </div>
@@ -223,25 +223,46 @@
             const fechaInicio = start.format('YYYY-MM-DD');
             const fechaFin = end.format('YYYY-MM-DD');
             
-            cargarGraficoPesoPorDia(fechaInicio, fechaFin);
+            cargarGraficoPesoYIngresosPorDia(fechaInicio, fechaFin);
         });
 
-        function cargarGraficoPesoPorDia(fechaInicio = '', fechaFin = '') {
+        function cargarGraficoPesoYIngresosPorDia(fechaInicio = '', fechaFin = '') {
             $.ajax({
                 url: '{{ path('app_estadisticas_peso_total_por_dia')}}',
                 method: 'GET',
-                data: { fechaInicio: fechaInicio, fechaFin: fechaFin },
-                success: function(data) {
-                    Highcharts.chart('pesoTotalPorDiaChart', {
-                        chart: { type: 'line' },
-                        title: { text: 'Total de peso real por día' },
-                        xAxis: { categories: data.labels, title: { text: 'Fecha' }},
-                        yAxis: { min: 0, title: { text: 'Peso Total (kg)' }},
-                        series: [{ name: 'Peso Total', data: data.data, color: 'rgba(54, 162, 235, 0.8)' }]
-                    });
-                }
+        data: { fechaInicio: fechaInicio, fechaFin: fechaFin },
+        success: function(data) {
+            Highcharts.chart('pesoYIngresosPorDiaChart', {
+                chart: { type: 'line' },
+                title: { text: 'Peso total y ingresos por día' },
+                xAxis: { categories: data.labels, title: { text: 'Fecha' }},
+                yAxis: [{ // Eje Y para Peso
+                    title: { text: 'Peso Total (kg)' },
+                    min: 0
+                }, { // Eje Y secundario para Ingresos
+                    title: { text: 'Ingresos ($)' },
+                    opposite: true,
+                    min: 0
+                }],
+                series: [{
+                    name: 'Peso Total',
+                    data: data.peso_total,
+                    color: 'rgba(54, 162, 235, 0.8)',
+                    yAxis: 0 // Asignado al primer eje Y
+                }, {
+                    name: 'Ingresos',
+                    data: data.ingresos,
+                    color: 'rgba(255, 99, 132, 0.8)',
+                    yAxis: 1 // Asignado al eje Y secundario
+                }]
             });
+        },
+        error: function(error) {
+            console.error("Error al cargar los datos de peso y ingresos por día:", error);
+            }
+        });
         }
+        
         $('#fechaPorEmpresa').daterangepicker({
             opens: 'left',
             locale: {
@@ -288,7 +309,7 @@
         cargarGraficoOrigen(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
         cargarGraficoDestino(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
         cargarGraficoEmpresa(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
-        cargarGraficoPesoPorDia(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
+        cargarGraficoPesoYIngresosPorDia(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
 
     });
 </script>
