@@ -25,43 +25,99 @@
 				<a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}">
 					<i class="  fas fa-paste"></i>
 					Nueva Factura Simple</a>
-				
+				<a class="btn waves-effect waves-light btn-orange" href="{{ path('app_recibo_caja_new') }}">
+							<i class="  fas fa-paste"></i>
+							Nuevo Recibo</a>
 			{% endif %}
 			<a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}">
 				<i class=" fas fa-handshake"></i>
 				Clientes</a>
 		</div>
 	</div>
+	<ul class="nav nav-tabs mb-3">
+		<li class="nav-item">
+			<a href="#facturas" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
+				<i class="mdi mdi-home-variant d-lg-none d-block me-1"></i>
+				<span class="d-none d-lg-block">facturas</span>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a href="#recibos" data-bs-toggle="tab" aria-expanded="true" class="nav-link ">
+				<i class="mdi mdi-account-circle d-lg-none d-block me-1"></i>
+				<span class="d-none d-lg-block">recibos</span>
+			</a>
+		</li>
 
-	<h1>Listado de Facturas</h1>
-	<div class="card-options">
-		<select id="company" name="company" style="width:100%;">
-			{% for company in companys %}
-				<option value="{{company.id}}">
-					{{company.nombre}}
-				</option>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane show active" id="facturas">
+			<h1>Listado de Facturas</h1>
+			<div class="card-options">
+				<select id="company" name="company" style="width:100%;">
+					{% for company in companys %}
+						<option value="{{company.id}}">
+							{{company.nombre}}
+						</option>
 
-			{% endfor %}
-		</select>
+					{% endfor %}
+				</select>
+			</div>
+			<br>
+			<br>
+			<table class="table" id="data_table_facturas">
+				<thead>
+					<tr>
+						<th>Fecha</th>
+						<th>N°</th>
+						<th>Cliente</th>
+						<th>Total</th>
+						<th style="width:25%;">Acciones</th>
+						<th>soporte Pago</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			
+			<div id="erroresDian" title="Errores de la dian" style="display:none;width:800px;height:500px;">
+
+				<div class="input-group"></div>
+
+				<div id="diverrores"></div>
+
+			</div>
+			<div id="notascredito" title="Notas credito" style="display:none;width:800px;height:500px;z-index: auto !important;">
+
+				<div id="divnotascredito"></div>
+			</div>
+			<div id="notasdebito" title="Notas debito" style="display:none;width:800px;height:500px;z-index: auto !important;">
+
+				<div id="divnotasdebito"></div>
+			</div>
+		</div>
+		<div class="tab-pane " id="recibos" >
+			<h1>Listado de recibos</h1>
+
+			<br>
+			<br>
+			<table class="table" id="data_table_recibos" style="width:100%">
+				<thead>
+					<tr>
+						<th>Fecha</th>
+						<th>N°</th>
+						<th>Total</th>
+						<th style="width:25%;">Acciones</th>
+
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			
+		</div>
+
 	</div>
-	<br>
-	<br>
-	<table class="table" id="data_table_facturas">
-		<thead>
-			<tr>
-				<th>Fecha</th>
-				<th>N°</th>
-				<th>Cliente</th>
-				<th>Total</th>
-				<th style="width:25%;">Acciones</th>
-				<th>soporte Pago</th>
-			</tr>
-		</thead>
-		<tbody></tbody>
-	</table>
-	<div class="p-3">
+<div class="p-3">
 		<div class="form-group ">
-			{% if is_granted('ROLE_ADMIN') %}
+			{% if is_granted('ROLE_ADMIN')  %}
 				<a class="btn waves-effect waves-light btn-success" href="{{ path('app_factura_new') }}">
 					<i class="  fas fa-paste"></i>
 					Nueva Factura</a>
@@ -74,31 +130,19 @@
 					<i class="fas fa-file-alt"></i>
 					Resoluciones</a>
 			{% endif %}
+
 			{% if is_granted('ROLE_ADMIN')  or is_granted('ROLE_AUXILIAR_NACIONAL') %}
 				<a class="btn waves-effect waves-light btn-warning" href="{{ path('app_factura_simple_new') }}">
 					<i class="  fas fa-paste"></i>
 					Nueva Factura Simple</a>
-				
+				<a class="btn waves-effect waves-light btn-orange" href="{{ path('app_recibo_caja_new') }}">
+							<i class="  fas fa-paste"></i>
+							Nuevo Recibo</a>
 			{% endif %}
 			<a class="btn waves-effect waves-light btn-primary " href="{{ path('app_clientes_index') }}">
 				<i class=" fas fa-handshake"></i>
 				Clientes</a>
 		</div>
-	</div>
-	<div id="erroresDian" title="Errores de la dian" style="display:none;width:800px;height:500px;">
-
-		<div class="input-group"></div>
-
-		<div id="diverrores"></div>
-
-	</div>
-	<div id="notascredito" title="Notas credito" style="display:none;width:800px;height:500px;z-index: auto !important;">
-
-		<div id="divnotascredito"></div>
-	</div>
-	<div id="notasdebito" title="Notas debito" style="display:none;width:800px;height:500px;z-index: auto !important;">
-
-		<div id="divnotasdebito"></div>
 	</div>
 
 {% endblock %}
@@ -121,7 +165,7 @@ language: {
 "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
 },
 ajax: {
-"url": '{{ path('app_factura_table') }}' + '?nacional= {{ is_nacional }}&company=' + $("#company").val(),
+"url": '{{ path('app_factura_table') }}' + '?nacional=  {{ is_nacional }}&company=' + $("#company").val(),
 "type": "POST"
 },
 columns: [
@@ -182,7 +226,7 @@ alert('Disculpe, existió un problema');
 
 $('#company').change(function () {
 
-let url = '{{ path('app_factura_table') }}' + '?nacional= {{ is_nacional }}&company=' + $("#company").val();
+let url = '{{ path('app_factura_table') }}' + '?nacional=  {{ is_nacional }}&company=' + $("#company").val();
 $('#data_table_facturas').DataTable().ajax.url(url).load();
 
 });
@@ -260,49 +304,86 @@ $("#notasdebito").dialog({width: 800, height: 500});
 
 }
 
-	function mostrarNotasCredito(factura_id) {
-		Paratarifas = '{{ path('app_nota_credito_index') }}';
-		jQuery('#divnotascredito').load(Paratarifas, {factura_id: factura_id});
-		$("#notascredito").dialog({width: 800, height: 500});
+function mostrarNotasCredito(factura_id) {
+Paratarifas = '{{ path('app_nota_credito_index') }}';
+jQuery('#divnotascredito').load(Paratarifas, {factura_id: factura_id});
+$("#notascredito").dialog({width: 800, height: 500});
 
-	}
-	function verificar(id){
-       $('#verificar'+id).hide();
-       $.ajax({
-        url : '{{ path('app_factura_verificar')}}',
-        data : { id : id},
-        type : 'POST',
-        dataType : 'json',
-        success : function(json) {
+}
+function verificar(id) {
+$('#verificar' + id).hide();
+$.ajax({
+url: '{{ path('app_factura_verificar') }}',
+data: {
+id: id
+},
+type: 'POST',
+dataType: 'json',
+success: function (json) {
 
-         alertify.success('Factura Verificada correctamente');
-         $("#data_table_facturas").DataTable().ajax.reload(null,false);
+alertify.success('Factura Verificada correctamente');
+$("#data_table_facturas").DataTable().ajax.reload(null, false);
 
-            },
-       error : function(xhr, status) {
-        alert('Disculpe, existió un problema');
-       }
-          });
+},
+error: function (xhr, status) {
+alert('Disculpe, existió un problema');
+}
+});
 
-    }
-    function desverificar(id){
-       $('#desverificar'+id).hide();
-       $.ajax({
-        url : '{{ path('app_factura_desverificar')}}',
-        data : { id : id},
-        type : 'POST',
-        dataType : 'json',
-        success : function(json) {
+}
+function desverificar(id) {
+$('#desverificar' + id).hide();
+$.ajax({
+url: '{{ path('app_factura_desverificar') }}',
+data: {
+id: id
+},
+type: 'POST',
+dataType: 'json',
+success: function (json) {
 
-         alertify.success('Factura fue Desverificada correctamente');
-         $("#data_table_facturas").DataTable().ajax.reload(null,false);
+alertify.success('Factura fue Desverificada correctamente');
+$("#data_table_facturas").DataTable().ajax.reload(null, false);
 
-            },
-       error : function(xhr, status) {
-        alert('Disculpe, existió un problema');
-       }
-          });
+},
+error: function (xhr, status) {
+alert('Disculpe, existió un problema');
+}
+});
 
-    }
+}
+
+$('#data_table_recibos').DataTable({
+        serverSide: true,
+        responsive: true,
+        pageLength: 50,
+        sPaginationType: "full_numbers",
+        language: {
+        "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+    },
+    ajax: {
+        "url": '{{ path('app_recibo_caja_table') }}',
+        "type": "POST"
+    },
+    columns: [
+        {
+            data: 'fecha'
+        },
+        {
+            data: 'numero'
+        },
+        {
+            data: 'total'
+        }, {
+            data: 'actions'
+        }
+
+    ],
+    columnDefs: [],
+    order: [
+        [0, "desc"]
+    ]
+    });
+
 	</script>
 {% endblock %}

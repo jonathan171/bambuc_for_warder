@@ -19,32 +19,7 @@
 		</div>
 	</div>
 
-	<h1>Listado de Facturas</h1>
-
-	<br>
-	<br>
-	<table class="table" id="data_table_facturas">
-		<thead>
-			<tr>
-				<th>Fecha</th>
-				<th>N°</th>
-				<th>Total</th>
-				<th style="width:25%;">Acciones</th>
-				
-			</tr>
-		</thead>
-		<tbody></tbody>
-	</table>
-	<div class="p-3">
-		<div class="form-group ">
-			{% if is_granted('ROLE_ADMIN')  or is_granted('ROLE_AUXILIAR_NACIONAL') %}
-				<a class="btn waves-effect waves-light btn-orange" href="{{ path('app_recibo_caja_new') }}">
-					<i class="  fas fa-paste"></i>
-					Nuevo Recibo</a>
-			{% endif %}
-			
-		</div>
-	</div>
+	
 	
 
 {% endblock %}
@@ -58,7 +33,7 @@
 {% endif %}
 $(document).ready(function () {
 
-$('#data_table_facturas').DataTable({
+$('#data_table_recibos').DataTable({
         serverSide: true,
         responsive: true,
         pageLength: 50,
