@@ -143,6 +143,12 @@ class EnviosNacionalesType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
+            ->add('reciboItems', TextType::class, [
+                'required'=> false,
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
             ->add('numero_guia',null,[
                 'attr' => [
                     'class' => 'form-control',
