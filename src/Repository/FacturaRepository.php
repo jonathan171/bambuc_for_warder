@@ -97,11 +97,9 @@ class FacturaRepository extends ServiceEntityRepository
             $actions = '';
             $reportar = '';
 
-            if ($factura->getTipoFactura() != 'FACTURA_VENTA_RECIBO') {
-                $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_factura?id=' . $factura->getId() . '" title="Imprimir" target="_blank"><span class="fas fa-print"></span></a>';
-            }else{
-                $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_recibo?id=' . $factura->getId() . '" title="Imprimir" target="_blank"><span class="fas fa-print"></span></a>';
-            }
+            
+            $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_factura?id=' . $factura->getId() . '" title="Imprimir" target="_blank"><span class="fas fa-print"></span></a>';
+            
             
             $actions .= "<button onclick='mostrarNotasCredito(" . $factura->getId() . ");'  class='btn btn-info'>NC</button>";
             if ($factura->getFacturado()) {
@@ -111,17 +109,15 @@ class FacturaRepository extends ServiceEntityRepository
             }
             if ($factura->getCufe() == '' || $factura->getCufe() == null) {
 
-                if ($factura->getTipoFactura() != 'FACTURA_VENTA_RECIBO') {
-                    $reportar = '<button type="button" id="reportar' . $factura->getId() . '" class="btn" onclick="Reportar(' . $factura->getId() . ');"title="Reportar Dian"><img src="/assets/images/facturas/dian.png" height="30px" width="30px"></button>';
-                }   
+                
+                $reportar = '<button type="button" id="reportar' . $factura->getId() . '" class="btn" onclick="Reportar(' . $factura->getId() . ');"title="Reportar Dian"><img src="/assets/images/facturas/dian.png" height="30px" width="30px"></button>';
+                  
                 if ($factura->getTipoFactura() == 'FACTURA_VENTA') {
 
                     $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/factura/' . $factura->getId() . '/edit"><span class="fas fa-pencil-alt"></span></a>';
                 } else if ($factura->getTipoFactura() == 'FACTURA_VENTA_NACIONAL') {
                     $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/factura_nacionales/' . $factura->getId() . '/edit"><span class="fas fa-pencil-alt"></span></a>';
-                } else if ($factura->getTipoFactura() == 'FACTURA_VENTA_RECIBO') {
-                    $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/recibo/' . $factura->getId() . '/edit"><span class="fas fa-pencil-alt"></span></a>';
-                } else {
+                }  else {
                     $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/factura_simple/' . $factura->getId() . '/edit"><span class="fas fa-pencil-alt"></span></a>';
                 }
 

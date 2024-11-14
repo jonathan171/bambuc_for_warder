@@ -1,0 +1,51 @@
+<form id="itemsForm" action="{{ path('app_recibo_caja_facturar_envios')}}" method="post" enctype="multipart/form-data">
+
+	<div class="alert alert-dismissable" style="border: 1px #75caeb solid;">
+		<div class="div_todo" style="width: 10%;"><input type="checkbox" id="select_all"/>
+		</div>
+		<di class="div_todo">
+			<b>Seleccionar Todo </b>
+		</di>
+	</div>
+
+
+	<table class="table customize-table mb-0 v-middle">
+		<thead class="table-light">
+			<tr>
+				<th>Escoger</th>
+				<th>Remisión</th>
+				<th>Fecha</th>
+				<th>Recibe</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			{% for envio in envios %}
+				<tr>
+					<td><input name="envId[]" id="checkBox" value="{{envio.id}}" type="checkbox"></td>
+					<td>{{envio.numero}}</td>
+					<td>{{envio.fecha|date('Y-m-d')}}</td>
+					<td>{{envio.destinatario}}</td>
+
+
+				</tr>
+			{% endfor %}
+
+			<tr>
+				<td colspan="2"><input type="submit" class="btn btn-success" value="Facturar"/></td>
+				<td colspan="2"></td>
+			</tr>
+
+		</tbody>
+	</table>
+	<input type="hidden" value="{{recibo}}" name="recibo" id="recibo">
+</form>
+{% block javascripts %} 
+<script>
+     $('#select_all').change(function() {
+        var checkboxes = $(this).closest('form').find(':checkbox').not($(this));
+        checkboxes.prop('checked', $(this).is(':checked'));
+      });
+    
+</script>
+{% endblock %}

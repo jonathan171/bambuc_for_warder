@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -49,6 +51,16 @@ class Municipio
      */
     private $departamento;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ReciboCaja::class, mappedBy="municipio")
+     */
+    private $recibos_caja;
+
+    public function __construct()
+    {
+        $this->recibos_caja = new ArrayCollection();
+    }
+
     public function getId(): ?string
     {
         return $this->id;
@@ -86,6 +98,36 @@ class Municipio
     public function setDepartamento(?Departamento $departamento): self
     {
         $this->departamento = $departamento;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReciboCaja>
+     */
+    public function getRecibosCaja(): Collection
+    {
+        return $this->recibos_caja;
+    }
+
+    public function addCreadaPor(ReciboCaja $reciboCaja): self
+    {
+        if (!$this->recibos_caja->contains($reciboCaja)) {
+            $this->recibos_caja[] = $reciboCaja;
+            $reciboCaja->setMunicipio($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReciboCaja(ReciboCaja $reciboCaja): self
+    {
+        if ($this->recibos_caja->removeElement($reciboCaja)) {
+            // set the owning side to null (unless already changed)
+            if ($reciboCaja->getMunicipio() === $this) {
+                $reciboCaja->setMunicipio(null);
+            }
+        }
 
         return $this;
     }

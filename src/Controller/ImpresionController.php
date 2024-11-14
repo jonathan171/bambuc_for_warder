@@ -9,6 +9,8 @@ use App\Entity\Factura;
 use App\Entity\FacturaItems;
 use App\Entity\NotaCredito;
 use App\Entity\NotaCreditoItems;
+use App\Entity\ReciboCaja;
+use App\Entity\ReciboCajaItem;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\PdfPersonalisado;
 use Dompdf\Dompdf;
@@ -793,7 +795,7 @@ class ImpresionController extends AbstractController
     public function recibo(Request $request, EntityManagerInterface $entityManager)
     {
 
-        $factura = $entityManager->getRepository(Factura::class)->find($request->query->get('id'));
+        $recibo = $entityManager->getRepository(ReciboCaja::class)->find($request->query->get('id'));
         // create new PDF document
         $pdf = new PdfPersonalisado(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
@@ -854,67 +856,60 @@ class ImpresionController extends AbstractController
         $pdf->setTextShadow(array('enabled' => false, 'depth_w' => 0.2, 'depth_h' => 0.2, 'color' => array(196, 196, 196), 'opacity' => 1, 'blend_mode' => 'Normal'));
 
         //
-        $empresa_base = $factura->getFacturaResolucion()->getEmpresa();
-        // Set some content to 
-        if($empresa_base->getId()==1){
-            $email = 'bambuc.forwarder@gmail.com';
-            $iva = 'No somos Agente Retenedor del Impuesto sobre las Ventas - IVA';
-            $obligacion = 'NO RESPONSABLE DE IVA';
-        }else{
-            $email = 'comercializadorabambucsas@gmail.com';
-            $iva = 'Agente Retenedor del Impuesto sobre las Ventas - IVA';
-            $obligacion = 'RESPONSABLE DE IVA';
-        }
-        
-        $empresa = array(
-            'nombre'=>$empresa_base->getNombre(),
-            'tipoDoc'=>$empresa_base->getTipoDoc(),
-            'numero' =>$empresa_base->getDocumento(),
-            'email'  => $email,
-            'telefono' => '3164388280',
-            'direccion' => 'AV 87 22 11 IN 2 BRR DIAMANTE II',
-            'ciudad' => 'BUCARAMANGA, SANTANDER (CO)',
-            'iva'    => $iva,
-            'obligacion' => $obligacion
-
-        );
-        $items = $entityManager->getRepository(FacturaItems::class)->createQueryBuilder('fi')
-            ->andWhere('fi.facturaClientes = :val')
-            ->setParameter('val', $factura->getId())
+      
+        $items = $entityManager->getRepository(ReciboCajaItem::class)->createQueryBuilder('ri')
+            ->andWhere('ri.reciboCaja = :val')
+            ->setParameter('val', $recibo->getId())
             ->getQuery()->getResult();
 
-        if(file_exists('uploads/assets/codes/'.$factura->getId().'.png')) {
-            $pha_img = 'uploads/assets/codes/'.$factura->getId().'.png';
+        $array_items = [];
+        foreach($items as $item){
+            $envio = $entityManager->getRepository(EnviosNacionales::class)->findOneBy(['reciboItems' => $item->getId()]);
+            if(!$envio){
+                $envio = $entityManager->getRepository(Envio::class)->findOneBy(['reciboItems' => $item->getId()]); 
+            }else{
+                $descripcion = '('.$envio->getFecha()->format('Y-m-d').')';
+                $unidades= $entityManager->getRepository(EnviosNacionalesUnidades::class)->findBy(['envioNacional' => $envio->getId()]);
+                $desRef = '';
+                 foreach($unidades as $unidad){
+                    $desRef .= $unidad->getNumeroGuia() ? $unidad->getNumeroGuia().' ': '';
+                 }
+            }
 
-        }else {
-            $pha_img = '';
+            $array_items[$item->getId()]['descripcion'] = $descripcion;
+            $array_items[$item->getId()]['ref'] = $desRef;
         }
+       
         $countItem= count($items);
 
         if($request->query->get('html')){
 
             return $this->render('impresion/recibo.html.twig', [
-                'factura' => $factura,
-                'empresa' => $empresa,
-                'code' =>   $pha_img,
+                'recibo' => $recibo,
+                'creada_por' => $recibo->getCreadaPor(),
+                'paga_a' => $recibo->getPagadaA(),
                 'items' =>   $items,
                 'countItem' => $countItem,
+                'municipio' => $recibo->getMunicipio(),
+                'unidades' => $array_items
             ]);
         }
 
         $html = $this->renderView('impresion/recibo.html.twig', [
-            'factura' => $factura,
-            'empresa' => $empresa,
-            'code' => $pha_img,
-            'items' => $items,
-            'countItem' => $countItem,
+                'recibo' => $recibo,
+                'creada_por' => $recibo->getCreadaPor(),
+                'paga_a' => $recibo->getPagadaA(),
+                'items' =>   $items,
+                'countItem' => $countItem,
+                'municipio' => $recibo->getMunicipio(),
+                'unidades' => $array_items
         ]);
 
         // Print text using writeHTMLCell()
         $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
 
         // ---------------------------------------------------------
-        $fileName = $factura->getFacturaResolucion()->getPrefijo().'-'.$factura->getNumeroFactura();
+        $fileName = 'RE-'.$recibo->getNumeroRecibo();
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
         $pdf->Output($fileName.'.pdf', 'I');

@@ -393,6 +393,7 @@ class EnviosNacionalesController extends AbstractController
                 ->setParameter('pago', $request->request->get('pago'));
         }
         $envios = $query->andWhere('e.facturado = 0')
+            ->andWhere('e.facturado_recibo = 0')
             ->orderBy('e.numero', 'ASC')
             ->setMaxResults(200)
             ->getQuery()->getResult();
@@ -402,6 +403,53 @@ class EnviosNacionalesController extends AbstractController
         return $this->render('envios_nacionales/listado_envios.html.twig', [
             'envios'     => $envios,
             'factura_id' => $request->request->get('factura_id'),
+            'recibo' => $request->request->get('recibo'),
+        ]);
+    }
+
+    #[Route('/listado_envios_recibo', name: 'app_envios_nacionales_listado_envios_recibo', methods: ['GET', 'POST'])]
+    public function listadoEnviosRecibo(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $shearch = '%' . $request->request->get('filtro') . '%';
+        $query = $entityManager->getRepository(EnviosNacionales::class)->createQueryBuilder('e')
+                            ->innerJoin(Municipio::class, 'm', Join::WITH,   'm.id = e.municipioDestino')
+                            ->innerJoin(Departamento::class, 'd', Join::WITH, 'm.departamento = d.id')
+                            ->innerJoin(Municipio::class, 'm1', Join::WITH,  'm1.id = e.municipioOrigen')
+                            ->innerJoin(Departamento::class, 'd1', Join::WITH, 'm1.departamento = d1.id')
+                            ->innerJoin(Clientes::class, 'c', Join::WITH,   'c.id = e.cliente')
+                            ->innerJoin(EnviosNacionalesUnidades::class,'enu' , Join::WITH,  'e.id = enu.envioNacional');;
+
+        if ($request->request->get('fecha_inicio')) {
+
+            $query->andWhere('e.fecha >= :val2')
+                ->setParameter('val2', $request->request->get('fecha_inicio'))
+                ->andWhere('e.fecha <= :val1')
+                ->setParameter('val1', $request->request->get('fecha_fin'));
+        }
+        
+
+        if ($request->request->get('filtro')) {
+            $query->andWhere('e.numero like :val OR e.fecha like :val   OR e.destinatario like :val OR m.nombre like :val OR m1.nombre like :val OR enu.numeroGuia like :val OR c.razonSocial like :val OR  c.nit like :val OR  d.nombre like :val OR  d1.nombre like :val')
+                ->setParameter('val', $shearch);
+        }
+        if ($request->request->get('pago')) {
+            $query->andWhere('e.formaPago  = :pago')
+                ->setParameter('pago', $request->request->get('pago'));
+        }
+        $envios = $query->andWhere('e.facturado = 0')
+            ->andWhere('e.facturado_recibo = 0')
+            ->orderBy('e.numero', 'ASC')
+            ->setMaxResults(200)
+            ->getQuery()->getResult();
+
+
+
+        return $this->render('envios_nacionales/listado_envios_recibo.html.twig', [
+            'envios'     => $envios,
             'recibo' => $request->request->get('recibo'),
         ]);
     }

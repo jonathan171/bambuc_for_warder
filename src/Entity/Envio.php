@@ -185,6 +185,16 @@ class Envio
      */
     private $facturaTransportadora;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $facturado_recibo;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ReciboCajaItem::class, inversedBy="envios")
+     */
+    private $reciboCajaItem;
+
     
 
     public function getId(): ?int
@@ -451,6 +461,30 @@ class Envio
     public function setFacturaTransportadora(?string $facturaTransportadora): self
     {
         $this->facturaTransportadora = $facturaTransportadora;
+
+        return $this;
+    }
+
+    public function isFacturadoRecibo(): ?bool
+    {
+        return $this->facturado_recibo;
+    }
+
+    public function setFacturadoRecibo(bool $facturado_recibo): self
+    {
+        $this->facturado_recibo = $facturado_recibo;
+
+        return $this;
+    }
+
+    public function getReciboCajaItem(): ?ReciboCajaItem
+    {
+        return $this->reciboCajaItem;
+    }
+
+    public function setReciboCajaItem(?ReciboCajaItem $reciboCajaItem): self
+    {
+        $this->reciboCajaItem = $reciboCajaItem;
 
         return $this;
     }

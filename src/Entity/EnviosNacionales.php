@@ -172,6 +172,16 @@ class EnviosNacionales
      */
     private $creador;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $facturado_recibo;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ReciboCajaItem::class, inversedBy="enviosNacionales")
+     */
+    private $reciboItems;
+
 
     public function getId(): ?string
     {
@@ -438,6 +448,30 @@ class EnviosNacionales
     public function setCreador(?User $creador): self
     {
         $this->creador = $creador;
+
+        return $this;
+    }
+
+    public function isFacturadoRecibo(): ?bool
+    {
+        return $this->facturado_recibo;
+    }
+
+    public function setFacturadoRecibo(bool $facturado_recibo): self
+    {
+        $this->facturado_recibo = $facturado_recibo;
+
+        return $this;
+    }
+
+    public function getReciboItems(): ?ReciboCajaItem
+    {
+        return $this->reciboItems;
+    }
+
+    public function setReciboItems(?ReciboCajaItem $reciboItems): self
+    {
+        $this->reciboItems = $reciboItems;
 
         return $this;
     }

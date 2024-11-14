@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+{% import "macros/redirect.html.twig" as macroRedirect %}
+
+{% block title %}Factura index
+{% endblock %}
+
+{% block body %}
+	<div class="p-3">
+		<div class="form-group ">
+			
+
+			{% if is_granted('ROLE_ADMIN')  or is_granted('ROLE_AUXILIAR_NACIONAL') %}
+				
+				<a class="btn waves-effect waves-light btn-orange" href="{{ path('app_recibo_caja_new') }}">
+					<i class="  fas fa-paste"></i>
+					Nuevo Recibo</a>
+			{% endif %}
+			
+		</div>
+	</div>
+
+	<h1>Listado de Facturas</h1>
+
+	<br>
+	<br>
+	<table class="table" id="data_table_facturas">
+		<thead>
+			<tr>
+				<th>Fecha</th>
+				<th>N°</th>
+				<th>Total</th>
+				<th style="width:25%;">Acciones</th>
+				
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+	<div class="p-3">
+		<div class="form-group ">
+			{% if is_granted('ROLE_ADMIN')  or is_granted('ROLE_AUXILIAR_NACIONAL') %}
+				<a class="btn waves-effect waves-light btn-orange" href="{{ path('app_recibo_caja_new') }}">
+					<i class="  fas fa-paste"></i>
+					Nuevo Recibo</a>
+			{% endif %}
+			
+		</div>
+	</div>
+	
+
+{% endblock %}
+{% block javascripts %}
+	{{ macroRedirect.scriptRedirect}}
+	<script>
+{% if is_granted('ROLE_NACIONAL') or  is_granted('ROLE_AUXILIAR_NACIONAL') %}
+{% set is_nacional = 1 %}
+{% else %}
+{% set is_nacional = 0 %}
+{% endif %}
+$(document).ready(function () {
+
+$('#data_table_facturas').DataTable({
+        serverSide: true,
+        responsive: true,
+        pageLength: 50,
+        sPaginationType: "full_numbers",
+        language: {
+        "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+    },
+    ajax: {
+        "url": '{{ path('app_recibo_caja_table') }}',
+        "type": "POST"
+    },
+    columns: [
+        {
+            data: 'fecha'
+        },
+        {
+            data: 'numero'
+        },
+        {
+            data: 'total'
+        }, {
+            data: 'actions'
+        }
+
+    ],
+    columnDefs: [],
+    order: [
+        [0, "desc"]
+    ]
+    });
+});
+
+	</script>
+{% endblock %}

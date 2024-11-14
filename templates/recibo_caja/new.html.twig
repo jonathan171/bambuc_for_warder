@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% import "macros/select2.html.twig" as macroselect2 %}
+{% block title %}nuevo  Recibo{% endblock %}
+{% block stylesheets %}
+{{ macroselect2.styleSelect2}}
+{% endblock %}
+{% block body %}
+    <h1>Nuevo Recibo Caja</h1>
+
+    {{ include('recibo_caja/_form.html.twig') }}
+
+  
+{% endblock %}
+{% block javascripts %}
+ 
+{{ macroselect2.scriptSelect2}}
+
+<script>
+    
+
+     $("#recibo_caja_municipio").select2({
+            width: '100%'});
+     $("#recibo_caja_pagada_a").select2({
+            width: '100%'});
+     $(document).on('select2:open', () => {
+            document.querySelector('.select2-search__field').focus();
+     });
+
+   
+
+</script>
+{% endblock %}

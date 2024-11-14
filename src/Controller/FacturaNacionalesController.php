@@ -165,11 +165,10 @@ class FacturaNacionalesController extends AbstractController
             $entityManager->persist($factura);
             $entityManager->flush();
         }
-        if($request->request->get('recibo')){
-            return $this->redirectToRoute('app_recibo_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
-        }else{
-            return $this->redirectToRoute('app_factura_nacionales_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
-        }
+   
+          
+        return $this->redirectToRoute('app_factura_nacionales_edit', ['id' => $factura->getId()], Response::HTTP_SEE_OTHER);
+        
         
     }
 

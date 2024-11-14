@@ -1,40 +1,35 @@
 <style>
+    body {
+        font-family: Arial, sans-serif;
+        color: #333;
+        margin: 20px;
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
-        font-family: Arial, sans-serif;
+        margin-bottom: 20px;
     }
 
     th, td {
-        padding: 8px;
+        padding: 10px;
         border: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #f2f2f2;
-        font-weight: bold;
-        text-align: center;
-    }
-
-    h2 {
-        margin: 0;
-        font-size: 18px;
-    }
-
-    .section-title {
-        text-align: center;
-        font-weight: bold;
-        background-color: #e0e0e0;
-        border-bottom: 2px solid #000;
-    }
-
-    .info-title {
-        font-weight: bold;
         text-align: left;
     }
 
-    .value {
-        text-align: right;
+    th {
+        background-color: #f7f7f7;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .section-title {
+        text-align: left;
+        font-size: 14px;
+        background-color: #e8e8e8;
+        padding: 10px;
+        font-weight: bold;
+        border: 1px solid #ddd;
     }
 
     .highlight {
@@ -44,89 +39,76 @@
     .total {
         font-weight: bold;
         font-size: 16px;
-        color: #333;
+        color: #444;
         text-align: right;
     }
 
+    .logo {
+        text-align: center;
+        padding: 10px;
+    }
+
+    .firma {
+        text-align: center;
+        font-size: 12px;
+        margin-top: 40px;
+        border-top: 2px solid #000;
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 10px;
+    }
+
+    .firma-text {
+        text-align: center;
+        margin-top: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .big-title {
+        font-size: 18px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .total-row {
+        background-color: #e8f4e8;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
 </style>
 
 <table>
     <tr>
         <td style="width: 45%; text-align:center;">
-            <img src="{{ asset('assets/images/facturas/logo.jpg') }}" alt="logo" width="90">
+            <img src="{{ asset('assets/images/facturas/logo.jpg') }}" alt="logo" width="100">
         </td>
-        <td style="width: 55%;" colspan="3">
-            <dl>
-			    <dt>Recibo de Caja</dt>
-                <dt><strong style="font-size: 35px;"> {{ factura.facturaResolucion.prefijo }}-{{ factura.numeroFactura }} </strong></dt>
-               
-            </dl>
+        <td style="width: 55%;" colspan="3" class="big-title">
+            RECIBO N° {{ recibo.numeroRecibo }}
         </td>
     </tr>
     <tr>
-        <td>
-            <dl>
-                <dt>Tipo de Operación : Estandar</dt>
-                <dt>Fecha de Generación : {{ factura.fecha | date('d/m/Y') }}</dt>
-            </dl>
+        <td colspan="2" >
+            <strong> {{ municipio.nombre }}</strong>
         </td>
-        <td colspan="3">
-            <dl>
-                <dt>Forma de Pago: <b style="text-align: right;">
-					{% if factura.formaDePago =='DEBITO' %}
-						Contado
-					{%  else %}
-						Crédito
-					{% endif %}
-
-				</b></dt>
-                <dt>Medio de Pago : <b> {{factura.condDePago.descripcion}}</b></dt>
-                <dt>Moneda :       <b>COP</b></dt>
-            </dl>
+        <td colspan="2" style="text-align:right;">
+            <strong>Fecha:</strong> {{ recibo.fecha | date('d/m/Y') }}
         </td>
     </tr>
 </table>
 
 <table>
     <tr>
-        <td colspan="2" class="section-title">RECIBE</td>
-        <td colspan="2" class="section-title">PAGA</td>
+        <td colspan="1" class="section-title">Genera</td>
+        <td colspan="3">{{ creada_por.firstName }}</td>
     </tr>
     <tr>
-        <td class="info-title">Razón Social</td>
-        <td class="highlight">{{ empresa.nombre }}</td>
-        <td class="info-title">Razón Social</td>
-        <td>{{ factura.cliente.razonSocial }}</td>
-    </tr>
-    <tr>
-        <td class="info-title">{{ empresa.tipoDoc }}</td>
-        <td class="highlight">{{ empresa.numero }}</td>
-        <td class="info-title">{{ factura.cliente.tipoDocumento }}</td>
-        <td>{{ factura.cliente.nit }}</td>
-    </tr>
-    <tr>
-        <td class="info-title">Email</td>
-        <td class="highlight">{{ empresa.email }}</td>
-        <td class="info-title">Email</td>
-        <td>{{ factura.cliente.correo }}</td>
-    </tr>
-    <tr>
-        <td class="info-title">Teléfono</td>
-        <td class="highlight">{{ empresa.telefono }}</td>
-        <td class="info-title">Teléfono</td>
-        <td>{{ factura.cliente.telefono }}</td>
-    </tr>
-    <tr>
-        <td class="info-title">Dirección</td>
-        <td class="highlight">{{ empresa.direccion }}</td>
-        <td class="info-title">Dirección</td>
-        <td>{{ factura.cliente.direccion }}</td>
-    </tr>
-    <tr>
-        <td class="info-title">Ciudad, Depart.</td>
-        <td class="highlight">{{ empresa.ciudad }}</td>
-        <td class="info-title">Ciudad, Depart.</td>
-        <td>{{ factura.cliente.municipio.nombre }}, {{ factura.cliente.municipio.departamento.nombre }} (CO)</td>
+        <td colspan="1" class="section-title">Pagada a</td>
+        <td colspan="3">{{ paga_a.firstName }}</td>
     </tr>
 </table>
 
@@ -134,58 +116,33 @@
 
 <table>
     <tr>
-        <th style="width:4%">N°</th>
-        <th style="width:11%">REF</th>
-        <th style="width:29%">CONCEPTO</th>
-        <th style="width:7%">CANT</th>
-        <th style="width:5%">U/M</th>
-        <th style="width:12%">PRECIO</th>
-        <th style="width:5%">IMP</th>
-        <th style="width:12%">SUBTOTAL</th>
-        <th style="width:15%">TOTAL ITEM</th>
+        <th style="width: 10%;">REF</th>
+        <th style="width: 40%;">CONCEPTO</th>
+        <th style="width: 30%;">REFERENCIAS</th>
+        <th style="width: 20%;">TOTAL</th>
     </tr>
-    {% set i = 0 %}
+    
     {% for item in items %}
-    {% set i = i + 1 %}
     <tr>
-        <td>{{ i }}</td>
         <td>{{ item.codigo }}</td>
-        <td>{{ item.descripcion }}</td>
-        <td>{{ item.cantidad }}</td>
-        <td>EA</td>
-        <td class="value">{{ item.valorUnitario }}</td>
-        <td class="value">{{ item.iva }}</td>
-        <td class="value">{{ item.subtotal }}</td>
-        <td class="value">{{ item.total }}</td>
+        <td>{{ unidades[item.id]['descripcion'] }}</td>
+        <td>{{ unidades[item.id]['ref'] }}</td>
+        <td class="value">{{ item.total | number_format(2, '.', ',') }}</td>
     </tr>
     {% endfor %}
-    <tr>
-        <td colspan="7" class="total">Subtotal</td>
-        <td colspan="2" class="total">{{ factura.subtotal | number_format(2, '.', ',') }}</td>
-    </tr>
-    {% if factura.reteFuente > 0 %}
-    <tr>
-        <td colspan="7" class="total">RETE FUENTE</td>
-        <td colspan="2" class="total">-{{ (factura.totalReteFuente + factura.totalReteFuenteG) | number_format(2, '.', ',') }}</td>
-    </tr>
-    {% endif %}
-    {% if factura.descuento > 0 %}
-    <tr>
-        <td colspan="7" class="total">DESCUENTO</td>
-        <td colspan="2" class="total">-{{ factura.descuento | number_format(2, '.', ',') }}</td>
-    </tr>
-    {% endif %}
-    <tr>
-        <td colspan="7" class="total" style="border-top: 2px solid #000;">Total a Pagar</td>
-        <td colspan="2" class="total" style="border-top: 2px solid #000;">
-            {{ (factura.total - (factura.totalReteIva + factura.totalReteIca + factura.totalReteFuenteG + factura.descuento)) | number_format(2, '.', ',') }}
+
+    <tr class="total-row">
+        <td colspan="2" class="total bold">Total a Pagar</td>
+        <td colspan="2" class="total bold">
+            {{ recibo.total | number_format(2, '.', ',') }}
         </td>
     </tr>
 </table>
-
-<table>
-    <tr>
-        <td colspan="2">Observaciones:</td>
-        <td colspan="2">{{ factura.observaciones }}</td>
-    </tr>
-</table>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="firma">
+    <span class="firma-text">Firma Recibido</span>
+</div>

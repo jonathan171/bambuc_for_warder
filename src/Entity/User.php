@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -47,6 +49,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $last_name;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ReciboCaja::class, mappedBy="creada_por")
+     */
+    private $reciboCajas;
+
+    public function __construct()
+    {
+        $this->reciboCajas = new ArrayCollection();
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -153,5 +165,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString()
     {
         return $this->first_name.' '.$this->last_name;
+    }
+
+    /**
+     * @return Collection<int, ReciboCaja>
+     */
+    public function getReciboCajas(): Collection
+    {
+        return $this->reciboCajas;
+    }
+
+    public function addReciboCaja(ReciboCaja $reciboCaja): self
+    {
+        if (!$this->reciboCajas->contains($reciboCaja)) {
+            $this->reciboCajas[] = $reciboCaja;
+            $reciboCaja->setCreadaPor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReciboCaja(ReciboCaja $reciboCaja): self
+    {
+        if ($this->reciboCajas->removeElement($reciboCaja)) {
+            // set the owning side to null (unless already changed)
+            if ($reciboCaja->getCreadaPor() === $this) {
+                $reciboCaja->setCreadaPor(null);
+            }
+        }
+
+        return $this;
     }
 }

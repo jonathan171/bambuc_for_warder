@@ -1,0 +1,241 @@
+{% extends 'base.html.twig' %}
+{% import "macros/select2.html.twig" as macroselect2 %}
+{% block title %}Editar Recibo Caja
+{% endblock %}
+{% block stylesheets %}
+	{{ macroselect2.styleSelect2}}
+{% endblock %}
+{% block body %}
+	<h1>Editar Recibo Caja</h1>
+
+	{{ include('recibo_caja/_form.html.twig', {'button_label': 'Update'}) }}
+
+	<h2>
+		Items de Recibo</h2>
+	{% for item in items %}
+		
+		<div class="row" id="{{item.id}}">
+			<div class="col-sm-12 col-lg-1">
+				<label class="col-sm-12">Codigo</label>
+				<br>
+				<br>
+				{{item.codigo}}
+			</div>
+			<div class="col-sm-12 col-lg-1">
+				<label class="col-sm-12">Cantidad</label>
+				<br>
+				<br>
+				{{item.cantidad}}
+			</div>
+			<div class="col-sm-12 col-lg-4">
+				<label class="col-sm-12">Descripción</label>
+				<br>
+				<br>
+				<input class="form-control" type="text" id="descripcion{{item.id}}" value="{{item.descripcion}}" onkeyup="ActualizarItems({{item.id}})"/>
+			</div>
+			<div class="col-sm-12 col-lg-2">
+				<label class="col-sm-12">Valor Unitario</label>
+				<br>
+				<br>
+				{{item.valorUnitario|number_format(2, '.', ',')}}
+			</div>
+
+			<div class="col-sm-12 col-lg-3">
+				<label class="col-sm-12">Total</label>
+				<br>
+				<br>
+				<input class="form-control" type="text" id="total{{item.id}}" value="{{item.total}}" disabled="disabled"/>
+				<input type="text" id="subtotal{{item.id}}" value="{{item.subtotal}}" style=" display:none; "/>
+			</div>
+			<div class="col-sm-12 col-lg-1">
+				<form method="post" action="{{ path('app_recibo_caja_item_delete', {'id': item.id}) }}" onsubmit="return confirm('Estas seguro de borrar esta factura?');">
+					<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
+					<button class="btn waves-effect waves-light btn-danger">
+						<span class="fas fa-trash-alt"></span>
+					</button>
+				</form>
+			</div>
+		</div>
+	{%  endfor %}
+
+	<div class="row" style="padding-top:20px;">
+		<div class="col-sm-12 col-lg-4"></div>
+		<div class="col-sm-12 col-lg-4">
+			<strong>Total Recibo</strong>
+		</div>
+		<div class="col-sm-12 col-lg-4">
+			<input class="form-control" type="text" id="totalFactura" value="{{recibo_caja.total }}" disabled="disabled"/>
+		</div>
+
+	</div>
+	<div class="row" style="padding-top:20px;">
+		<div class="col-sm-12 col-lg-2">
+			<strong>Fecha inicio</strong>
+			<input type="text" id="fecha_inicio" class="form-control border-color">
+		</div>
+		<div class="col-sm-12 col-lg-2">
+			<strong>Fecha fin</strong>
+			<input type="text" id="fecha_fin" class="form-control border-color">
+		</div>
+		<div class="col-sm-12 col-lg-2">
+			<strong>Condición de Pago</strong>
+			<select class="form-control" id="condicion_pago">
+				<option value=""></option>
+				<option value="CONTADO">
+					CONTADO</option>
+				<option value="CRÉDITO">
+					CRÉDITO</option>
+				<option value="CONTRA ENTREGA">
+					CONTRA ENTREGA</option>
+			</select>
+		</div>
+		<div class="col-sm-12 col-lg-2">
+			<strong>Filtrar</strong>
+			<input type="text" id="filtro" class="form-control border-color">
+		</div>
+		<div class="col-sm-12 col-lg-1">
+			<button class="btn waves-effect waves-light btn-success" type="button" onclick="envios();">
+				Nacionales</button>
+		</div>
+    <div class="col-sm-12 col-lg-1">
+			<button class="btn waves-effect waves-light btn-danger" type="button" onclick="inter();">
+				Inter</button>
+		</div>
+		<div class="col-sm-12 col-lg-2">
+			<a class="btn waves-effect waves-light btn-info" href="/impresion/impresion_recibo?id={{recibo_caja.id}}" title="Imprimir">
+				<span class="fas fa-print"></span>
+			</a>
+			<a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_recibo_caja_index') }}">Terminar</a>
+		</div>
+	</div>
+
+
+	<div id="envios" title="Envios" style="display:none;width:800px;height:500px;">
+		<div id="divenvios"></div>
+	</div>
+	{% block javascripts %}
+
+		{{ macroselect2.scriptSelect2}}
+
+		<script>
+
+
+			$("#recibo_caja_municipio").select2({width: '100%'});
+      $("#recibo_caja_pagada_a").select2({width: '100%'});
+      $(document).on('select2:open', () => {
+        document.querySelector('.select2-search__field').focus();
+      });
+
+      function envios()
+        {
+            var fechaincio = $("#fecha_inicio").val();
+            var fechafin = $("#fecha_fin").val();
+            var recibo_id = '{{recibo_caja.id}}';
+            var filtro = $("#filtro").val();
+            var condicionPago = $("#condicion_pago").val();
+
+            if (fechaincio != "") {
+                if (fechafin != "") {
+                    if (fechafin > fechaincio) {
+                        ParaEnvios = '{{ path('app_envios_nacionales_listado_envios')}}';
+                        $('#divenvios').load( ParaEnvios,{ fecha_inicio: fechaincio, fecha_fin: fechafin, recibo: recibo_id ,filtro:filtro,pago: condicionPago});
+                        $("#envios").dialog({ width: 800, height: 500});
+                    } else {
+                        alert("La fecha de inicio debe ser menor");
+                    }
+                } else {
+                    alert("Por favor ingrese la fecha fin");
+                }
+
+            } else {
+                 ParaEnvios = '{{ path('app_envios_nacionales_listado_envios_recibo')}}';
+                 $('#divenvios').load(ParaEnvios,{recibo: recibo_id,filtro:filtro,pago:condicionPago });
+                 $("#envios").dialog({ width: 800, height: 500});
+            }
+
+
+        }
+//validar campos menores que 100
+function validateMenorCien(item, id)
+    {
+       
+
+        var x = item;
+        if (x.value <= 100) {
+            ActualizarItems(id);
+        } else {
+            alert('por favor ingrese valores menores o iguales a 100');
+            $("#" + x.id).val(0);
+            validateMenorCien(item, id);
+        }
+
+    }
+    function ActualizarItems(item)
+    {
+        ////////////////// obtener los datos de los input ////////////////////
+        var valoresDeMedicamentosTotal = [];
+        var valoresDeMedicamentos = new Array();
+
+        ///////////// trayendo los datos de tipo input /////////////////
+
+        let fila = 0;
+
+
+
+        $("#" + item).find('div').each(function () {
+
+            $(this).find(':input, textarea').each(function () {
+                var elemento = this;
+
+                var datoDeForeach = {nombre: elemento.id, valor: elemento.value, grupo: elemento.getAttribute('data-grupo')};
+
+                valoresDeMedicamentos.push(datoDeForeach);
+
+            });
+
+        });
+        // $("#total"+imprimir).attr({value:'33'});
+        if (valoresDeMedicamentos.length > 0)
+        {
+            valoresDeMedicamentosTotal[fila] = valoresDeMedicamentos;
+        }
+        cargarDatosItems(JSON.stringify(valoresDeMedicamentosTotal),item);
+
+        ///////////// fin trayendo los datos de tipo input ////////////////
+    }
+
+     function cargarDatosItems(datos,id){
+       $.ajax({
+        url : '{{ path('app_factura_nacionales_cargar_items')}}',
+        data :{datos: datos, id:id} ,
+        type : 'POST',
+        dataType : 'json',
+        success : function(json) {
+            console.log(json[0]);
+
+            $("#total" + json[1]).attr({value: json[0]});
+            $("#totalFactura").attr({value: json[2]});
+
+        
+            },
+            error : function(xhr, status) {
+            alert('Disculpe, existió un problema');
+       }
+          });
+
+    };
+
+     //solo se pueden ingresar numeros
+    function validaNumericos(event) {
+        if (event.charCode >= 48 && event.charCode <= 57) {
+            return true;
+        }
+        return false;
+    }
+
+     $(document).on('select2:open', () => {
+        document.querySelector('.select2-search__field').focus();
+     });
+		</script>
+	{% endblock %}
+{% endblock %}
