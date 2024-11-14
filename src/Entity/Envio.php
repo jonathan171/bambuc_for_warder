@@ -186,7 +186,7 @@ class Envio
     private $facturaTransportadora;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $facturado_recibo;
 
