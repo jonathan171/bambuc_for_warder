@@ -92,10 +92,10 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2" >
+        <td colspan="1" >
             <strong> {{ municipio.nombre }}</strong>
         </td>
-        <td colspan="2" style="text-align:right;">
+        <td colspan="3" style="text-align:right;">
             <strong>Fecha:</strong> {{ recibo.fecha | date('d/m/Y') }}
         </td>
     </tr>
@@ -103,12 +103,12 @@
 
 <table>
     <tr>
-        <td colspan="1" class="section-title">Genera</td>
-        <td colspan="3">{{ creada_por.firstName }}</td>
+        <td colspan="1" class="section-title">Generada por </td>
+        <td colspan="3"  class="section-title">{{ creada_por.firstName  }} {{ creada_por.lastName  }}</td>
     </tr>
     <tr>
         <td colspan="1" class="section-title">Pagada a</td>
-        <td colspan="3">{{ paga_a.firstName }}</td>
+        <td colspan="3"  class="section-title">{{ paga_a.firstName }} {{ paga_a.lastName  }}</td>
     </tr>
 </table>
 

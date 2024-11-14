@@ -866,9 +866,11 @@ class ImpresionController extends AbstractController
         foreach($items as $item){
             $envio = $entityManager->getRepository(EnviosNacionales::class)->findOneBy(['reciboItems' => $item->getId()]);
             if(!$envio){
-                $envio = $entityManager->getRepository(Envio::class)->findOneBy(['reciboItems' => $item->getId()]); 
+                $envio = $entityManager->getRepository(Envio::class)->findOneBy(['reciboCajaItem' => $item->getId()]); 
+                $descripcion = $item->getDescripcion().'('.$envio->getFechaEnvio()->format('Y-m-d').')';
+                $desRef = $envio->getNumeroEnvio();
             }else{
-                $descripcion = '('.$envio->getFecha()->format('Y-m-d').')';
+                $descripcion = $item->getDescripcion().'('.$envio->getFecha()->format('Y-m-d').')';
                 $unidades= $entityManager->getRepository(EnviosNacionalesUnidades::class)->findBy(['envioNacional' => $envio->getId()]);
                 $desRef = '';
                  foreach($unidades as $unidad){

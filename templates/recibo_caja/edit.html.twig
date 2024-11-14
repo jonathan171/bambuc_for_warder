@@ -98,7 +98,7 @@
 				Nacionales</button>
 		</div>
     <div class="col-sm-12 col-lg-1">
-			<button class="btn waves-effect waves-light btn-danger" type="button" onclick="inter();">
+			<button class="btn waves-effect waves-light btn-danger" type="button" onclick="enviosInter();">
 				Inter</button>
 		</div>
 		<div class="col-sm-12 col-lg-2">
@@ -150,6 +150,34 @@
             } else {
                  ParaEnvios = '{{ path('app_envios_nacionales_listado_envios_recibo')}}';
                  $('#divenvios').load(ParaEnvios,{recibo: recibo_id,filtro:filtro,pago:condicionPago });
+                 $("#envios").dialog({ width: 800, height: 500});
+            }
+
+
+        }
+		 function enviosInter()
+        {
+            var fechaincio = $("#fecha_inicio").val();
+            var fechafin = $("#fecha_fin").val();
+            var recibo_id = '{{recibo_caja.id}}';
+            var envia = $("#filtro").val();
+
+            if (fechaincio != "") {
+                if (fechafin != "") {
+                    if (fechafin > fechaincio) {
+                        ParaEnvios = '{{ path('app_envio_listado_envios_recibo')}}';
+                        $('#divenvios').load( ParaEnvios,{ fecha_inicio: fechaincio, fecha_fin: fechafin, recibo: recibo_id ,envia: envia});
+                        $("#envios").dialog({ width: 800, height: 500});
+                    } else {
+                        alert("La fecha de inicio debe ser menor");
+                    }
+                } else {
+                    alert("Por favor ingrese la fecha fin");
+                }
+
+            } else {
+                 ParaEnvios = '{{ path('app_envio_listado_envios_recibo')}}';
+                 $('#divenvios').load(ParaEnvios,{recibo: recibo_id,envia: envia });
                  $("#envios").dialog({ width: 800, height: 500});
             }
 

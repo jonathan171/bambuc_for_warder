@@ -296,6 +296,42 @@ class EnvioController extends AbstractController
         ]);
     }
 
+    #[Route('/listado_envios_recibo', name: 'app_envio_listado_envios_recibo', methods: ['GET', 'POST'])]
+    public function listadoEnviosRecibo(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // usually you'll want to make sure the user is authenticated first,
+        // see "Authorization" below
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $shearch = '%' . $request->request->get('envia') . '%';
+        $query = $entityManager->getRepository(Envio::class)->createQueryBuilder('e')
+                                ->innerJoin(Pais::class, 'p', Join::WITH,   'p.id = e.paisDestino')
+                                ->innerJoin(Pais::class, 'p1', Join::WITH,  'p1.id = e.paisOrigen');
+
+        if ($request->request->get('fecha_inicio')) {
+
+            $query->andWhere('e.fechaEnvio >= :val')
+                ->setParameter('val', $request->request->get('fecha_inicio'))
+                ->andWhere('e.fechaEnvio <= :val1')
+                ->setParameter('val1', $request->request->get('fecha_fin'));
+        }
+
+        if ($request->request->get('envia')) {
+            $query->andWhere('e.numeroEnvio like :val OR e.fechaEnvio like :val2 OR e.empresa like :val3 OR e.quienRecibe like :val4 OR e.quienEnvia like :val5 OR p.nombre like :val6 OR p1.nombre like :val7 OR e.referencia like :val7')
+                ->setParameters(['val' => $shearch, 'val2' => $shearch, 'val3' => $shearch, 'val4' => $shearch, 'val5' => $shearch, 'val6' => $shearch, 'val7' => $shearch]);
+        }
+        $envios = $query->andWhere('e.facturado = 0')
+            ->setMaxResults(200)
+            ->getQuery()->getResult();
+
+
+
+        return $this->render('envio/listado_envios_recibo.html.twig', [
+            'envios'     => $envios,
+            'recibo' => $request->request->get('recibo')
+        ]);
+    }
+
     #[Route('/new', name: 'app_envio_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {   

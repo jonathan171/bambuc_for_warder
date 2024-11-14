@@ -117,11 +117,14 @@ class ReciboCajaController extends AbstractController
 
             $envio = $entityManager->getRepository(EnviosNacionales::class)->findOneBy(['reciboItems' => $item->getId()]);
             if(!$envio){
-                $envio = $entityManager->getRepository(Envio::class)->findOneBy(['reciboItems' => $item->getId()]); 
+                $envio = $entityManager->getRepository(Envio::class)->findOneBy(['reciboCajaItem' => $item->getId()]); 
+                $envio->setReciboCajaItem(NULL);
+            }else{
+                $envio->setReciboItems(NULL);
             }
 
             $envio->setFacturadoRecibo(0);
-            $envio->setReciboItems(NULL);
+           
 
             $entityManager->persist($envio);
             $entityManager->flush();
@@ -150,7 +153,7 @@ class ReciboCajaController extends AbstractController
 
             $item = new ReciboCajaItem();
             $item->setCantidad($envio->getUnidades());
-            $item->setDescripcion('TRANSPORTE ENVIO');
+            $item->setDescripcion('TRANSPORTE NACIONAL');
             $item->setValorUnitario($envio->getValorTotal()/$envio->getUnidades());
             $item->setSubtotal($envio->getValorTotal());
             $item->setTotal($envio->getValorTotal());
@@ -162,6 +165,54 @@ class ReciboCajaController extends AbstractController
 
             $envio->setFacturadoRecibo(1);
             $envio->setReciboItems($item);
+
+            $entityManager->persist($envio);
+            $entityManager->flush();
+
+            $recibo->setSubTotal($recibo->getSubTotal() + $item->getSubTotal());
+            $recibo->setTotal($recibo->getTotal() + $item->getTotal());
+            
+
+
+            $entityManager->persist( $recibo);
+            $entityManager->flush();
+        }
+   
+          
+        return $this->redirectToRoute('app_recibo_caja_edit', ['id' => $recibo->getId()], Response::HTTP_SEE_OTHER);
+        
+        
+    }
+    #[Route('/facturar_envios_inter', name: 'app_recibo_caja_facturar_envios_inter', methods: ['GET', 'POST'])]
+    public function executeFacturarEnviosInter(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ) {
+
+        $enviosId = (array) $request->request->get('envId');
+        $recibo = $entityManager->getRepository(ReciboCaja::class)->find($request->request->get('recibo'));
+        
+        foreach ($enviosId as $envioId) {
+
+            $envio = $entityManager->getRepository(Envio::class)->find($envioId);
+
+            $envio = $entityManager->getRepository(Envio::class)->find($envioId);
+
+            $item = new ReciboCajaItem();
+            $item->setCantidad(1);
+            $item->setDescripcion('TRANSPORTE COURRIER');
+            $item->setValorUnitario($envio->getTotalACobrar());
+            $item->setSubtotal($envio->getTotalACobrar());
+            $item->setTotal($envio->getTotalACobrar());
+            $item->setReciboCaja($recibo);
+            $item->setCodigo($envio->getNumeroEnvio());
+           
+
+            $entityManager->persist($item);
+            $entityManager->flush();
+
+            $envio->setFacturadoRecibo(1);
+            $envio->setReciboCajaItem($item);
 
             $entityManager->persist($envio);
             $entityManager->flush();
