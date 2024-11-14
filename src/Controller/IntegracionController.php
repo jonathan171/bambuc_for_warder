@@ -178,6 +178,7 @@ class IntegracionController extends AbstractController
             $envio->setEmpresa('DHL');
             $envio->setVerificado(0);
             $envio->setFacturadoTransportadora(0);
+            $envio->setFacturadoRecibo(0);
 
             $pais_envio = $doctrine->getRepository(Pais::class)->findOneBy(['code' => $array_envio['shipperDetails']['postalAddress']['countryCode']]);
             $pais_recibe = $doctrine->getRepository(Pais::class)->findOneBy(['code' => $array_envio['receiverDetails']['postalAddress']['countryCode']]);
