@@ -14,6 +14,7 @@ use App\Repository\ReciboCajaRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -256,5 +257,36 @@ class ReciboCajaController extends AbstractController
 
         return $this->json($responseData);
     }
+
+    #[Route('/guardar-firma', name: 'app_recibo_caja_guardar_firma', methods: ['POST'])]
+public function guardarFirma(Request $request, EntityManagerInterface $em): JsonResponse
+{
+    $data = json_decode($request->getContent(), true);
+    $reciboId = $data['reciboId'] ?? null;
+    $firmaBase64 = $data['firma'] ?? null;
+
+    if (!$reciboId || !$firmaBase64) {
+        return new JsonResponse(['success' => false, 'message' => 'Datos inválidos.'], 400);
+    }
+
+    $recibo = $em->getRepository(ReciboCaja::class)->find($reciboId);
+
+    if (!$recibo) {
+        return new JsonResponse(['success' => false, 'message' => 'Recibo no encontrado.'], 404);
+    }
+
+    // Guardar la firma como archivo
+    $firmaPath = sprintf('uploads/firmas/recibo_%d.png', $reciboId);
+    $firmaData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $firmaBase64));
+    file_put_contents($firmaPath, $firmaData);
+
+    // Relacionar la firma con el recibo
+    $recibo->setFirma($firmaPath);
+    $em->persist($recibo);
+    $em->flush();
+
+    return new JsonResponse(['success' => true]);
+}
+
 
 }

@@ -4,6 +4,14 @@
 {% endblock %}
 {% block stylesheets %}
 	{{ macroselect2.styleSelect2}}
+    <style>
+        #signaturePad {
+        border: 1px solid #ddd;
+        width: 100%;
+        height: 200px;
+        display: block;
+}
+    </style>
 {% endblock %}
 {% block body %}
 	<h1>Editar Recibo Caja</h1>
@@ -106,27 +114,53 @@
 				<span class="fas fa-print"></span>
 			</a>
 			<a class="btn btn-dark rounded-pill px-4 waves-effect waves-light" href="{{ path('app_factura_index') }}">Terminar</a>
+            <button class="btn btn-primary" id="btnAbrirFirma" data-bs-toggle="modal" data-bs-target="#firmaModal" data-recibo-id="{{ recibo_caja.id }}">
+                Registrar Firma
+            </button>
 		</div>
 	</div>
 
-
+    <div class="modal fade" id="firmaModal" tabindex="-1" role="dialog" aria-labelledby="firmaModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="firmaModalLabel">Registrar Firma</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <canvas id="signaturePad" style="border: 1px solid #ddd; width: 100%; height: 200px;"></canvas>
+                    <button id="clearSignature" class="btn btn-danger btn-sm mt-2">Limpiar Firma</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button id="saveSignature" class="btn btn-success">Guardar Firma</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	<div id="envios" title="Envios" style="display:none;width:800px;height:500px;">
 		<div id="divenvios"></div>
 	</div>
-	{% block javascripts %}
-
+	
+{% endblock %}
+{% block javascripts %}
+        <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 		{{ macroselect2.scriptSelect2}}
 
-		<script>
+<script>
+    
 
+     $("#recibo_caja_municipio").select2({
+            width: '100%'});
+     $("#recibo_caja_pagada_a").select2({
+            width: '100%'});
+     $(document).on('select2:open', () => {
+            document.querySelector('.select2-search__field').focus();
+     });
 
-			$("#recibo_caja_municipio").select2({width: '100%'});
-      $("#recibo_caja_pagada_a").select2({width: '100%'});
-      $(document).on('select2:open', () => {
-        document.querySelector('.select2-search__field').focus();
-      });
-
-      function envios()
+   function envios()
         {
             var fechaincio = $("#fecha_inicio").val();
             var fechafin = $("#fecha_fin").val();
@@ -183,8 +217,7 @@
 
 
         }
-//validar campos menores que 100
-function validateMenorCien(item, id)
+       function validateMenorCien(item, id)
     {
        
 
@@ -264,6 +297,76 @@ function validateMenorCien(item, id)
      $(document).on('select2:open', () => {
         document.querySelector('.select2-search__field').focus();
      });
-		</script>
+
+    $(document).ready(function () {
+    const canvas = document.getElementById('signaturePad');
+    const signaturePad = new SignaturePad(canvas);
+
+    // Ajustar las dimensiones del lienzo al tamaño visible
+    function resizeCanvas() {
+        // Obtener el ratio del dispositivo (para pantallas Retina, etc.)
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+
+        // Ajustar el tamaño físico del lienzo (interno)
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+
+        // Escalar el contexto para que coincida con el tamaño visible
+        canvas.getContext('2d').scale(ratio, ratio);
+    }
+
+    // Ajustar el lienzo al cargar la página
+    resizeCanvas();
+
+    // Ajustar el lienzo cuando la ventana cambia de tamaño
+    $(window).on('resize', function () {
+        resizeCanvas();
+        signaturePad.clear(); // Limpiar la firma después de redimensionar
+    });
+
+    // Limpiar la firma
+    $('#clearSignature').on('click', function () {
+        signaturePad.clear();
+    });
+
+    // Guardar la firma
+    $('#saveSignature').on('click', function () {
+        if (signaturePad.isEmpty()) {
+            alert('Por favor, registre una firma antes de guardar.');
+            return;
+        }
+
+        // Capturar la firma en formato Base64
+        const firmaBase64 = signaturePad.toDataURL('image/png');
+        const reciboId = $('#btnAbrirFirma').data('recibo-id'); // Obtener el ID del recibo del botón
+
+        // Enviar la firma al servidor
+        $.ajax({
+            url: '{{ path('app_recibo_caja_guardar_firma')}}',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                reciboId: reciboId,
+                firma: firmaBase64,
+            }),
+            success: function (response) {
+                if (response.success) {
+                    alert('Firma registrada con éxito.');
+                    $('#firmaModal').modal('hide');
+                } else {
+                    alert('Error al guardar la firma: ' + response.message);
+                }
+            },
+            error: function (xhr) {
+                console.error(xhr);
+                alert('Ocurrió un error al guardar la firma.');
+            },
+        });
+    });
+});
+
+
+</script>
+
+		
 	{% endblock %}
-{% endblock %}

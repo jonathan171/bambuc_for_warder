@@ -58,6 +58,10 @@ class ReciboCaja
      * @ORM\Column(type="decimal", precision=20, scale=2)
      */
     private $total;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $firma;
 
     public function __construct()
     {
@@ -180,6 +184,17 @@ class ReciboCaja
     {
         $this->total = $total;
 
+        return $this;
+    }
+
+    public function getFirma(): ?string
+    {
+        return $this->firma;
+    }
+
+    public function setFirma(?string $firma): self
+    {
+        $this->firma = $firma;
         return $this;
     }
 }
