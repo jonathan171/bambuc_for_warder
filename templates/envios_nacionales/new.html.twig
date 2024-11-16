@@ -196,7 +196,12 @@ $(document).ready(function () {
 });
 
  $(document).on('select2:open', () => {
-        document.querySelector('.select2-search__field').focus();
-    });
+    setTimeout(() => {
+        const searchField = document.querySelector('.select2-search__field');
+        if (searchField) {
+            searchField.focus();
+        }
+    }, 100); // Pequeño retraso para garantizar que el elemento esté completamente renderizado
+});
 </script>
 {% endblock %}
