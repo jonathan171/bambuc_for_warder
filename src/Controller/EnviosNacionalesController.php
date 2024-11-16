@@ -563,7 +563,7 @@ class EnviosNacionalesController extends AbstractController
     public function buscarDestinatario(Request $request, EntityManagerInterface $em): JsonResponse {
         $query = $request->query->get('q');
         $resultados = $em->getRepository(EnviosNacionales::class)->createQueryBuilder('e')
-            ->select('DISTINCT e.destinatario, e.direccionDestino, e.telefonoDestinatario, m.id as municipio')
+            ->select('DISTINCT e.destinatario, e.direccionDestino, e.telefonoDestinatario, m.id as municipio,m.nombre as municipio_text')
             ->leftJoin('e.municipioDestino', 'm')
             ->where('e.destinatario LIKE :query')
             ->setParameter('query', '%' . $query . '%')

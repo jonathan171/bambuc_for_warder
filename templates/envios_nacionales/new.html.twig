@@ -173,10 +173,11 @@ $(document).ready(function () {
                     results: $.map(data, function (item) {
                         return {
                             id: item.destinatario,
-                            text: item.destinatario,
+                            text: item.destinatario + ' '+item.direccionDestino+'('+ item.municipio_text+')',
                             direccion: item.direccionDestino,
                             telefono: item.telefonoDestinatario,
-                            municipio: item.municipio
+                            municipio: item.municipio,
+                            destinatario:  item.destinatario
                         };
                     })
                 };
@@ -185,7 +186,7 @@ $(document).ready(function () {
         }
     }).on('select2:select', function (e) {
         var data = e.params.data;
-        $('#envios_nacionales_destinatario').val(data.text);
+        $('#envios_nacionales_destinatario').val(data.destinatario);
         $('#envios_nacionales_direccionDestino').val(data.direccion);
         $('#envios_nacionales_telefonoDestinatario').val(data.telefono);
         $('#envios_nacionales_municipioDestino').val(data.municipio);
