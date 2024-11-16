@@ -258,7 +258,7 @@ class ReciboCajaController extends AbstractController
         return $this->json($responseData);
     }
 
-    #[Route('/guardar-firma', name: 'app_recibo_caja_guardar_firma', methods: ['POST'])]
+    #[Route('/guardar_firma', name: 'app_recibo_caja_guardar_firma', methods: ['POST'])]
 public function guardarFirma(Request $request, EntityManagerInterface $em): JsonResponse
 {
     $data = json_decode($request->getContent(), true);

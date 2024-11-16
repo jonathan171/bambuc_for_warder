@@ -80,6 +80,9 @@
     .bold {
         font-weight: bold;
     }
+    .content-firma{
+        text-align: center;
+    }
 </style>
 
 <table>
@@ -143,6 +146,11 @@
 <br>
 <br>
 <br>
+{% if (recibo.firma)%}
+<div class="firma-text">
+     <img src="{{ asset(recibo.firma) }}" alt="logo" width="300">
+</div>
+{% endif %}
 <div class="firma">
     <span class="firma-text">Firma Recibido</span>
 </div>
