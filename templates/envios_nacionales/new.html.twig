@@ -196,12 +196,15 @@ $(document).ready(function () {
 });
 
  $(document).on('select2:open', () => {
-    setTimeout(() => {
-        const searchField = document.querySelector('.select2-search__field');
-        if (searchField) {
+    const searchField = document.querySelector('.select2-search__field');
+    if (searchField) {
+        // Asegúrate de que haya un retraso para que el elemento esté disponible
+        setTimeout(() => {
+            // Simula una interacción directa en móviles
+            searchField.dispatchEvent(new Event('touchstart', { bubbles: true }));
             searchField.focus();
-        }
-    }, 100); // Pequeño retraso para garantizar que el elemento esté completamente renderizado
+        }, 100); 
+    }
 });
 </script>
 {% endblock %}
