@@ -110,7 +110,7 @@
 				Internacional
             </button>
             {% if is_granted('ROLE_ADMIN')  %}
-            <button id="#btnAbrirFirma" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#firmaModal" data-recibo-id="{{ recibo_caja.id }}">
+            <button  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#firmaModal" data-recibo-id="{{ recibo_caja.id }}">
                 Firmar
             </button>
             {% endif %}

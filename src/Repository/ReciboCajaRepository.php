@@ -6,6 +6,7 @@ use App\Entity\ReciboCaja;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @extends ServiceEntityRepository<ReciboCaja>
@@ -16,10 +17,13 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ReciboCaja[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ReciboCajaRepository extends ServiceEntityRepository
-{
-    public function __construct(ManagerRegistry $registry)
+{   
+    private $security;
+
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, ReciboCaja::class);
+        $this->security = $security;
     }
 
     public function add(ReciboCaja $entity, bool $flush = false): void
@@ -92,6 +96,11 @@ class ReciboCajaRepository extends ServiceEntityRepository
             
             $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_recibo?id=' . $recibo->getId() . '" title="Imprimir" target="_blank"><span class="fas fa-print"></span></a>';
             $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/recibo_caja/' . $recibo->getId() . '/edit"><span class="fas fa-pencil-alt"></span></a>';
+          if ($this->security->isGranted('ROLE_ADMIN')) {
+                $actions .= '<button  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#firmaModal" data-recibo-id="'. $recibo->getId().'">
+                    Firmar
+                </button>';
+            }
 
             $list[] = [
                 'fecha' => $recibo->getFecha()->format('Y-m-d'),

@@ -114,7 +114,25 @@
 			</table>
 			
 		</div>
-
+		<div class="modal fade" id="firmaModal" tabindex="-1" role="dialog" aria-labelledby="firmaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="firmaModalLabel">Registrar Firma</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="canvasContainer" style="width: 100%; height: 200px;">
+                        <canvas id="signaturePad" style="border: 1px solid #ddd;"></canvas>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="clearSignature" class="btn btn-danger btn-sm">Limpiar Firma</button>
+                    <button id="saveSignature" class="btn btn-success btn-sm">Guardar Firma</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	</div>
 <div class="p-3">
 		<div class="form-group ">
@@ -149,6 +167,7 @@
 
 {% endblock %}
 {% block javascripts %}
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 	{{ macroRedirect.scriptRedirect}}
 	<script>
 		{% if is_granted('ROLE_NACIONAL') or  is_granted('ROLE_AUXILIAR_NACIONAL') %}
@@ -387,5 +406,79 @@ $('#data_table_recibos').DataTable({
     ]
     });
 
+	$(document).ready(function () {
+    const canvas = document.getElementById('signaturePad');
+    const container = document.getElementById('canvasContainer');
+    let signaturePad;
+    let reciboId = null; // Variable para almacenar el ID del recibo
+
+    // Función para configurar el tamaño del lienzo
+    function setCanvasSize() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+
+        // Configurar las dimensiones físicas del lienzo
+        canvas.width = container.offsetWidth * ratio;
+        canvas.height = container.offsetHeight * ratio;
+
+        // Escalar el contexto del lienzo
+        canvas.getContext('2d').scale(ratio, ratio);
+    }
+
+    // Inicializar el lienzo cuando se muestra el modal
+    $('#firmaModal').on('shown.bs.modal', function (event) {
+        const button = $(event.relatedTarget); // Botón que activó el modal
+        reciboId = button.data('recibo-id'); // Obtener el ID del recibo del atributo data-recibo-id
+
+        console.log('ID del recibo:', reciboId); // Verificar el ID del recibo en la consola
+
+        setCanvasSize(); // Ajustar el tamaño del lienzo
+        signaturePad = new SignaturePad(canvas); // Inicializar SignaturePad
+        signaturePad.clear(); // Asegurar que esté limpio
+    });
+
+    // Limpiar la firma
+    $('#clearSignature').on('click', function () {
+        if (signaturePad) {
+            signaturePad.clear();
+        }
+    });
+
+    // Guardar la firma
+    $('#saveSignature').on('click', function () {
+        if (!reciboId) {
+            alert('No se pudo obtener el ID del recibo.');
+            return;
+        }
+
+        if (signaturePad && signaturePad.isEmpty()) {
+            alert('Por favor, registre una firma antes de guardar.');
+        } else if (signaturePad) {
+            const firmaBase64 = signaturePad.toDataURL('image/png');
+
+            // Enviar la firma y el ID del recibo al backend
+            $.ajax({
+                url: '{{ path('app_recibo_caja_guardar_firma')}}',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    reciboId: reciboId,
+                    firma: firmaBase64,
+                }),
+                success: function (response) {
+                    if (response.success) {
+                        alert('Firma guardada correctamente.');
+                        $('#firmaModal').modal('hide');
+                    } else {
+                        alert('Error al guardar la firma.');
+                    }
+                },
+                error: function (error) {
+                    console.error('Error al enviar la firma:', error);
+                    alert('Ocurrió un error al guardar la firma.');
+                },
+            });
+        }
+    });
+});
 	</script>
 {% endblock %}
