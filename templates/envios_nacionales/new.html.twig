@@ -159,6 +159,7 @@
 $(document).ready(function () {
     $("#form_destinatario").select2({
         placeholder: "Buscar destinatario",
+        width: '100%',
         ajax: {
             url: '{{ path('app_envios_nacionales_buscar_destinatario')}}',
             dataType: 'json',
