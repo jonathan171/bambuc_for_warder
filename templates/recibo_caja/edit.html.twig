@@ -109,9 +109,11 @@
 			<button class="btn waves-effect waves-light btn-danger" type="button" onclick="enviosInter();">
 				Internacional
             </button>
+            {% if is_granted('ROLE_ADMIN')  %}
             <button id="#btnAbrirFirma" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#firmaModal" data-recibo-id="{{ recibo_caja.id }}">
                 Firmar
             </button>
+            {% endif %}
 		</div>
 		<div class="col-sm-12 col-lg-2">
 			<a class="btn waves-effect waves-light btn-info" href="/impresion/impresion_recibo?id={{recibo_caja.id}}" title="Imprimir">
