@@ -134,6 +134,9 @@
                                 text: 'Cantidad de envíos'
                             }
                         },
+                            tooltip: {
+                                pointFormat: '<b>{point.y} envíos</b><br>Total a cobrar: <b>${point.totalCobrar}</b>'
+                            },
                         series: [{
                             name: 'Envíos',
                             data: data.totales.map((total, index) => ({
