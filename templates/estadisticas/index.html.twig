@@ -115,6 +115,7 @@
                 method: 'GET',
                 data: { fechaInicio: fechaInicio, fechaFin: fechaFin },
                 success: function(data) {
+                     const totalGeneral = data.totales.reduce((acc, curr) => acc + curr, 0);
                     Highcharts.chart('enviosPorPaisChart', {
                         chart: {
                             type: 'column'
@@ -134,9 +135,24 @@
                                 text: 'Cantidad de envíos'
                             }
                         },
-                            tooltip: {
+                        tooltip: {
                                 pointFormat: '<b>{point.y} envíos</b><br>Total a cobrar: <b>${point.totalCobrar}</b>'
                             },
+                        plotOptions: {
+                            column: {
+                                dataLabels: {
+                                    enabled: true,
+                                    formatter: function() {
+                                        const porcentaje = ((this.y / totalGeneral) * 100).toFixed(2);
+                                        return `${porcentaje}%`; // Mostrar porcentaje encima de cada barra
+                                    },
+                                    style: {
+                                        fontWeight: 'bold',
+                                        color: 'black'
+                                    }
+                                }
+                            }
+                        },
                         series: [{
                             name: 'Envíos',
                             data: data.totales.map((total, index) => ({
