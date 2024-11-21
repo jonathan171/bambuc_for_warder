@@ -24,12 +24,14 @@ class EstadisticasController extends AbstractController
         
         $data = $envioRepository->getEnviosPorPaisOrigen($fechaInicio, $fechaFin);
     
-        $labels = array_column($data, 'pais');
+        $labels = array_column($data, 'municipio');
         $totals = array_column($data, 'total');
+        $totalesCobrar = array_column($data, 'total_cobrar');
     
         return new JsonResponse([
             'labels' => $labels,
-            'data' => $totals,
+            'totales' => $totals,
+            'totalesCobrar' => $totalesCobrar,
         ]);
     }
     #[Route('/estadisticas_envios_por_pais_destino', name: 'app_estadisticas_envios_por_pais_destino')]

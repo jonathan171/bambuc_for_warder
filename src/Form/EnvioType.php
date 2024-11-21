@@ -151,7 +151,12 @@ class EnvioType extends AbstractType
                 'attr' => [
                     'class' => 'form-control'
                 ]
-            ]);
+            ])
+            ->add('municipio',null, [
+                'attr' => [
+                    'class' => 'form-control', 
+                ]
+              ]);
 
             $builder->get('facturaItems')
             ->addModelTransformer($this->transformer);

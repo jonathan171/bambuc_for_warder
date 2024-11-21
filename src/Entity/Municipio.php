@@ -56,9 +56,15 @@ class Municipio
      */
     private $recibos_caja;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Envio::class, mappedBy="municipio")
+     */
+    private $envios;
+
     public function __construct()
     {
         $this->recibos_caja = new ArrayCollection();
+        $this->envios = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -126,6 +132,36 @@ class Municipio
             // set the owning side to null (unless already changed)
             if ($reciboCaja->getMunicipio() === $this) {
                 $reciboCaja->setMunicipio(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Envio>
+     */
+    public function getEnvios(): Collection
+    {
+        return $this->envios;
+    }
+
+    public function addEnvio(Envio $envio): self
+    {
+        if (!$this->envios->contains($envio)) {
+            $this->envios[] = $envio;
+            $envio->setMunicipio($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnvio(Envio $envio): self
+    {
+        if ($this->envios->removeElement($envio)) {
+            // set the owning side to null (unless already changed)
+            if ($envio->getMunicipio() === $this) {
+                $envio->setMunicipio(null);
             }
         }
 

@@ -177,9 +177,9 @@ class EnvioRepository extends ServiceEntityRepository
     public function getEnviosPorPaisOrigen($fechaInicio = null, $fechaFin = null): array
     {
         $qb = $this->createQueryBuilder('e')
-            ->select('p.nombre as pais', 'COUNT(e.id) as total')
-            ->join('e.paisOrigen', 'p')
-            ->groupBy('p.id');
+            ->select('m.nombre as municipio', 'COUNT(e.id) as total', 'SUM(e.totalACobrar) as total_cobrar')
+            ->join('e.municipio', 'm')
+            ->groupBy('m.id');
         
         if ($fechaInicio) {
             $qb->andWhere('e.fechaEnvio >= :fechaInicio')

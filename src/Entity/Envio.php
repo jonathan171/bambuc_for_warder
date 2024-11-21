@@ -195,6 +195,11 @@ class Envio
      */
     private $reciboCajaItem;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Municipio::class, inversedBy="envios")
+     */
+    private $municipio;
+
     
 
     public function getId(): ?int
@@ -485,6 +490,18 @@ class Envio
     public function setReciboCajaItem(?ReciboCajaItem $reciboCajaItem): self
     {
         $this->reciboCajaItem = $reciboCajaItem;
+
+        return $this;
+    }
+
+    public function getMunicipio(): ?Municipio
+    {
+        return $this->municipio;
+    }
+
+    public function setMunicipio(?Municipio $municipio): self
+    {
+        $this->municipio = $municipio;
 
         return $this;
     }

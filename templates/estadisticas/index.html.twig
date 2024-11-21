@@ -120,12 +120,12 @@
                             type: 'column'
                         },
                         title: {
-                            text: 'Cantidad de envíos por país de origen'
+                            text: 'Cantidad de envíos por ciudad de origen'
                         },
                         xAxis: {
                             categories: data.labels,
                             title: {
-                                text: 'Países'
+                                text: 'Ciudades'
                             }
                         },
                         yAxis: {
@@ -136,12 +136,16 @@
                         },
                         series: [{
                             name: 'Envíos',
-                            data: data.data
-                        }]
+                            data: data.totales.map((total, index) => ({
+                            y: total,
+                            totalCobrar: data.totalesCobrar[index]
+                        })),
+                        color: 'rgba(128, 0, 128, 0.8)'
+                            }]
                     });
                 },
                 error: function(error) {
-                    console.error("Error al cargar los datos de envíos por país:", error);
+                    console.error("Error al cargar los datos de envíos por ciudad:", error);
                 }
             });
         }
