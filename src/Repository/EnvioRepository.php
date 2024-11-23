@@ -199,7 +199,9 @@ class EnvioRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('e')
             ->select('p.nombre as pais', 'COUNT(e.id) as total', 'SUM(e.totalACobrar) as total_cobrar')
             ->join('e.paisDestino', 'p')
-            ->groupBy('p.id');
+            ->groupBy('p.id')
+            ->orderBy('total', 'DESC') // Ordenar por cantidad de envíos (descendente)
+            ->setMaxResults(10);;
         
         if ($fechaInicio) {
             $qb->andWhere('e.fechaEnvio >= :fechaInicio')
