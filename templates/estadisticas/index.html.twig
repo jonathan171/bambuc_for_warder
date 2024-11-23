@@ -197,6 +197,7 @@
                 method: 'GET',
                 data: { fechaInicio: fechaInicio, fechaFin: fechaFin },
                 success: function(data) {
+                    const totalGeneral = data.totales.reduce((acc, curr) => acc + curr, 0);
                     Highcharts.chart('enviosPorPaisDestinoChart', {
                         chart: {
                             type: 'column'
