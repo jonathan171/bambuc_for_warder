@@ -9,6 +9,16 @@
 .select2-container {
     width: 100% !important;
 }
+
+.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 500vw;
+    height: 100vh;
+    background: white; /* Opcional: para un fondo consistente */
+    z-index: 9999; /* Asegura que esté por encima de otros elementos */
+}
 </style>
 {% endblock %}
 
@@ -487,8 +497,102 @@
         }).on('select2:closing', function() {
             currentQuery = $('.select2-search input').prop('value');
         });
-  
 
+
+        /**full pantalla
+        */
+        const chartContainer = $('#enviosPorPaisChart');
+
+        chartContainer.on('dblclick', function () {
+            // Alternar la clase fullscreen
+            $(this).toggleClass('fullscreen');
+
+            // Redibujar el gráfico para ajustarlo al nuevo tamaño
+            if ($(this).hasClass('fullscreen')) {
+                Highcharts.charts.forEach(chart => {
+                    if (chart && chart.renderTo.id === 'enviosPorPaisChart') {
+                        chart.setSize(null, null); // Ajusta al contenedor
+                    }
+                });
+            } else {
+                Highcharts.charts.forEach(chart => {
+                    if (chart && chart.renderTo.id === 'enviosPorPaisChart') {
+                        chart.setSize(null, 400); // Vuelve al tamaño original
+                    }
+                });
+            }
+        });
+
+        /**full pantalla
+        */
+        const chartContainer2 = $('#enviosPorPaisDestinoChart');
+
+        chartContainer2.on('dblclick', function () {
+            // Alternar la clase fullscreen
+            $(this).toggleClass('fullscreen');
+
+            // Redibujar el gráfico para ajustarlo al nuevo tamaño
+            if ($(this).hasClass('fullscreen')) {
+                Highcharts.charts.forEach(chart => {
+                    if (chart && chart.renderTo.id === 'enviosPorPaisDestinoChart') {
+                        chart.setSize(null, null); // Ajusta al contenedor
+                    }
+                });
+            } else {
+                Highcharts.charts.forEach(chart => {
+                    if (chart && chart.renderTo.id === 'enviosPorPaisDestinoChart') {
+                        chart.setSize(null, 400); // Vuelve al tamaño original
+                    }
+                });
+            }
+        });
+
+         /**full pantalla
+        */
+        const chartContainer3 = $('#totalesPorDiaChart');
+
+        chartContainer3.on('dblclick', function () {
+            // Alternar la clase fullscreen
+            $(this).toggleClass('fullscreen');
+
+            // Redibujar el gráfico para ajustarlo al nuevo tamaño
+            if ($(this).hasClass('fullscreen')) {
+                Highcharts.charts.forEach(chart => {
+                    if (chart && chart.renderTo.id === 'totalesPorDiaChart') {
+                        chart.setSize(null, null); // Ajusta al contenedor
+                    }
+                });
+            } else {
+                Highcharts.charts.forEach(chart => {
+                    if (chart && chart.renderTo.id === 'totalesPorDiaChart') {
+                        chart.setSize(null, 400); // Vuelve al tamaño original
+                    }
+                });
+            }
+        });
+         /**full pantalla
+        */
+        const chartContainer4 = $('#rangosDePesoChart');
+
+        chartContainer4.on('dblclick', function () {
+            // Alternar la clase fullscreen
+            $(this).toggleClass('fullscreen');
+
+            // Redibujar el gráfico para ajustarlo al nuevo tamaño
+            if ($(this).hasClass('fullscreen')) {
+                Highcharts.charts.forEach(chart => {
+                    if (chart && chart.renderTo.id === 'rangosDePesoChart') {
+                        chart.setSize(null, null); // Ajusta al contenedor
+                    }
+                });
+            } else {
+                Highcharts.charts.forEach(chart => {
+                    if (chart && chart.renderTo.id === 'rangosDePesoChart') {
+                        chart.setSize(null, 400); // Vuelve al tamaño original
+                    }
+                });
+            }
+        });
     });
 
 
