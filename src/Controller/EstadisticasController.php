@@ -44,10 +44,12 @@ class EstadisticasController extends AbstractController
 
         $labels = array_column($data, 'pais');
         $totals = array_column($data, 'total');
+        $totalesCobrar = array_column($data, 'total_cobrar');
 
         return new JsonResponse([
             'labels' => $labels,
-            'data' => $totals,
+            'totales' => $totals,
+            'totalesCobrar' => $totalesCobrar,
         ]);
     }
 

@@ -197,7 +197,7 @@ class EnvioRepository extends ServiceEntityRepository
     public function getEnviosPorPaisDestino($fechaInicio = null, $fechaFin = null): array
     {
         $qb = $this->createQueryBuilder('e')
-            ->select('p.nombre as pais', 'COUNT(e.id) as total')
+            ->select('p.nombre as pais', 'COUNT(e.id) as total', 'SUM(e.totalACobrar) as total_cobrar')
             ->join('e.paisDestino', 'p')
             ->groupBy('p.id');
         
