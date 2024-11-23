@@ -219,48 +219,48 @@ class EnvioRepository extends ServiceEntityRepository
     public function getTotalesPorDia($fechaInicio = null, $fechaFin = null, $agrupacion = 'daily'): array
     {
         
-    $qb = $this->createQueryBuilder('e');
+        $qb = $this->createQueryBuilder('e');
 
-    if ($agrupacion === 'daily') {
-        $qb->select(
-            "SUBSTRING(e.fechaEnvio, 1, 10) as fecha",
-            "SUM(e.totalACobrar) as total",
-            "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
-            "SUM(CASE WHEN e.facturadoRecibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
-            "SUM(CASE WHEN e.facturado = 0 AND e.facturadoRecibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
-        );
-    } elseif ($agrupacion === 'weekly') {
-        $qb->select(
-            "CONCAT(YEAR(e.fechaEnvio), '-', WEEK(e.fechaEnvio)) as fecha",
-            "SUM(e.totalACobrar) as total",
-            "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
-            "SUM(CASE WHEN e.facturadoRecibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
-            "SUM(CASE WHEN e.facturado = 0 AND e.facturadoRecibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
-        );
-    } elseif ($agrupacion === 'monthly') {
-        $qb->select(
-            "CONCAT(YEAR(e.fechaEnvio), '-', MONTH(e.fechaEnvio)) as fecha",
-            "SUM(e.totalACobrar) as total",
-            "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
-            "SUM(CASE WHEN e.facturadoRecibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
-            "SUM(CASE WHEN e.facturado = 0 AND e.facturadoRecibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
-        );
-    }
-
-    $qb->groupBy('fecha')
-       ->orderBy('fecha', 'ASC');
-
-    if ($fechaInicio) {
-        $qb->andWhere('e.fechaEnvio >= :fechaInicio')
-           ->setParameter('fechaInicio', $fechaInicio);
-    }
-
-    if ($fechaFin) {
-        $qb->andWhere('e.fechaEnvio <= :fechaFin')
-           ->setParameter('fechaFin', $fechaFin);
-    }
-
-    return $qb->getQuery()->getResult();
+        if ($agrupacion === 'daily') {
+            $qb->select(
+                "SUBSTRING(e.fechaEnvio, 1, 10) as fecha", // Solo fecha (YYYY-MM-DD)
+                "SUM(e.totalACobrar) as total",
+                "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
+                "SUM(CASE WHEN e.facturadoRecibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
+                "SUM(CASE WHEN e.facturado = 0 AND e.facturadoRecibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
+            );
+        } elseif ($agrupacion === 'weekly') {
+            $qb->select(
+                "CONCAT(YEAR(e.fechaEnvio), '-', LPAD(WEEK(e.fechaEnvio, 1), 2, '0')) as fecha", // Año-Semana
+                "SUM(e.totalACobrar) as total",
+                "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
+                "SUM(CASE WHEN e.facturadoRecibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
+                "SUM(CASE WHEN e.facturado = 0 AND e.facturadoRecibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
+            );
+        } elseif ($agrupacion === 'monthly') {
+            $qb->select(
+                "CONCAT(YEAR(e.fechaEnvio), '-', LPAD(MONTH(e.fechaEnvio), 2, '0')) as fecha", // Año-Mes
+                "SUM(e.totalACobrar) as total",
+                "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
+                "SUM(CASE WHEN e.facturadoRecibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
+                "SUM(CASE WHEN e.facturado = 0 AND e.facturadoRecibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
+            );
+        }
+    
+        $qb->groupBy('fecha')
+           ->orderBy('fecha', 'ASC');
+    
+        if ($fechaInicio) {
+            $qb->andWhere('e.fechaEnvio >= :fechaInicio')
+               ->setParameter('fechaInicio', $fechaInicio);
+        }
+    
+        if ($fechaFin) {
+            $qb->andWhere('e.fechaEnvio <= :fechaFin')
+               ->setParameter('fechaFin', $fechaFin);
+        }
+    
+        return $qb->getQuery()->getResult();
     }
 
     public function getEnviosPorEmpresa($fechaInicio = null, $fechaFin = null): array
