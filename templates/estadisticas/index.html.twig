@@ -136,10 +136,13 @@
                             }
                         },
                         tooltip: {
-                               pointFormat: `
-                                <b>{point.y} envíos</b><br>
-                                Total a cobrar: <b>${Highcharts.numberFormat(point.totalesCobrar, 2, '.', ',')} COP</b>
-                            `
+                               formatter: function() {
+                                        return `
+                                            <b>${this.point.category}</b><br>
+                                            <b>${this.point.y} envíos</b><br>
+                                            Total a cobrar: <b>${Highcharts.numberFormat(this.point.totalCobrar, 2, '.', ',')} MXN</b>
+                                        `;
+                                    }
                             },
                         plotOptions: {
                             column: {
@@ -228,10 +231,13 @@
                             }
                         },
                         tooltip: {
-                                pointFormat: `
-                                <b>{point.y} envíos</b><br>
-                                Total a cobrar: <b>${Highcharts.numberFormat(point.totalesCobrar, 2, '.', ',')} COP</b>
-                            `
+                                formatter: function() {
+                                        return `
+                                            <b>${this.point.category}</b><br>
+                                            <b>${this.point.y} envíos</b><br>
+                                            Total a cobrar: <b>${Highcharts.numberFormat(this.point.totalCobrar, 2, '.', ',')} MXN</b>
+                                        `;
+                                    }
                             },
                         plotOptions: {
                             column: {
