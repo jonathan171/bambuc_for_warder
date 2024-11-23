@@ -293,14 +293,9 @@ class EnvioRepository extends ServiceEntityRepository
             "SUM(CASE WHEN e.totalPesoCobrar > 30 AND e.totalPesoCobrar <= 40 THEN 1 ELSE 0 END) as rango_30_40",
             "SUM(CASE WHEN e.totalPesoCobrar > 40 AND e.totalPesoCobrar <= 50 THEN 1 ELSE 0 END) as rango_40_50",
             "SUM(CASE WHEN e.totalPesoCobrar > 50 THEN 1 ELSE 0 END) as rango_mas_50",
-            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar <= 5 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_0_5",
-            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar > 5 AND e.totalPesoCobrar <= 10 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_5_10",
-            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar > 10 AND e.totalPesoCobrar <= 20 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_10_20",
-            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar > 20 AND e.totalPesoCobrar <= 30 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_20_30",
-            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar > 30 AND e.totalPesoCobrar <= 40 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_30_40",
-            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar > 40 AND e.totalPesoCobrar <= 50 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_40_50",
-            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar > 50 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_mas_50"
-        );
+            "e.totalPesoCobrar as pesos" // Traemos todos los pesos sin agrupación
+        )
+        ->groupBy('e.totalPesoCobrar'); // Agrupamos por el peso exacto
 
         if ($fechaInicio) {
             $qb->andWhere('e.fechaEnvio >= :fechaInicio')
@@ -317,6 +312,6 @@ class EnvioRepository extends ServiceEntityRepository
             ->setParameter('paisDestino', $paisDestino);
         }
 
-        return $qb->getQuery()->getSingleResult();
+        return $qb->getQuery()->getResult();
     }
 }

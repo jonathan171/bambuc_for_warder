@@ -100,10 +100,40 @@ class EstadisticasController extends AbstractController
         $fechaFin = $request->query->get('fechaFin');
         $paisDestino = $request->query->get('paisDestino');
 
-        $data = $envioRepository->getRangosDePesoConTop3($fechaInicio, $fechaFin, $paisDestino);
+        $data = $envioRepository->getRangosDePesoConPesos($fechaInicio, $fechaFin, $paisDestino);
+
+        $rangos = [
+            'rango_0_5' => [],
+            'rango_5_10' => [],
+            'rango_10_20' => [],
+            'rango_20_30' => [],
+            'rango_30_40' => [],
+            'rango_40_50' => [],
+            'rango_mas_50' => []
+        ];
+
+        foreach ($data as $row) {
+            $peso = (float)$row['pesos'];
+
+            if ($peso <= 5) {
+                $rangos['rango_0_5'][] = $peso;
+            } elseif ($peso > 5 && $peso <= 10) {
+                $rangos['rango_5_10'][] = $peso;
+            } elseif ($peso > 10 && $peso <= 20) {
+                $rangos['rango_10_20'][] = $peso;
+            } elseif ($peso > 20 && $peso <= 30) {
+                $rangos['rango_20_30'][] = $peso;
+            } elseif ($peso > 30 && $peso <= 40) {
+                $rangos['rango_30_40'][] = $peso;
+            } elseif ($peso > 40 && $peso <= 50) {
+                $rangos['rango_40_50'][] = $peso;
+            } else {
+                $rangos['rango_mas_50'][] = $peso;
+            }
+        }
 
         $top3 = [];
-        foreach (json_decode($data['detalles_rangos'], true) as $rango => $pesos) {
+        foreach ($rangos as $rango => $pesos) {
             $conteo = array_count_values($pesos);
             arsort($conteo);
             $top3[$rango] = array_slice($conteo, 0, 3, true);
@@ -120,16 +150,16 @@ class EstadisticasController extends AbstractController
                 'Más de 50'
             ],
             'data' => [
-                (int)$data['rango_0_5'],
-                (int)$data['rango_5_10'],
-                (int)$data['rango_10_20'],
-                (int)$data['rango_20_30'],
-                (int)$data['rango_30_40'],
-                (int)$data['rango_40_50'],
-                (int)$data['rango_mas_50']
+                count($rangos['rango_0_5']),
+                count($rangos['rango_5_10']),
+                count($rangos['rango_10_20']),
+                count($rangos['rango_20_30']),
+                count($rangos['rango_30_40']),
+                count($rangos['rango_40_50']),
+                count($rangos['rango_mas_50'])
             ],
             'top3' => $top3
         ]);
-    }
 
+    }
 }
