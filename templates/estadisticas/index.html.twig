@@ -373,21 +373,21 @@
                         chart: { type: 'pie' },
                         title: { text: 'Distribución de Envíos por Rangos de Peso' },
                         tooltip: {
-                                formatter: function() {
-                                    const rango = this.point.name.replace(/\s/g, '_').toLowerCase();
-                                    const top3 = data.top3[rango];
-                                    const top3Html = top3
-                                        ? Object.entries(top3)
-                                            .map(([peso, conteo]) => `<br>- ${peso}kg: ${conteo} envíos`)
-                                            .join('')
-                                        : '<br>- Sin datos';
-                                    return `
-                                        <b>${this.point.name}</b><br>
-                                        Envíos: <b>${this.point.y}</b> (${this.point.percentage.toFixed(1)}%)<br>
-                                        <b>Top 3 Pesos:</b>${top3Html}
-                                    `;
-                                }
-                            },
+                            formatter: function() {
+                                const rango = this.point.name.replace(/\s/g, '_').toLowerCase();
+                                const top3 = data.top3[rango];
+                                const top3Html = top3
+                                    ? Object.entries(top3)
+                                        .map(([peso, conteo]) => `<br>- ${peso}kg: ${conteo} envíos`)
+                                        .join('')
+                                    : '<br>- Sin datos';
+                                return `
+                                    <b>${this.point.name}</b><br>
+                                    Envíos: <b>${this.point.y}</b> (${this.point.percentage.toFixed(1)}%)<br>
+                                    <b>Top 3 Pesos:</b>${top3Html}
+                                `;
+                            }
+                        },
                         plotOptions: {
                             pie: {
                                 allowPointSelect: true,
