@@ -136,7 +136,7 @@
                             }
                         },
                         tooltip: {
-                                pointFormat: '<b>{point.y} envíos</b><br>Total a cobrar: <b>${point.totalCobrar}</b>'
+                                pointFormat: '<b>{point.y} envíos</b><br>Total a cobrar: <b>${Highcharts.numberFormat(point.totalCobrar, 2, '.', ',')} COP</b>'
                             },
                         plotOptions: {
                             column: {
@@ -225,7 +225,7 @@
                             }
                         },
                         tooltip: {
-                                pointFormat: '<b>{point.y} envíos</b><br>Total a cobrar: <b>${point.totalCobrar}</b>'
+                                pointFormat: '<b>{point.y} envíos</b><br>Total a cobrar: <b>${Highcharts.numberFormat(point.totalCobrar, 2, '.', ',')} COP</b>'
                             },
                         plotOptions: {
                             column: {
