@@ -285,27 +285,22 @@ class EnvioRepository extends ServiceEntityRepository
     public function getRangosDePesoConTop3($fechaInicio = null, $fechaFin = null, $paisDestino = null): array
     {
         $qb = $this->createQueryBuilder('e')
-            ->select(
-                "SUM(CASE WHEN e.totalPesoCobrar <= 5 THEN 1 ELSE 0 END) as rango_0_5",
-                "SUM(CASE WHEN e.totalPesoCobrar > 5 AND e.totalPesoCobrar <= 10 THEN 1 ELSE 0 END) as rango_5_10",
-                "SUM(CASE WHEN e.totalPesoCobrar > 10 AND e.totalPesoCobrar <= 20 THEN 1 ELSE 0 END) as rango_10_20",
-                "SUM(CASE WHEN e.totalPesoCobrar > 20 AND e.totalPesoCobrar <= 30 THEN 1 ELSE 0 END) as rango_20_30",
-                "SUM(CASE WHEN e.totalPesoCobrar > 30 AND e.totalPesoCobrar <= 40 THEN 1 ELSE 0 END) as rango_30_40",
-                "SUM(CASE WHEN e.totalPesoCobrar > 40 AND e.totalPesoCobrar <= 50 THEN 1 ELSE 0 END) as rango_40_50",
-                "SUM(CASE WHEN e.totalPesoCobrar > 50 THEN 1 ELSE 0 END) as rango_mas_50",
-                "JSON_OBJECTAGG(
-                    CASE 
-                        WHEN e.totalPesoCobrar <= 5 THEN 'rango_0_5'
-                        WHEN e.totalPesoCobrar > 5 AND e.totalPesoCobrar <= 10 THEN 'rango_5_10'
-                        WHEN e.totalPesoCobrar > 10 AND e.totalPesoCobrar <= 20 THEN 'rango_10_20'
-                        WHEN e.totalPesoCobrar > 20 AND e.totalPesoCobrar <= 30 THEN 'rango_20_30'
-                        WHEN e.totalPesoCobrar > 30 AND e.totalPesoCobrar <= 40 THEN 'rango_30_40'
-                        WHEN e.totalPesoCobrar > 40 AND e.totalPesoCobrar <= 50 THEN 'rango_40_50'
-                        ELSE 'rango_mas_50'
-                    END,
-                    JSON_ARRAYAGG(e.totalPesoCobrar)
-                ) as detalles_rangos"
-            );
+        ->select(
+            "SUM(CASE WHEN e.totalPesoCobrar <= 5 THEN 1 ELSE 0 END) as rango_0_5",
+            "SUM(CASE WHEN e.totalPesoCobrar > 5 AND e.totalPesoCobrar <= 10 THEN 1 ELSE 0 END) as rango_5_10",
+            "SUM(CASE WHEN e.totalPesoCobrar > 10 AND e.totalPesoCobrar <= 20 THEN 1 ELSE 0 END) as rango_10_20",
+            "SUM(CASE WHEN e.totalPesoCobrar > 20 AND e.totalPesoCobrar <= 30 THEN 1 ELSE 0 END) as rango_20_30",
+            "SUM(CASE WHEN e.totalPesoCobrar > 30 AND e.totalPesoCobrar <= 40 THEN 1 ELSE 0 END) as rango_30_40",
+            "SUM(CASE WHEN e.totalPesoCobrar > 40 AND e.totalPesoCobrar <= 50 THEN 1 ELSE 0 END) as rango_40_50",
+            "SUM(CASE WHEN e.totalPesoCobrar > 50 THEN 1 ELSE 0 END) as rango_mas_50",
+            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar <= 5 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_0_5",
+            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar > 5 AND e.totalPesoCobrar <= 10 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_5_10",
+            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar > 10 AND e.totalPesoCobrar <= 20 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_10_20",
+            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar > 20 AND e.totalPesoCobrar <= 30 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_20_30",
+            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar > 30 AND e.totalPesoCobrar <= 40 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_30_40",
+            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar > 40 AND e.totalPesoCobrar <= 50 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_40_50",
+            "GROUP_CONCAT(CASE WHEN e.totalPesoCobrar > 50 THEN e.totalPesoCobrar ELSE NULL END) as detalles_rango_mas_50"
+        );
 
         if ($fechaInicio) {
             $qb->andWhere('e.fechaEnvio >= :fechaInicio')
