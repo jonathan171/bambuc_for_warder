@@ -1,6 +1,16 @@
 {% extends 'base.html.twig' %}
+{% import "macros/select2.html.twig" as macroselect2 %}
 
 {% block title %}Hello EstadisticasController!{% endblock %}
+
+{% block stylesheets %}
+{{ macroselect2.styleSelect2}}
+<style>
+.select2-container {
+    width: 100% !important;
+}
+</style>
+{% endblock %}
 
 {% block body %}
 
@@ -69,6 +79,12 @@
                       </div>
                     </div>
             </div>
+            <div class="d-flex align-items-center">
+                    <div>
+                      <h4 class="card-title">Pais:</h4>
+                    </div>
+                    <select class="form-control select2" id="input-buscador-pais"></select>
+            </div>
             <div id="rangosDePesoChart" style="width:100%; height:400px;"></div>
             </div>
         </div>
@@ -83,7 +99,7 @@
 <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
+{{ macroselect2.scriptSelect2}}
 <script>
  $(document).ready(function() {
         const fechaFin = moment();
@@ -361,7 +377,8 @@
             // Función que se llama cuando el usuario selecciona un rango de fechas
             const fechaInicio = start.format('YYYY-MM-DD');
             const fechaFin = end.format('YYYY-MM-DD');
-            cargarGraficoRangosDePeso(fechaInicio, fechaFin, null);
+            const pais = $("#input-buscador-pais").val();
+            cargarGraficoRangosDePeso(fechaInicio, fechaFin,  pais);
         });
         function cargarGraficoRangosDePeso(fechaInicio = '', fechaFin = '', paisDestino = '') {
             $.ajax({
@@ -430,7 +447,53 @@
         cargarGraficoDestino(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
        cargarGraficoRangosDePeso(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'), null);
         cargarGraficoTotalesPorDia(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
+        
+        function pad(n, width, z) { z = z || '0'; n = n + ''; return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n; }
+
+     function formatResult (item) {
+            
+
+            var html = [
+                '<div>',
+                    item.text ,
+                '</div>'
+            ];
+
+            var $state = $(html.join(""));
+
+            return $state;
+        };
+    
+
+       var currentQuery = "";
+
+        $("#input-buscador-pais").select2({
+            width: '100%',
+             theme: "bootstrap5",
+             minimumInputLength: 2,
+             delay: 200,
+             placeholder: "Ingrese un término de búsqueda aquí ",
+            ajax: {
+                url: '{{ path('app_pais_buscador_ajax_pais')}}',
+                dataType: 'json'
+            },
+            templateResult: formatResult
+        }).on('select2:select', function (e) {
+            var data = e.params.data;
+             cargarGraficoRangosDePeso(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'), data.id);
+            
+        }).on('select2:open', function() {
+            $('.select2-search input').focus().val(currentQuery).trigger('input');
+        }).on('select2:closing', function() {
+            currentQuery = $('.select2-search input').prop('value');
+        });
+  
 
     });
+
+
+     
+    
+     
 </script>
 {% endblock %}

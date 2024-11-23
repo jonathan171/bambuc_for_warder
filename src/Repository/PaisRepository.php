@@ -79,6 +79,36 @@ class PaisRepository extends ServiceEntityRepository
 
     }
 
+    public function findByDataShearch(array $options = [])
+    {
+        
+        $currentPage = isset($options['page']) ? $options['page'] : 0;
+        $pageSize = isset($options['pageSize']) ? $options['pageSize'] : 10;
+
+        $query = $this->createQueryBuilder('c');
+        if($options['search']){
+            $shearch = '%'.$options['search'].'%';
+            $query ->where('c.nombre like :val ')
+            ->setParameter('val',$shearch);
+        }
+       
+        $query->getQuery();
+        $paginator = new Paginator($query);
+        $totalItems = $paginator->count();
+        $paginator->getQuery()->setFirstResult($pageSize * $currentPage)->setMaxResults($pageSize)->getResult();
+        $list = [];
+        foreach ($paginator as $item) {
+
+            $list[] = [
+                'id' => $item->getId(),       
+                'text'=>$item->getNombre()
+            ];
+        }
+        return ['data' => $list, 'totalRecords' => $totalItems];
+     
+
+    }
+
     /*
     public function findOneBySomeField($value): ?Pais
     {

@@ -64,6 +64,35 @@ class PaisController extends AbstractController
             'form' => $form,
         ]);
     }
+    #[Route('/buscadorAjaxPais', name: 'app_pais_buscador_ajax_pais', methods: ['GET', 'POST'])]
+    public function executeBuscadorAjaxCliente(
+        Request $request,
+        PaisRepository $paisRepository
+    ) {
+        $busqueda = $request->query->get('term');
+
+
+
+        $start = 0;
+        $length = 20;
+
+
+        $data_table  = $paisRepository->findByDataShearch([
+            'page' => ($start / $length),
+            'pageSize' =>  $length,
+            'search' =>  $busqueda
+        ]);
+
+
+        $responseData = array(
+            "results" => $data_table['data'],
+            "pagination" => array(
+                // Determinar si hay mas paginas disponibles
+                "more" => (false)
+            )
+        );
+        return $this->json($responseData);
+    }
 
     #[Route('/{id}', name: 'app_pais_show', methods: ['GET'])]
     public function show(Pais $pai): Response
