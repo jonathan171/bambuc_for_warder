@@ -295,6 +295,7 @@
             $.ajax({
                 url: '{{ path('app_estadisticas_peso_total_por_dia')}}',
                 method: 'GET',
+                 method: 'GET',
                 data: { fechaInicio: fechaInicio, fechaFin: fechaFin },
                 success: function(data) {
                     Highcharts.chart('totalesPorDiaChart', {
@@ -310,11 +311,13 @@
                                 const index = this.points ? this.points[0].point.index : this.point.index;
                                 const totalFacturado = data.totalesFacturado[index];
                                 const totalRecibo = data.totalesRecibo[index];
+                                const totalSinCobrar = data.totalesSinCobrar[index];
                                 return `
                                     <b>${this.x}</b><br>
-                                    Total: <b>$${Highcharts.numberFormat(this.y, 2, '.', ',')} COP/b><br>
+                                    Total: <b>$${Highcharts.numberFormat(this.y, 2, '.', ',')} COP</b><br>
                                     Total en Facturas: <b>$${Highcharts.numberFormat(totalFacturado, 2, '.', ',')} COP</b><br>
-                                    Total en Recibos: <b>$${Highcharts.numberFormat(totalRecibo, 2, '.', ',')} COP</b>
+                                    Total en Recibos: <b>$${Highcharts.numberFormat(totalRecibo, 2, '.', ',')} COP</b><br>
+                                    Total sin Cobrar: <b>$${Highcharts.numberFormat(totalSinCobrar, 2, '.', ',')} COP</b>
                                 `;
                             },
                             shared: true // Permite un tooltip único para toda la serie
