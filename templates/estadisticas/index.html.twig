@@ -369,18 +369,30 @@
                 method: 'GET',
                 data: { fechaInicio: fechaInicio, fechaFin: fechaFin, paisDestino: paisDestino },
                 success: function(data) {
+                    const rangoMap = {
+                        '0 <= 5': 'rango_0_5',
+                        '5 <= 10': 'rango_5_10',
+                        '10 <= 20': 'rango_10_20',
+                        '20 <= 30': 'rango_20_30',
+                        '30 <= 40': 'rango_30_40',
+                        '40 <= 50': 'rango_40_50',
+                        'Más de 50': 'rango_mas_50'
+                    };
+
                     Highcharts.chart('rangosDePesoChart', {
                         chart: { type: 'pie' },
                         title: { text: 'Distribución de Envíos por Rangos de Peso' },
                         tooltip: {
                             formatter: function() {
-                                const rango = this.point.name.replace(/\s/g, '_').toLowerCase();
-                                const top3 = data.top3[rango];
+                                // Mapear el nombre del rango al formato correcto de clave en top3
+                                const rangoKey = rangoMap[this.point.name];
+                                const top3 = data.top3[rangoKey];
                                 const top3Html = top3
                                     ? Object.entries(top3)
                                         .map(([peso, conteo]) => `<br>- ${peso}kg: ${conteo} envíos`)
                                         .join('')
                                     : '<br>- Sin datos';
+
                                 return `
                                     <b>${this.point.name}</b><br>
                                     Envíos: <b>${this.point.y}</b> (${this.point.percentage.toFixed(1)}%)<br>
