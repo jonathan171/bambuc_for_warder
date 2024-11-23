@@ -221,7 +221,7 @@ class EnvioRepository extends ServiceEntityRepository
                 "SUBSTRING(e.fechaEnvio, 1, 10) as fecha",
                 "SUM(e.totalACobrar) as total",
                 "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
-                "SUM(CASE WHEN e.facturadoRecibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo"
+                "SUM(CASE WHEN e.facturado_recibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo"
             )
             ->groupBy('fecha')
             ->orderBy('fecha', 'ASC');
