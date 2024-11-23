@@ -113,7 +113,7 @@ class EstadisticasController extends AbstractController
         ];
 
         foreach ($data as $row) {
-            $peso = (float)$row['pesos'];
+            $peso = round((float)$row['pesos'], 1); // Redondear a 1 decimal
 
             if ($peso <= 5) {
                 $rangos['rango_0_5'][] = $peso;
@@ -134,8 +134,11 @@ class EstadisticasController extends AbstractController
 
         $top3 = [];
         foreach ($rangos as $rango => $pesos) {
+            // Contar ocurrencias de valores redondeados
             $conteo = array_count_values($pesos);
             arsort($conteo);
+
+            // Obtener los 3 más frecuentes
             $top3[$rango] = array_slice($conteo, 0, 3, true);
         }
 
@@ -160,6 +163,5 @@ class EstadisticasController extends AbstractController
             ],
             'top3' => $top3
         ]);
-
     }
 }
