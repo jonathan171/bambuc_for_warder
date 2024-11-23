@@ -226,24 +226,24 @@ class EnvioRepository extends ServiceEntityRepository
                 "SUBSTRING(e.fechaEnvio, 1, 10) as fecha", // Agrupación diaria
                 "SUM(e.totalACobrar) as total",
                 "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
-                "SUM(CASE WHEN e.facturadoRecibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
-                "SUM(CASE WHEN e.facturado = 0 AND e.facturadoRecibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
+                "SUM(CASE WHEN e.facturado_recibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
+                "SUM(CASE WHEN e.facturado = 0 AND e.facturado_recibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
             );
         } elseif ($agrupacion === 'weekly') {
             $qb->select(
                 "CONCAT(SUBSTRING(e.fechaEnvio, 1, 4), '-', FLOOR((DAYOFYEAR(e.fechaEnvio) - 1) / 7) + 1) as fecha", // Año-Semana
                 "SUM(e.totalACobrar) as total",
                 "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
-                "SUM(CASE WHEN e.facturadoRecibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
-                "SUM(CASE WHEN e.facturado = 0 AND e.facturadoRecibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
+                "SUM(CASE WHEN e.facturado_recibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
+                "SUM(CASE WHEN e.facturado = 0 AND e.facturado_recibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
             );
         } elseif ($agrupacion === 'monthly') {
             $qb->select(
                 "CONCAT(SUBSTRING(e.fechaEnvio, 1, 4), '-', SUBSTRING(e.fechaEnvio, 6, 2)) as fecha", // Año-Mes
                 "SUM(e.totalACobrar) as total",
                 "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
-                "SUM(CASE WHEN e.facturadoRecibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
-                "SUM(CASE WHEN e.facturado = 0 AND e.facturadoRecibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
+                "SUM(CASE WHEN e.facturado_recibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
+                "SUM(CASE WHEN e.facturado = 0 AND e.facturado_recibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
             );
         }
 
