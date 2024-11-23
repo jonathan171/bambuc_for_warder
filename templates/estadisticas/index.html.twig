@@ -292,11 +292,20 @@
 
         
         function cargarGraficoTotalesPorDia(fechaInicio = '', fechaFin = '') {
+            // Calcular la diferencia de días entre las fechas
+            const diffInDays = moment(fechaFin).diff(moment(fechaInicio), 'days');
+            let agrupacion = 'daily';
+
+            if (diffInDays > 30 && diffInDays <= 90) {
+                agrupacion = 'weekly';
+            } else if (diffInDays > 90) {
+                agrupacion = 'monthly';
+            }
+
             $.ajax({
                 url: '{{ path('app_estadisticas_peso_total_por_dia')}}',
                 method: 'GET',
-                 method: 'GET',
-                data: { fechaInicio: fechaInicio, fechaFin: fechaFin },
+                data: { fechaInicio: fechaInicio, fechaFin: fechaFin, agrupacion: agrupacion },
                 success: function(data) {
                     Highcharts.chart('totalesPorDiaChart', {
                         chart: { type: 'line' },
@@ -320,7 +329,7 @@
                                     Total sin Cobrar: <b>$${Highcharts.numberFormat(totalSinCobrar, 2, '.', ',')} COP</b>
                                 `;
                             },
-                            shared: true // Permite un tooltip único para toda la serie
+                            shared: true
                         },
                         series: [{
                             name: 'Total de Ingresos',

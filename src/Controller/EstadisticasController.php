@@ -58,8 +58,9 @@ class EstadisticasController extends AbstractController
     {
         $fechaInicio = $request->query->get('fechaInicio') ?: (new \DateTime())->modify('-3 months')->format('Y-m-d');
         $fechaFin = $request->query->get('fechaFin') ?: (new \DateTime())->format('Y-m-d');
+        $agrupacion = $request->query->get('agrupacion') ?: 'daily';
 
-        $data = $envioRepository->getTotalesPorDia($fechaInicio, $fechaFin);
+        $data = $envioRepository->getTotalesPorDia($fechaInicio, $fechaFin, $agrupacion);
 
         $fechas = array_column($data, 'fecha');
         $totales = array_map('floatval', array_column($data, 'total'));
