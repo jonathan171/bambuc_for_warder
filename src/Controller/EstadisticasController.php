@@ -93,5 +93,43 @@ class EstadisticasController extends AbstractController
             'data' => $totals,
         ]);
     }
+    #[Route('/estadisticas_envios_rangos_de_peso', name: 'app_estadisticas_envios_rangos_de_peso')]
+    public function rangosDePesoConTop3(Request $request, EnvioRepository $envioRepository): JsonResponse
+    {
+        $fechaInicio = $request->query->get('fechaInicio');
+        $fechaFin = $request->query->get('fechaFin');
+        $paisDestino = $request->query->get('paisDestino');
+
+        $data = $envioRepository->getRangosDePesoConTop3($fechaInicio, $fechaFin, $paisDestino);
+
+        $top3 = [];
+        foreach (json_decode($data['detalles_rangos'], true) as $rango => $pesos) {
+            $conteo = array_count_values($pesos);
+            arsort($conteo);
+            $top3[$rango] = array_slice($conteo, 0, 3, true);
+        }
+
+        return new JsonResponse([
+            'labels' => [
+                '0 <= 5',
+                '5 <= 10',
+                '10 <= 20',
+                '20 <= 30',
+                '30 <= 40',
+                '40 <= 50',
+                'Más de 50'
+            ],
+            'data' => [
+                (int)$data['rango_0_5'],
+                (int)$data['rango_5_10'],
+                (int)$data['rango_10_20'],
+                (int)$data['rango_20_30'],
+                (int)$data['rango_30_40'],
+                (int)$data['rango_40_50'],
+                (int)$data['rango_mas_50']
+            ],
+            'top3' => $top3
+        ]);
+    }
 
 }

@@ -361,35 +361,62 @@
             // Función que se llama cuando el usuario selecciona un rango de fechas
             const fechaInicio = start.format('YYYY-MM-DD');
             const fechaFin = end.format('YYYY-MM-DD');
-            cargarGraficoEmpresa(fechaInicio, fechaFin);
+            cargarGraficoRangosDePeso(fechaInicio, fechaFin, null);
         });
-        function cargarGraficoEmpresa(fechaInicio = '', fechaFin = '') {
+        function cargarGraficoRangosDePeso(fechaInicio = '', fechaFin = '', paisDestino = '') {
             $.ajax({
-                url: '{{ path('app_estadisticas_envios_por_empresa')}}',
+                url: '{{ path('app_estadisticas_envios_rangos_de_peso')}}',
                 method: 'GET',
-                data: { fechaInicio: fechaInicio, fechaFin: fechaFin },
+                data: { fechaInicio: fechaInicio, fechaFin: fechaFin, paisDestino: paisDestino },
                 success: function(data) {
-                    Highcharts.chart('enviosPorEmpresaChart', {
+                    Highcharts.chart('rangosDePesoChart', {
                         chart: { type: 'pie' },
-                        title: { text: 'Cantidad de envíos por empresa' },
-                        plotOptions: { 
+                        title: { text: 'Distribución de Envíos por Rangos de Peso' },
+                        tooltip: {
+                            formatter: function() {
+                                const rango = this.point.name.replace(/\s/g, '_').toLowerCase();
+                                const top3 = data.top3[rango];
+                                const top3Html = top3
+                                    ? Object.entries(top3)
+                                        .map(([peso, conteo]) => `<br>- ${peso}kg: ${conteo} envíos`)
+                                        .join('')
+                                    : '<br>- Sin datos';
+                                return `
+                                    <b>${this.point.name}</b><br>
+                                    Envíos: <b>${this.point.y}</b> (${this.point.percentage.toFixed(1)}%)<br>
+                                    <b>Top 3 Pesos:</b>${top3Html}
+                                `;
+                            }
+                        },
+                        plotOptions: {
                             pie: {
-                                innerSize: '50%', 
-                                dataLabels: { enabled: true, format: '{point.name}: {point.y} envíos ({point.percentage:.1f}%)' }
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                                }
                             }
                         },
                         series: [{
                             name: 'Envíos',
-                            data: data.labels.map((label, index) => ({ name: label, y: data.data[index] }))
+                            colorByPoint: true,
+                            data: data.labels.map((label, index) => ({
+                                name: label,
+                                y: data.data[index]
+                            }))
                         }]
                     });
+                },
+                error: function(error) {
+                    console.error("Error al cargar los datos de los rangos de peso:", error);
                 }
             });
         }
         // Cargar gráfico sin filtros al cargar la página
         cargarGraficoOrigen(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
         cargarGraficoDestino(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
-        cargarGraficoEmpresa(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
+       cargarGraficoRangosDePeso(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'), null);
         cargarGraficoTotalesPorDia(fechaInicio.format('YYYY-MM-DD'), fechaFin.format('YYYY-MM-DD'));
 
     });
