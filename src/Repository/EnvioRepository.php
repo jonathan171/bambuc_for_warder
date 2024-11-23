@@ -214,11 +214,12 @@ class EnvioRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getTotalesPorFacturaYRecibo($fechaInicio = null, $fechaFin = null): array
+    public function getTotalesPorDia($fechaInicio = null, $fechaFin = null): array
     {
         $qb = $this->createQueryBuilder('e')
             ->select(
                 "SUBSTRING(e.fechaEnvio, 1, 10) as fecha",
+                "SUM(e.totalACobrar) as total",
                 "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
                 "SUM(CASE WHEN e.facturadoRecibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo"
             )
@@ -233,9 +234,9 @@ class EnvioRepository extends ServiceEntityRepository
         if ($fechaFin) {
             $qb->andWhere('e.fechaEnvio <= :fechaFin')
             ->setParameter('fechaFin', $fechaFin);
-        }
+    }
 
-        return $qb->getQuery()->getResult();
+    return $qb->getQuery()->getResult();
     }
 
     public function getEnviosPorEmpresa($fechaInicio = null, $fechaFin = null): array

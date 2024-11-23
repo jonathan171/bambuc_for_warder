@@ -299,30 +299,30 @@
                 success: function(data) {
                     Highcharts.chart('totalesPorDiaChart', {
                         chart: { type: 'line' },
-                        title: { text: 'Totales cobrados por día (Facturas vs Recibos)' },
+                        title: { text: 'Total de ingresos por día' },
                         xAxis: { categories: data.labels, title: { text: 'Fecha' }},
                         yAxis: {
                             min: 0,
                             title: { text: 'Total ($)' }
                         },
                         tooltip: {
-                            shared: true,
                             formatter: function() {
-                                let tooltip = `<b>${this.x}</b><br>`;
-                                this.points.forEach(point => {
-                                    tooltip += `${point.series.name}: <b>$${Highcharts.numberFormat(point.y, 2, '.', ',')} MXN</b><br>`;
-                                });
-                                return tooltip;
-                            }
+                                const index = this.points ? this.points[0].point.index : this.point.index;
+                                const totalFacturado = data.totalesFacturado[index];
+                                const totalRecibo = data.totalesRecibo[index];
+                                return `
+                                    <b>${this.x}</b><br>
+                                    Total: <b>$${Highcharts.numberFormat(this.y, 2, '.', ',')} COP/b><br>
+                                    Total en Facturas: <b>$${Highcharts.numberFormat(totalFacturado, 2, '.', ',')} COP</b><br>
+                                    Total en Recibos: <b>$${Highcharts.numberFormat(totalRecibo, 2, '.', ',')} COP</b>
+                                `;
+                            },
+                            shared: true // Permite un tooltip único para toda la serie
                         },
                         series: [{
-                            name: 'Total Facturado',
-                            data: data.totalesFacturado,
+                            name: 'Total de Ingresos',
+                            data: data.totales,
                             color: 'rgba(54, 162, 235, 0.8)'
-                        }, {
-                            name: 'Total Recibo',
-                            data: data.totalesRecibo,
-                            color: 'rgba(255, 99, 132, 0.8)'
                         }]
                     });
                 },
