@@ -65,12 +65,14 @@ class EstadisticasController extends AbstractController
         $totales = array_map('floatval', array_column($data, 'total'));
         $totalesFacturado = array_map('floatval', array_column($data, 'total_facturado'));
         $totalesRecibo = array_map('floatval', array_column($data, 'total_recibo'));
+        $totalesSinCobrar = array_map('floatval', array_column($data, 'total_sin_cobrar'));
 
         return new JsonResponse([
             'labels' => $fechas,
             'totales' => $totales,
             'totalesFacturado' => $totalesFacturado,
             'totalesRecibo' => $totalesRecibo,
+            'totalesSinCobrar' => $totalesSinCobrar,
         ]);
     }
 
