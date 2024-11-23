@@ -52,7 +52,7 @@
                       </div>
                     </div>
             </div>
-            <div id="pesoYIngresosPorDiaChart" style="width:100%; height:400px;"></div>
+            <div id="totalesPorDiaChart" style="width:100%; height:400px;"></div>
             </div>
         </div>
     </div>
@@ -287,44 +287,49 @@
             const fechaInicio = start.format('YYYY-MM-DD');
             const fechaFin = end.format('YYYY-MM-DD');
             
-            cargarGraficoPesoYIngresosPorDia(fechaInicio, fechaFin);
+            cargarGraficoTotalesPorDia(fechaInicio, fechaFin);
         });
 
-        function cargarGraficoPesoYIngresosPorDia(fechaInicio = '', fechaFin = '') {
+        
+        function cargarGraficoTotalesPorDia(fechaInicio = '', fechaFin = '') {
             $.ajax({
                 url: '{{ path('app_estadisticas_peso_total_por_dia')}}',
                 method: 'GET',
-        data: { fechaInicio: fechaInicio, fechaFin: fechaFin },
-        success: function(data) {
-            Highcharts.chart('pesoYIngresosPorDiaChart', {
-                chart: { type: 'line' },
-                title: { text: 'Peso total y ingresos por día' },
-                xAxis: { categories: data.labels, title: { text: 'Fecha' }},
-                yAxis: [{ // Eje Y para Peso
-                    title: { text: 'Peso Total (kg)' },
-                    min: 0
-                }, { // Eje Y secundario para Ingresos
-                    title: { text: 'Ingresos ($)' },
-                    opposite: true,
-                    min: 0
-                }],
-                series: [{
-                    name: 'Peso Total',
-                    data: data.peso_total,
-                    color: 'rgba(54, 162, 235, 0.8)',
-                    yAxis: 0 // Asignado al primer eje Y
-                }, {
-                    name: 'Ingresos',
-                    data: data.ingresos,
-                    color: 'rgba(255, 99, 132, 0.8)',
-                    yAxis: 1 // Asignado al eje Y secundario
-                }]
+                data: { fechaInicio: fechaInicio, fechaFin: fechaFin },
+                success: function(data) {
+                    Highcharts.chart('totalesPorDiaChart', {
+                        chart: { type: 'line' },
+                        title: { text: 'Totales cobrados por día (Facturas vs Recibos)' },
+                        xAxis: { categories: data.labels, title: { text: 'Fecha' }},
+                        yAxis: {
+                            min: 0,
+                            title: { text: 'Total ($)' }
+                        },
+                        tooltip: {
+                            shared: true,
+                            formatter: function() {
+                                let tooltip = `<b>${this.x}</b><br>`;
+                                this.points.forEach(point => {
+                                    tooltip += `${point.series.name}: <b>$${Highcharts.numberFormat(point.y, 2, '.', ',')} MXN</b><br>`;
+                                });
+                                return tooltip;
+                            }
+                        },
+                        series: [{
+                            name: 'Total Facturado',
+                            data: data.totalesFacturado,
+                            color: 'rgba(54, 162, 235, 0.8)'
+                        }, {
+                            name: 'Total Recibo',
+                            data: data.totalesRecibo,
+                            color: 'rgba(255, 99, 132, 0.8)'
+                        }]
+                    });
+                },
+                error: function(error) {
+                    console.error("Error al cargar los datos de totales por día:", error);
+                }
             });
-        },
-        error: function(error) {
-            console.error("Error al cargar los datos de peso y ingresos por día:", error);
-            }
-        });
         }
         
         $('#fechaPorEmpresa').daterangepicker({

@@ -54,21 +54,21 @@ class EstadisticasController extends AbstractController
     }
 
     #[Route('/estadisticas_peso_total_por_dia', name: 'app_estadisticas_peso_total_por_dia')]
-    public function pesoTotalPorDia(Request $request, EnvioRepository $envioRepository): JsonResponse
+    public function totalesPorFacturaYRecibo(Request $request, EnvioRepository $envioRepository): JsonResponse
     {
         $fechaInicio = $request->query->get('fechaInicio') ?: (new \DateTime())->modify('-3 months')->format('Y-m-d');
         $fechaFin = $request->query->get('fechaFin') ?: (new \DateTime())->format('Y-m-d');
 
-        $data = $envioRepository->getPesoEIngresosPorDia($fechaInicio, $fechaFin);
+        $data = $envioRepository->getTotalesPorFacturaYRecibo($fechaInicio, $fechaFin);
 
         $fechas = array_column($data, 'fecha');
-        $pesoTotal = array_map('floatval', array_column($data, 'peso_total'));
-        $ingresos = array_map('floatval', array_column($data, 'ingresos'));
+        $totalesFacturado = array_map('floatval', array_column($data, 'total_facturado'));
+        $totalesRecibo = array_map('floatval', array_column($data, 'total_recibo'));
 
         return new JsonResponse([
             'labels' => $fechas,
-            'peso_total' => $pesoTotal,
-            'ingresos' => $ingresos,
+            'totalesFacturado' => $totalesFacturado,
+            'totalesRecibo' => $totalesRecibo,
         ]);
     }
 
