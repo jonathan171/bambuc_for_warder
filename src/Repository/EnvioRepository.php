@@ -294,9 +294,8 @@ class EnvioRepository extends ServiceEntityRepository
                 WHEN e.totalPesoCobrar > 30 AND e.totalPesoCobrar <= 40 THEN '30 <= 40'
                 WHEN e.totalPesoCobrar > 40 AND e.totalPesoCobrar <= 50 THEN '40 <= 50'
                 ELSE 'Más de 50'
-                END AS rango",
-                "COUNT(e.id) AS total",
-                "GROUP_CONCAT(e.totalPesoCobrar) AS pesos"
+             END AS rango",
+            "e.totalPesoCobrar AS peso"
         );
 
         if ($fechaInicio) {
@@ -313,9 +312,6 @@ class EnvioRepository extends ServiceEntityRepository
             $qb->andWhere('e.paisDestino = :paisDestino')
             ->setParameter('paisDestino', $paisDestino);
         }
-
-        $qb->groupBy('rango')
-        ->orderBy('rango', 'ASC');
 
         return $qb->getQuery()->getResult();
     }

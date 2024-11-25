@@ -102,25 +102,35 @@ class EstadisticasController extends AbstractController
 
         $data = $envioRepository->getRangosDePesoConConteo($fechaInicio, $fechaFin, $paisDestino);
 
-        $labels = [];
-        $totales = [];
+        $rangos = [];
+        $conteos = [];
         $top3 = [];
 
         foreach ($data as $row) {
-            $labels[] = $row['rango'];
-            $totales[] = (int)$row['total'];
+            $rango = $row['rango'];
+            $peso = (string)$row['peso']; // Convertir a cadena para evitar problemas
 
-            // Procesar el top 3
-            $pesos = explode(',', $row['pesos']);
-            $conteoPesos = array_count_values($pesos);
-            arsort($conteoPesos);
+            // Inicializar rango si no existe
+            if (!isset($rangos[$rango])) {
+                $rangos[$rango] = [];
+                $conteos[$rango] = 0;
+            }
 
-            $top3[$row['rango']] = array_slice($conteoPesos, 0, 3, true);
+            // Incrementar conteo total y agregar peso al rango
+            $rangos[$rango][] = $peso;
+            $conteos[$rango]++;
+        }
+
+        // Calcular Top 3 de cada rango
+        foreach ($rangos as $rango => $pesos) {
+            $conteoPesos = array_count_values($pesos); // Contar ocurrencias
+            arsort($conteoPesos); // Ordenar por frecuencia
+            $top3[$rango] = array_slice($conteoPesos, 0, 3, true); // Tomar los 3 primeros
         }
 
         return new JsonResponse([
-            'labels' => $labels,
-            'data' => $totales,
+            'labels' => array_keys($conteos),
+            'data' => array_values($conteos),
             'top3' => $top3,
         ]);
     }
