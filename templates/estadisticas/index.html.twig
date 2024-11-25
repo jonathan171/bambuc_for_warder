@@ -412,8 +412,7 @@
                         title: { text: 'Distribución de Envíos por Rangos de Peso' },
                         tooltip: {
                             formatter: function() {
-                                // Mapear el nombre del rango al formato correcto de clave en top3
-                                const rangoKey = rangoMap[this.point.name];
+                                const rangoKey = this.point.name;
                                 const top3 = data.top3[rangoKey];
                                 const top3Html = top3
                                     ? Object.entries(top3)

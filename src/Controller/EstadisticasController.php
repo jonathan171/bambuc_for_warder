@@ -100,71 +100,28 @@ class EstadisticasController extends AbstractController
         $fechaFin = $request->query->get('fechaFin');
         $paisDestino = $request->query->get('paisDestino');
 
-        $data = $envioRepository->getRangosDePesoConPesos($fechaInicio, $fechaFin, $paisDestino);
+        $data = $envioRepository->getRangosDePesoConConteo($fechaInicio, $fechaFin, $paisDestino);
 
-        $rangos = [
-            'rango_0_5' => [],
-            'rango_5_10' => [],
-            'rango_10_20' => [],
-            'rango_20_30' => [],
-            'rango_30_40' => [],
-            'rango_40_50' => [],
-            'rango_mas_50' => []
-        ];
-
-        dump($data);
-        die();
+        $labels = [];
+        $totales = [];
+        $top3 = [];
 
         foreach ($data as $row) {
-            $peso = round((float)$row['pesos'], 1); // Redondear a 1 decimal
+            $labels[] = $row['rango'];
+            $totales[] = (int)$row['total'];
 
-            if ($peso <= 5) {
-                $rangos['rango_0_5'][] = (string)$peso; // Convertir a cadena
-            } elseif ($peso > 5 && $peso <= 10) {
-                $rangos['rango_5_10'][] = (string)$peso;
-            } elseif ($peso > 10 && $peso <= 20) {
-                $rangos['rango_10_20'][] = (string)$peso;
-            } elseif ($peso > 20 && $peso <= 30) {
-                $rangos['rango_20_30'][] = (string)$peso;
-            } elseif ($peso > 30 && $peso <= 40) {
-                $rangos['rango_30_40'][] = (string)$peso;
-            } elseif ($peso > 40 && $peso <= 50) {
-                $rangos['rango_40_50'][] = (string)$peso;
-            } else {
-                $rangos['rango_mas_50'][] = (string)$peso;
-            }
-        }
+            // Procesar el top 3
+            $pesos = explode(',', $row['pesos']);
+            $conteoPesos = array_count_values($pesos);
+            arsort($conteoPesos);
 
-        $top3 = [];
-        foreach ($rangos as $rango => $pesos) {
-            // Contar ocurrencias de valores convertidos a cadenas
-            $conteo = array_count_values($pesos);
-            arsort($conteo);
-
-            // Obtener los 3 más frecuentes
-            $top3[$rango] = array_slice($conteo, 0, 3, true);
+            $top3[$row['rango']] = array_slice($conteoPesos, 0, 3, true);
         }
 
         return new JsonResponse([
-            'labels' => [
-                '0 <= 5',
-                '5 <= 10',
-                '10 <= 20',
-                '20 <= 30',
-                '30 <= 40',
-                '40 <= 50',
-                'Más de 50'
-            ],
-            'data' => [
-                count($rangos['rango_0_5']),
-                count($rangos['rango_5_10']),
-                count($rangos['rango_10_20']),
-                count($rangos['rango_20_30']),
-                count($rangos['rango_30_40']),
-                count($rangos['rango_40_50']),
-                count($rangos['rango_mas_50'])
-            ],
-            'top3' => $top3
+            'labels' => $labels,
+            'data' => $totales,
+            'top3' => $top3,
         ]);
     }
 }

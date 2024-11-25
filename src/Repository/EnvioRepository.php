@@ -286,16 +286,18 @@ class EnvioRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('e')
         ->select(
-            "SUM(CASE WHEN e.totalPesoCobrar <= 5 THEN 1 ELSE 0 END) as rango_0_5",
-            "SUM(CASE WHEN e.totalPesoCobrar > 5 AND e.totalPesoCobrar <= 10 THEN 1 ELSE 0 END) as rango_5_10",
-            "SUM(CASE WHEN e.totalPesoCobrar > 10 AND e.totalPesoCobrar <= 20 THEN 1 ELSE 0 END) as rango_10_20",
-            "SUM(CASE WHEN e.totalPesoCobrar > 20 AND e.totalPesoCobrar <= 30 THEN 1 ELSE 0 END) as rango_20_30",
-            "SUM(CASE WHEN e.totalPesoCobrar > 30 AND e.totalPesoCobrar <= 40 THEN 1 ELSE 0 END) as rango_30_40",
-            "SUM(CASE WHEN e.totalPesoCobrar > 40 AND e.totalPesoCobrar <= 50 THEN 1 ELSE 0 END) as rango_40_50",
-            "SUM(CASE WHEN e.totalPesoCobrar > 50 THEN 1 ELSE 0 END) as rango_mas_50",
-            "e.totalPesoCobrar as pesos" // Traemos todos los pesos sin agrupación
-        )
-        ->groupBy('e.totalPesoCobrar'); // Agrupamos por el peso exacto
+            "CASE
+                WHEN e.totalPesoCobrar <= 5 THEN '0 <= 5'
+                WHEN e.totalPesoCobrar > 5 AND e.totalPesoCobrar <= 10 THEN '5 <= 10'
+                WHEN e.totalPesoCobrar > 10 AND e.totalPesoCobrar <= 20 THEN '10 <= 20'
+                WHEN e.totalPesoCobrar > 20 AND e.totalPesoCobrar <= 30 THEN '20 <= 30'
+                WHEN e.totalPesoCobrar > 30 AND e.totalPesoCobrar <= 40 THEN '30 <= 40'
+                WHEN e.totalPesoCobrar > 40 AND e.totalPesoCobrar <= 50 THEN '40 <= 50'
+                ELSE 'Más de 50'
+                END AS rango",
+                "COUNT(e.id) AS total",
+                "GROUP_CONCAT(e.totalPesoCobrar) AS pesos"
+        );
 
         if ($fechaInicio) {
             $qb->andWhere('e.fechaEnvio >= :fechaInicio')
@@ -311,6 +313,9 @@ class EnvioRepository extends ServiceEntityRepository
             $qb->andWhere('e.paisDestino = :paisDestino')
             ->setParameter('paisDestino', $paisDestino);
         }
+
+        $qb->groupBy('rango')
+        ->orderBy('rango', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
