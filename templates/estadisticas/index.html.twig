@@ -115,8 +115,8 @@
  $(document).ready(function() {
         const fechaFin = moment();
         const fechaInicio = moment().subtract(3, 'months');
-        const fechaFin_rango_pesos = moment();
-        const fechaInicio_rango_pesos = moment().subtract(3, 'months');
+        let fechaFin_rango_pesos = moment();
+        let fechaInicio_rango_pesos = moment().subtract(3, 'months');
         // Configurar el daterangepicker
         $('#fechaRango').daterangepicker({
             opens: 'left',
@@ -388,8 +388,8 @@
             }
         }, function(start, end) {
             // Función que se llama cuando el usuario selecciona un rango de fechas
-            const fechaInicio_rango_pesos = start.format('YYYY-MM-DD');
-            const fechaFin_rango_pesos = end.format('YYYY-MM-DD');
+            fechaInicio_rango_pesos = start.format('YYYY-MM-DD');
+            fechaFin_rango_pesos = end.format('YYYY-MM-DD');
             const pais = $("#input-buscador-pais").val();
             cargarGraficoRangosDePeso(fechaInicio_rango_pesos, fechaFin_rango_pesos,  pais);
         });
@@ -492,7 +492,7 @@
             templateResult: formatResult
         }).on('select2:select', function (e) {
             var data = e.params.data;
-             cargarGraficoRangosDePeso(fechaInicio_rango_pesos.format('YYYY-MM-DD'), fechaFin_rango_pesos.format('YYYY-MM-DD'), data.id);
+             cargarGraficoRangosDePeso(fechaInicio_rango_pesos, fechaFin_rango_pesos, data.id);
             
         }).on('select2:open', function() {
             $('.select2-search input').focus().val(currentQuery).trigger('input');
