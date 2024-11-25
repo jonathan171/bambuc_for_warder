@@ -115,7 +115,7 @@
  $(document).ready(function() {
         const fechaFin = moment();
         const fechaInicio = moment().subtract(3, 'months');
-         const fechaFin_rango_pesos = moment();
+        const fechaFin_rango_pesos = moment();
         const fechaInicio_rango_pesos = moment().subtract(3, 'months');
         // Configurar el daterangepicker
         $('#fechaRango').daterangepicker({
@@ -378,20 +378,20 @@
             locale: {
                 format: 'YYYY-MM-DD' // Formato de fecha que usaremos
             },
-            startDate: fechaInicio,
-            endDate: fechaFin,
+            startDate: fechaInicio_rango_pesos,
+            endDate: fechaFin_rango_pesos,
             ranges: {
-                'Últimos 3 meses': [fechaInicio, fechaFin],
-                'Últimos 6 meses': [moment().subtract(6, 'months'), fechaFin],
-                'Último año': [moment().subtract(1, 'year'), fechaFin],
-                'Este año': [moment().startOf('year'), fechaFin]
+                'Últimos 3 meses': [fechaInicio_rango_pesos, fechaFin_rango_pesos],
+                'Últimos 6 meses': [moment().subtract(6, 'months'), fechaFin_rango_pesos],
+                'Último año': [moment().subtract(1, 'year'), fechaFin_rango_pesos],
+                'Este año': [moment().startOf('year'), fechaFin_rango_pesos]
             }
         }, function(start, end) {
             // Función que se llama cuando el usuario selecciona un rango de fechas
             const fechaInicio_rango_pesos = start.format('YYYY-MM-DD');
             const fechaFin_rango_pesos = end.format('YYYY-MM-DD');
             const pais = $("#input-buscador-pais").val();
-            cargarGraficoRangosDePeso(fechaInicio, fechaFin,  pais);
+            cargarGraficoRangosDePeso(fechaInicio_rango_pesos, fechaFin_rango_pesos,  pais);
         });
         function cargarGraficoRangosDePeso(fechaInicio = '', fechaFin = '', paisDestino = '') {
             $.ajax({
