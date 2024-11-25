@@ -112,6 +112,9 @@ class EstadisticasController extends AbstractController
             'rango_mas_50' => []
         ];
 
+        dump($data);
+        die();
+
         foreach ($data as $row) {
             $peso = round((float)$row['pesos'], 1); // Redondear a 1 decimal
 
