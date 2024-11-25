@@ -282,7 +282,7 @@ class EnvioRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getRangosDePesoConPesos($fechaInicio = null, $fechaFin = null, $paisDestino = null): array
+    public function getRangosDePesoConConteo($fechaInicio = null, $fechaFin = null, $paisDestino = null): array
     {
         $qb = $this->createQueryBuilder('e')
         ->select(
