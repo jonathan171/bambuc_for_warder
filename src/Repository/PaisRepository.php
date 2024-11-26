@@ -97,6 +97,11 @@ class PaisRepository extends ServiceEntityRepository
         $totalItems = $paginator->count();
         $paginator->getQuery()->setFirstResult($pageSize * $currentPage)->setMaxResults($pageSize)->getResult();
         $list = [];
+
+          $list[] = [
+            'id' => "",       
+            'text'=>"Sin especificar"
+        ];
         foreach ($paginator as $item) {
 
             $list[] = [
