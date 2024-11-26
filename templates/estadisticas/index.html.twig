@@ -117,8 +117,8 @@ let fechaInicio_rango_pesos ;
  $(document).ready(function() {
         const fechaFin = moment();
         const fechaInicio = moment().subtract(3, 'months');
-        fechaFin_rango_pesos = moment();
-        fechaInicio_rango_pesos = moment().subtract(3, 'months');
+        fechaFin_rango_pesos = moment().format('YYYY-MM-DD');;
+        fechaInicio_rango_pesos = moment().subtract(3, 'months').format('YYYY-MM-DD');
         // Configurar el daterangepicker
         $('#fechaRango').daterangepicker({
             opens: 'left',
