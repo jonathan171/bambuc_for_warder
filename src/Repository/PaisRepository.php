@@ -98,10 +98,7 @@ class PaisRepository extends ServiceEntityRepository
         $paginator->getQuery()->setFirstResult($pageSize * $currentPage)->setMaxResults($pageSize)->getResult();
         $list = [];
 
-          $list[] = [
-            'id' => "",       
-            'text'=>"Sin especificar"
-        ];
+        
         foreach ($paginator as $item) {
 
             $list[] = [
@@ -109,6 +106,10 @@ class PaisRepository extends ServiceEntityRepository
                 'text'=>$item->getNombre()
             ];
         }
+        array_unshift($list, [
+            'id' => '',       
+            'text' => 'No especificar'
+        ]);
         return ['data' => $list, 'totalRecords' => $totalItems];
      
 
