@@ -112,11 +112,13 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 {{ macroselect2.scriptSelect2}}
 <script>
+ let fechaFin_rango_pesos;
+let fechaInicio_rango_pesos ;
  $(document).ready(function() {
         const fechaFin = moment();
         const fechaInicio = moment().subtract(3, 'months');
-        let fechaFin_rango_pesos = moment();
-        let fechaInicio_rango_pesos = moment().subtract(3, 'months');
+        fechaFin_rango_pesos = moment();
+        fechaInicio_rango_pesos = moment().subtract(3, 'months');
         // Configurar el daterangepicker
         $('#fechaRango').daterangepicker({
             opens: 'left',
@@ -495,6 +497,9 @@
             var data = e.params.data;
              cargarGraficoRangosDePeso(fechaInicio_rango_pesos, fechaFin_rango_pesos, data.id);
             
+        }).on('select2:unselect', function (e) {
+            console.log("Sin selección, id vacío.");
+            cargarGraficoRangosDePeso(fechaInicio_rango_pesos, fechaFin_rango_pesos, ''); // Pasar ID vacío
         }).on('select2:open', function() {
             $('.select2-search input').focus().val(currentQuery).trigger('input');
         }).on('select2:closing', function() {

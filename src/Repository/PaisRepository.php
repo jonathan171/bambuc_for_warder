@@ -106,10 +106,7 @@ class PaisRepository extends ServiceEntityRepository
                 'text'=>$item->getNombre()
             ];
         }
-        array_unshift($list, [
-            'id' => '',       
-            'text' => 'No especificar'
-        ]);
+    
         return ['data' => $list, 'totalRecords' => $totalItems];
      
 
