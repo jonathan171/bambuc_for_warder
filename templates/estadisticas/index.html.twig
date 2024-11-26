@@ -485,6 +485,7 @@
              minimumInputLength: 2,
              delay: 200,
              placeholder: "Ingrese un término de búsqueda aquí ",
+            allowClear: true, // Permite limpiar la selección
             ajax: {
                 url: '{{ path('app_pais_buscador_ajax_pais')}}',
                 dataType: 'json'
