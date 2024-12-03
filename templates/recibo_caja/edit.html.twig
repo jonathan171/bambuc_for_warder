@@ -109,7 +109,7 @@
 			<button class="btn waves-effect waves-light btn-danger" type="button" onclick="enviosInter();">
 				Internacional
             </button>
-            {% if is_granted('ROLE_ADMIN')  %}
+            {% if is_granted('ROLE_FIRMA')  %}
             <button  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#firmaModal" data-recibo-id="{{ recibo_caja.id }}">
                 Firmar
             </button>

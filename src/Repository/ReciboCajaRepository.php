@@ -95,8 +95,11 @@ class ReciboCajaRepository extends ServiceEntityRepository
 
             
             $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/impresion/impresion_recibo?id=' . $recibo->getId() . '" title="Imprimir" target="_blank"><span class="fas fa-print"></span></a>';
-            $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/recibo_caja/' . $recibo->getId() . '/edit"><span class="fas fa-pencil-alt"></span></a>';
-          if ($this->security->isGranted('ROLE_ADMIN')) {
+            
+            if( !$recibo->getFirma()){
+                $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/recibo_caja/' . $recibo->getId() . '/edit"><span class="fas fa-pencil-alt"></span></a>';
+            }
+          if ($this->security->isGranted('ROLE_FIRMA')) {
                 $actions .= '<button  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#firmaModal" data-recibo-id="'. $recibo->getId().'">
                     Firmar
                 </button>';
