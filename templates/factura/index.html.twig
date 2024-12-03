@@ -266,7 +266,7 @@ dataType: 'json',
 success: function (json) {
 
 alertify.success('Factura enviada correctamente por favor  verifica la respuesta de la Dian');
-location.reload();
+$("#data_table_facturas").DataTable().ajax.reload(null, false);
 
 },
 error: function (xhr, status) {
@@ -468,6 +468,7 @@ $('#data_table_recibos').DataTable({
                     if (response.success) {
                         alert('Firma guardada correctamente.');
                         $('#firmaModal').modal('hide');
+						$("#data_table_facturas").DataTable().ajax.reload(null, false);
                     } else {
                         alert('Error al guardar la firma.');
                     }
