@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\EnviosNacionales;
 use App\Form\DataTransformer\ClientesToNumberTransformer;
 use App\Form\DataTransformer\FacturaItemsToNumberTransformer;
+use App\Form\DataTransformer\ReciboItemsToNumberTransformer;
 use App\Form\DataTransformer\UserToNumberTransformer;
 use DateTime;
 use Symfony\Component\Form\AbstractType;
@@ -20,12 +21,14 @@ class EnviosNacionalesType extends AbstractType
 { 
     private $transformer;
     private $transformerItems;
+    private $transformerReciboItems;
     private $transformerUser;
 
-    public function __construct(ClientesToNumberTransformer $transformer, FacturaItemsToNumberTransformer $transformerItems, UserToNumberTransformer $transformerUser)
+    public function __construct(ClientesToNumberTransformer $transformer, FacturaItemsToNumberTransformer $transformerItems, UserToNumberTransformer $transformerUser, ReciboItemsToNumberTransformer $transformerReciboItems)
     {
         $this->transformer = $transformer;
         $this->transformerItems = $transformerItems;
+        $this->transformerReciboItems = $transformerReciboItems;
         $this->transformerUser = $transformerUser;
     }
 
@@ -165,6 +168,8 @@ class EnviosNacionalesType extends AbstractType
         ->addModelTransformer($this->transformer);
         $builder->get('facturaItems')
         ->addModelTransformer($this->transformerItems);
+        $builder->get('reciboItems')
+        ->addModelTransformer($this->transformerReciboItems);
 
         $builder->get('creador')
         ->addModelTransformer($this->transformerUser);

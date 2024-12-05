@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Envio;
 use App\Form\DataTransformer\FacturaItemsToNumberTransformer;
+use App\Form\DataTransformer\ReciboItemsToNumberTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -16,10 +17,12 @@ class EnvioType extends AbstractType
 {
 
     private $transformer;
+    private $transformerReciboItems;
 
-    public function __construct(FacturaItemsToNumberTransformer $transformer)
+    public function __construct(FacturaItemsToNumberTransformer $transformer, ReciboItemsToNumberTransformer $transformerReciboItems)
     {
         $this->transformer = $transformer;
+        $this->transformerReciboItems = $transformerReciboItems;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -160,6 +163,8 @@ class EnvioType extends AbstractType
 
             $builder->get('facturaItems')
             ->addModelTransformer($this->transformer);
+            $builder->get('reciboCajaItem')
+            ->addModelTransformer($this->transformerReciboItems );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
