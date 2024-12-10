@@ -61,7 +61,7 @@ class ReciboCajaRepository extends ServiceEntityRepository
     {
         $campos = array(
             "fecha",
-            "numero",
+            "numero_recibo",
             "total"
         );
 
@@ -107,7 +107,7 @@ class ReciboCajaRepository extends ServiceEntityRepository
 
             $list[] = [
                 'fecha' => $recibo->getFecha()->format('Y-m-d'),
-                'numero' => 'RE'. $recibo->getNumeroRecibo(),
+                'numero_recibo' => 'RE'. $recibo->getNumeroRecibo(),
                 'total' => $recibo->getTotal(),
                 'actions' => $actions,
             ];
