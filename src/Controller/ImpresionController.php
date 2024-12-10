@@ -797,7 +797,8 @@ class ImpresionController extends AbstractController
 
         $recibo = $entityManager->getRepository(ReciboCaja::class)->find($request->query->get('id'));
         // create new PDF document
-        $pdf = new PdfPersonalisado(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $customPageFormat = array(140, 216); // [Ancho, Alto]
+        $pdf = new PdfPersonalisado(PDF_PAGE_ORIENTATION, PDF_UNIT, $customPageFormat, true, 'UTF-8', false);
 
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
