@@ -85,7 +85,17 @@ class FacturaRepository extends ServiceEntityRepository
         $query->andWhere('fr.empresa  = :empresa')
                 ->setParameter('empresa',$options['company']);
 
-        $query->orderBy("f.{$campos[$options['order'][0]['column']]}", "{$options['order'][0]['dir']}");
+        // Procesar múltiples criterios de orden
+        if (!empty($options['order'])) {
+            foreach ($options['order'] as $order) {
+                $columnIndex = $order['column'];
+                $direction = strtoupper($order['dir']) === 'ASC' ? 'ASC' : 'DESC';
+
+                if (isset($campos[$columnIndex])) {
+                    $query->addOrderBy("f.{$campos[$columnIndex]}", $direction);
+                }
+            }
+        }
 
         $query->getQuery();
         $paginator = new Paginator($query);
