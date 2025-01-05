@@ -81,18 +81,19 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
         $usuario = $this->getUsuarioActual();
 
         $list = [];
+        $actions = '';
         foreach ($paginator as $item) {
             if ($item->getFacturaItems()||$item->getReciboItems()) {
                 if($item->getFacturaItems()){
-                    $actions = '<a class="btn btn-warning" title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" href="/impresion/impresion_factura?id=' . $item->getFacturaItems()->getFacturaClientes()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" ></i></a>';
+                    $actions .= '<a class="btn btn-warning" title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" href="/impresion/impresion_factura?id=' . $item->getFacturaItems()->getFacturaClientes()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" ></i></a>';
                 }
                    
                 if($item->getReciboItems()){
-                    $actions = '<a class="btn btn-primary" title=" RE -' . $item->getReciboItems()->getReciboCaja()->getNumeroRecibo() . '" href="/impresion/impresion_recibo?id=' . $item->getReciboItems()->getReciboCaja()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="RE-' . $item->getReciboItems()->getReciboCaja()->getNumeroRecibo() . '" ></i></a>';
+                    $actions .= '<a class="btn btn-primary" title=" RE -' . $item->getReciboItems()->getReciboCaja()->getNumeroRecibo() . '" href="/impresion/impresion_recibo?id=' . $item->getReciboItems()->getReciboCaja()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="RE-' . $item->getReciboItems()->getReciboCaja()->getNumeroRecibo() . '" ></i></a>';
                 }
                 
             } else {
-                $actions = '<a  class="btn waves-effect waves-light btn-warning" href="/envios_nacionales/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
+                $actions .= '<a  class="btn waves-effect waves-light btn-warning" href="/envios_nacionales/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
                 if ($usuario->getId() == 8) {
                     $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envios_nacionales/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar esta remisión\')"><i class="fas fa-trash-alt"></i></a>';
                 }
