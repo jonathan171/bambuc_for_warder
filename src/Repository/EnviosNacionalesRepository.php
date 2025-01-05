@@ -82,11 +82,13 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
 
         $list = [];
         foreach ($paginator as $item) {
-            if ($item->getFacturaItems()) {
-                if($item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getId()=='10'||$item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getId()=='11'){
-                    $actions = '<a class="btn btn-secondary" title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" href="/impresion/impresion_factura?id=' . $item->getFacturaItems()->getFacturaClientes()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" ></i></a>';
-                }else{
+            if ($item->getFacturaItems()||$item->getReciboItems()) {
+                if($item->getFacturaItems()){
                     $actions = '<a class="btn btn-warning" title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" href="/impresion/impresion_factura?id=' . $item->getFacturaItems()->getFacturaClientes()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" ></i></a>';
+                }
+                   
+                if($item->getReciboItems()){
+                    $actions = '<a class="btn btn-primary" title=" RE -' . $item->getReciboItems()->getReciboCaja()->getNumeroRecibo() . '" href="/impresion/impresion_recibo?id=' . $item->getReciboItems()->getReciboCaja()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="RE-' . $$item->getReciboItems()->getReciboCaja()->getNumeroRecibo() . '" ></i></a>';
                 }
                 
             } else {

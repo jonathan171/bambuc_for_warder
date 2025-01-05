@@ -85,9 +85,15 @@ class EnvioRepository extends ServiceEntityRepository
             }else {
                 $actions .= '<button class="btn btn-secondary" id="verificar'.$item->getId().'" onClick="verificar('.$item->getId().');"> <i class="fas fa-check" ></i></button>';
             }
-            if ($item->getFacturaItems()) {
+            if ($item->getFacturaItems()||$item->getReciboCajaItem()) {
 
-                $actions .= '<a class="btn btn-warning" title="'.$item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().'-'. $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura().'" href="/impresion/impresion_factura?id='.$item->getFacturaItems()->getFacturaClientes()->getId().'" target="_blank"> <i class="fa fa-qrcode"  title="'.$item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().'-'. $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura().'" ></i></a>';
+                if($item->getFacturaItems()){
+                    $actions = '<a class="btn btn-warning" title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" href="/impresion/impresion_factura?id=' . $item->getFacturaItems()->getFacturaClientes()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" ></i></a>';
+                }
+                   
+                if($item->getReciboCajaItem()){
+                    $actions = '<a class="btn btn-primary" title=" RE -' . $item->getReciboCajaItem()->getReciboCaja()->getNumeroRecibo() . '" href="/impresion/impresion_recibo?id=' . $item->getReciboCajaItem()->getReciboCaja()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="RE-' . $$item->getReciboCajaItem()->getReciboCaja()->getNumeroRecibo() . '" ></i></a>';
+                }
             }else{
                 $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/envio/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
                 $actions .= '<a  class="btn waves-effect waves-light btn-danger" href="/envio/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')"><i class="fas fa-trash-alt"></i></a>';
