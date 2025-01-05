@@ -88,7 +88,7 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
                 }
                    
                 if($item->getReciboItems()){
-                    $actions = '<a class="btn btn-primary" title=" RE -' . $item->getReciboItems()->getReciboCaja()->getNumeroRecibo() . '" href="/impresion/impresion_recibo?id=' . $item->getReciboItems()->getReciboCaja()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="RE-' . $$item->getReciboItems()->getReciboCaja()->getNumeroRecibo() . '" ></i></a>';
+                    $actions = '<a class="btn btn-primary" title=" RE -' . $item->getReciboItems()->getReciboCaja()->getNumeroRecibo() . '" href="/impresion/impresion_recibo?id=' . $item->getReciboItems()->getReciboCaja()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="RE-' . $item->getReciboItems()->getReciboCaja()->getNumeroRecibo() . '" ></i></a>';
                 }
                 
             } else {
