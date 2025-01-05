@@ -92,7 +92,7 @@ class EnvioRepository extends ServiceEntityRepository
                 }
                    
                 if($item->getReciboCajaItem()){
-                    $actions = '<a class="btn btn-primary" title=" RE -' . $item->getReciboCajaItem()->getReciboCaja()->getNumeroRecibo() . '" href="/impresion/impresion_recibo?id=' . $item->getReciboCajaItem()->getReciboCaja()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="RE-' . $$item->getReciboCajaItem()->getReciboCaja()->getNumeroRecibo() . '" ></i></a>';
+                    $actions = '<a class="btn btn-primary" title=" RE -' . $item->getReciboCajaItem()->getReciboCaja()->getNumeroRecibo() . '" href="/impresion/impresion_recibo?id=' . $item->getReciboCajaItem()->getReciboCaja()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="RE-' . $item->getReciboCajaItem()->getReciboCaja()->getNumeroRecibo() . '" ></i></a>';
                 }
             }else{
                 $actions .= '<a  class="btn waves-effect waves-light btn-info" href="/envio/' . $item->getId() . '/edit"><i class="fas fa-pencil-alt"></i></a>';
