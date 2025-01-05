@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Envio;
+use App\Entity\Factura;
+use App\Entity\FacturaItems;
 use App\Entity\Pais;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -61,7 +63,9 @@ class EnvioRepository extends ServiceEntityRepository
 
         $query = $this->createQueryBuilder('e')
             ->innerJoin(Pais::class, 'p', Join::WITH,   'p.id = e.paisDestino')
-            ->innerJoin(Pais::class, 'p1', Join::WITH,  'p1.id = e.paisOrigen');
+            ->innerJoin(Pais::class, 'p1', Join::WITH,  'p1.id = e.paisOrigen')
+            ->leftJoin(FacturaItems::class, 'fi', Join::WITH, 'fi.id = e.facturaItems')
+            ->leftJoin(Factura::class, 'f', Join::WITH, 'f.id = fi.facturaClientes');
         if ($options['search']) {
             $shearch = '%' . $options['search'] . '%';
             $query->andWhere('e.numeroEnvio like :val OR e.fechaEnvio like :val2 OR e.empresa like :val3 OR e.quienRecibe like :val4 OR e.quienEnvia like :val5 OR p.nombre like :val6 OR p1.nombre like :val7 OR e.referencia like :val8')
