@@ -6,6 +6,8 @@ use App\Entity\Clientes;
 use App\Entity\Envio;
 use App\Entity\EnviosNacionales;
 use App\Entity\EnviosNacionalesUnidades;
+use App\Entity\Factura;
+use App\Entity\FacturaItems;
 use App\Entity\Pais;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
@@ -70,7 +72,9 @@ class ReporteEnvioController extends AbstractController
         $sheet->getCell('G4')->setValue("DESTINATARIO");
         $sheet->getCell('H4')->setValue("VALOR \n DEL \n ENVÍO");
         $sheet->getCell('I4')->setValue("FACTURA");
-        $sheet->getCell('J4')->setValue("REFERENCIA");
+        $sheet->getCell('J4')->setValue("RECIBO");
+        $sheet->getCell('K4')->setValue("REFERENCIA");
+
 
 
         $styleArray = array(
@@ -87,7 +91,7 @@ class ReporteEnvioController extends AbstractController
                 ),
             ),
         );
-        foreach (range('A', 'J') as $columnID) {
+        foreach (range('A', 'K') as $columnID) {
 
             $sheet->getStyle($columnID . '4')->applyFromArray($styleArray);
         }
@@ -99,7 +103,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getColumnDimension('F')->setWidth(15);
         $sheet->getColumnDimension('G')->setWidth(30);
         $sheet->getColumnDimension('H')->setWidth(25);
-        $sheet->getColumnDimension('J')->setWidth(30);
+        $sheet->getColumnDimension('K')->setWidth(30);
         $sheet->getStyle('B4')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
         $sheet->getRowDimension('4')->setRowHeight(45, 'pt');
         $sheet->getRowDimension('1')->setRowHeight(100, 'px');
@@ -113,6 +117,8 @@ class ReporteEnvioController extends AbstractController
         $query = $entityManager->getRepository(Envio::class)->createQueryBuilder('e')
             ->innerJoin(Pais::class, 'p', Join::WITH,   'p.id = e.paisDestino')
             ->innerJoin(Pais::class, 'p1', Join::WITH,  'p1.id = e.paisOrigen')
+            ->leftJoin(FacturaItems::class, 'fi', Join::WITH, 'fi.id = e.facturaItems')
+            ->leftJoin(Factura::class, 'f', Join::WITH, 'f.id = fi.facturaClientes')
             ->andWhere('e.fechaEnvio >= :val')
             ->setParameter('val', $request->get('fecha_inicio'))
             ->andWhere('e.fechaEnvio <= :val1')
@@ -164,12 +170,15 @@ class ReporteEnvioController extends AbstractController
                 $sheet->setCellValue("I$cell", $envio->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().$envio->getFacturaItems()->getFacturaClientes()->getNumeroFactura());
 
             }
+            if($envio->getReciboCajaItem()){
+                $sheet->setCellValue("J$cell", "RE".$envio->getReciboCajaItem()->getReciboCaja()->getNumeroRecibo());
+            }
             $sheet->getStyle("H$cell",)
                 ->getNumberFormat()
                 ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->setCellValue("J$cell", $envio->getReferencia());
+            $sheet->setCellValue("K$cell", $envio->getReferencia());
             $total += $envio->getTotalACobrar();
-            foreach (range('A', 'J') as $columnID) {
+            foreach (range('A', 'K') as $columnID) {
 
                 $sheet->getStyle($columnID . $cell)->applyFromArray($styleArray);
             }
@@ -188,6 +197,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getStyle("H$cell")->applyFromArray($styleArray);
         $sheet->getStyle("I$cell")->applyFromArray($styleArray);
         $sheet->getStyle("J$cell")->applyFromArray($styleArray);
+        $sheet->getStyle("K$cell")->applyFromArray($styleArray);
 
 
         $sheet->setTitle("Reporte envios");
@@ -238,7 +248,8 @@ class ReporteEnvioController extends AbstractController
         $sheet->getCell('M4')->setValue("COSTO");
         $sheet->getCell('N4')->setValue("FORMA PAGO");
         $sheet->getCell('O4')->setValue("FACTURA");
-        $sheet->getCell('P4')->setValue("USUARIO");
+        $sheet->getCell('P4')->setValue("RECIBO");
+        $sheet->getCell('Q4')->setValue("USUARIO");
        
 
         $styleArray = array(
@@ -255,7 +266,7 @@ class ReporteEnvioController extends AbstractController
                 ),
             ),
         );
-        foreach (range('A', 'P') as $columnID) {
+        foreach (range('A', 'Q') as $columnID) {
 
             $sheet->getStyle($columnID . '4')->applyFromArray($styleArray);
         }
@@ -355,6 +366,9 @@ class ReporteEnvioController extends AbstractController
                 $sheet->setCellValue("O$cell", $envio->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().$envio->getFacturaItems()->getFacturaClientes()->getNumeroFactura());
 
             }
+            if($envio->getReciboItems()){
+                $sheet->setCellValue("P$cell"," RE -" . $envio->getReciboItems()->getReciboCaja()->getNumeroRecibo());
+            }
             $sheet->getStyle("K$cell",)
                 ->getNumberFormat()
                 ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
@@ -364,11 +378,11 @@ class ReporteEnvioController extends AbstractController
             ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
             if($envio->getCreador()){
-                $sheet->setCellValue("P$cell", $envio->getCreador()->__toString());
+                $sheet->setCellValue("Q$cell", $envio->getCreador()->__toString());
             }
             $sheet->getStyle("K$cell")->getAlignment()->setWrapText(true);
             $total += $envio->getValorTotal();
-            foreach (range('A', 'P') as $columnID) {
+            foreach (range('A', 'Q') as $columnID) {
 
                 $sheet->getStyle($columnID . $cell)->applyFromArray($styleArray);
             }
@@ -393,6 +407,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getStyle("N$cell")->applyFromArray($styleArray);
         $sheet->getStyle("O$cell")->applyFromArray($styleArray);
         $sheet->getStyle("P$cell")->applyFromArray($styleArray);
+        $sheet->getStyle("Q$cell")->applyFromArray($styleArray);
 
 
         $sheet->setTitle("Reporte envios");
