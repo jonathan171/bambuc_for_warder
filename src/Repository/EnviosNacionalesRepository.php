@@ -81,8 +81,9 @@ class EnviosNacionalesRepository extends ServiceEntityRepository
         $usuario = $this->getUsuarioActual();
 
         $list = [];
-        $actions = '';
+        
         foreach ($paginator as $item) {
+            $actions = '';
             if ($item->getFacturaItems()||$item->getReciboItems()) {
                 if($item->getFacturaItems()){
                     $actions .= '<a class="btn btn-warning" title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" href="/impresion/impresion_factura?id=' . $item->getFacturaItems()->getFacturaClientes()->getId() . '" target="_blank"> <i class="fa fa-qrcode"  title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" ></i></a>';
