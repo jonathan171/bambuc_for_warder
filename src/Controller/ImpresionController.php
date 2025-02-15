@@ -869,17 +869,25 @@ class ImpresionController extends AbstractController
                 $envio = $entityManager->getRepository(Envio::class)->findOneBy(['reciboCajaItem' => $item->getId()]); 
                 $descripcion = $item->getDescripcion().'('.$envio->getFechaEnvio()->format('Y-m-d').')';
                 $desRef = $envio->getNumeroEnvio();
+                $origen = $envio->getPaisOrigen()->getCode();
+                $destino = $envio->getPaisDestino()->getCode();
+                $peso = $envio->getPesoReal();
             }else{
                 $descripcion = $item->getDescripcion().'('.$envio->getFecha()->format('Y-m-d').')';
                 $unidades= $entityManager->getRepository(EnviosNacionalesUnidades::class)->findBy(['envioNacional' => $envio->getId()]);
                 $desRef = '';
+                $origen = $envio->getMunicipioOrigen()->getNombre();
+                $destino = $envio->getMunicipioDestino()->getCode();
+                $peso = $envio->getPeso();
                  foreach($unidades as $unidad){
                     $desRef .= $unidad->getNumeroGuia() ? $unidad->getNumeroGuia().' ': '';
                  }
             }
 
             $array_items[$item->getId()]['descripcion'] = $descripcion;
-            $array_items[$item->getId()]['ref'] = $desRef;
+            $array_items[$item->getId()]['orig'] = $origen;
+            $array_items[$item->getId()]['destino'] = $destino;
+            $array_items[$item->getId()]['peso'] = $peso;
         }
        
         $countItem= count($items);

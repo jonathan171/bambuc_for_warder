@@ -121,7 +121,9 @@
     <tr>
         <th style="width: 10%;">REF</th>
         <th style="width: 40%;">CONCEPTO</th>
-        <th style="width: 30%;">REFERENCIAS</th>
+        <th style="width: 10%;">ORIG</th>
+        <th style="width: 10%;">DESTI</th>
+        <th style="width: 10%;">KG</th>
         <th style="width: 20%;">TOTAL</th>
     </tr>
     
@@ -129,14 +131,16 @@
     <tr>
         <td>{{ item.codigo }}</td>
         <td>{{ unidades[item.id]['descripcion'] }}</td>
-        <td>{{ unidades[item.id]['ref'] }}</td>
+        <td>{{ unidades[item.id]['orig'] }}</td>
+        <td>{{ unidades[item.id]['destino'] }}</td>
+         <td>{{ unidades[item.id]['peso'] }}</td>
         <td class="value">{{ item.total | number_format(2, '.', ',') }}</td>
     </tr>
     {% endfor %}
 
     <tr class="total-row">
         <td colspan="2" class="total bold">Total a Pagar</td>
-        <td colspan="2" class="total bold">
+        <td colspan="4" class="total bold">
             {{ recibo.total | number_format(2, '.', ',') }}
         </td>
     </tr>
