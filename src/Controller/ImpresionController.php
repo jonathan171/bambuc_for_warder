@@ -871,7 +871,7 @@ class ImpresionController extends AbstractController
                 $desRef = $envio->getNumeroEnvio();
                 $origen = $envio->getPaisOrigen()->getCode();
                 $destino = $envio->getPaisDestino()->getCode();
-                $peso = $envio->getPesoReal();
+                $peso = $envio->getTotalPesoCobrar();
             }else{
                 $descripcion = $item->getDescripcion().'('.$envio->getFecha()->format('Y-m-d').')';
                 $unidades= $entityManager->getRepository(EnviosNacionalesUnidades::class)->findBy(['envioNacional' => $envio->getId()]);
