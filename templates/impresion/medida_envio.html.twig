@@ -129,7 +129,7 @@
 			</td>
 			<td style="width:30%; border-bottom: 2px solid gray;">
 				{% if pieza.actualDimensions is defined %}
-					{{(((pieza.actualDimensions.length * pieza.actualDimensions.width * pieza.actualDimensions.height ) / 5000)* 2)|round(0, 'ceil')) / 2}}
+					{{((((pieza.actualDimensions.length * pieza.actualDimensions.width * pieza.actualDimensions.height ) / 5000)* 2)|round(0, 'ceil')) / 2}}
 
 				{% endif %}
 			</td>
