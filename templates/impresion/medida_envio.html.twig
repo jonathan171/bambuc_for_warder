@@ -64,13 +64,13 @@
 		</tr>
 		<tr>
 			<td style="width:20%;">Peso Fisico </td>
-			<td style="width:30%; border-right: 2px solid black;">{{pieza.weight}}</td>
+			<td style="width:30%; border-right: 2px solid black;">{{ ((pieza.weight * 2)|round(0, 'common')) / 2 }}</td>
 			<td style="width:20%; ">
 				  Peso Fisico
 			</td>
 			<td style="width:30%;">
 				{% if pieza.actualWeight %}
-					{{pieza.actualWeight}}
+					{{ ((pieza.actualWeight * 2)|round(0, 'common')) / 2 }}
 
 				{% endif %}
 			</td>
