@@ -79,14 +79,14 @@
 			<td style="width:20%;">Alto
 			</td>
 			<td style="width:30%; border-right: 2px solid black;">
-				{{ ((pieza.dimensions.height * 2)|round(0, 'ceil')) / 2 }}
+				{{ pieza.dimensions.height }}
 			</td>
 			<td style="width:20%; ">
 				  Alto
 			</td>
 			<td style="width:30%;">
 				{% if pieza.actualDimensions is defined %}
-					{{ ((pieza.actualDimensions.height * 2)|round(0, 'ceil')) / 2 }}
+					{{ pieza.actualDimensions.height  }}
 				{% endif %}
 			</td>
 		</tr>
@@ -101,21 +101,21 @@
 			</td>
 			<td style="width:30%;">
 				{% if pieza.actualDimensions is defined  %}
-					{{ ((pieza.actualDimensions.width * 2)|round(0, 'ceil')) / 2 }}
+					{{ pieza.actualDimensions.width  }}
 				{% endif %}
 			</td>
 		</tr>
 		<tr>
 			<td >Largo</td>
 			<td style="width:30%; border-right: 2px solid black; ">
-				{{ ((pieza.dimensions.length * 2)|round(0, 'ceil')) / 2 }}
+				{{ pieza.dimensions.length }}
 			</td>
 			<td >
 				  Largo
 			</td>
 			<td >
 				{% if pieza.actualDimensions is defined %}
-					{{ ((pieza.actualDimensions.length * 2)|round(0, 'ceil')) / 2 }}
+					{{ pieza.actualDimensions.length  }}
 				{% endif %}
 			</td>
 		</tr>
