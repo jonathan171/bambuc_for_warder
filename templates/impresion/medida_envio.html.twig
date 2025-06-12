@@ -64,7 +64,7 @@
 		</tr>
 		<tr>
 			<td style="width:20%;">Peso Fisico </td>
-			<td style="width:30%; border-right: 2px solid black;">{{ ((pieza.weight * 2)|round(0, 'ceil')) / 2 }}</td>
+			<td style="width:30%; border-right: 2px solid black;">{{pieza.weight  }}</td>
 			<td style="width:20%; ">
 				  Peso Fisico
 			</td>
@@ -94,7 +94,7 @@
 			<td style="width:20%;">Ancho
 			</td>
 			<td style="width:30%; border-right: 2px solid black;">
-				{{ ((pieza.dimensions.width * 2)|round(0, 'ceil')) / 2 }}
+				{{ pieza.dimensions.width  }}
 			</td>
 			<td style="width:20%; ">
 				  Ancho
@@ -122,7 +122,7 @@
 		<tr>
 			<td style="width:20%; border-bottom: 2px solid gray;">Peso Volumetrico</td>
 			<td style="width:30%; border-right: 2px solid black; border-bottom: 2px solid gray;">
-				{{((((pieza.dimensions.length * pieza.dimensions.width * pieza.dimensions.height ) / 5000)* 2)|round(0, 'ceil')) / 2}}
+				{{((pieza.dimensions.length * pieza.dimensions.width * pieza.dimensions.height ) / 5000)}}
 			</td>
 			<td style="width:20%; border-bottom: 2px solid gray;">
 				  Peso Volumetrico
@@ -148,7 +148,7 @@
 		<td>
 			<b>PESO FACTURADO</b>
 		</td>
-		<td> {{ ((envio.pesoEstimado * 2)|round(0, 'ceil')) / 2 }}</td>
+		<td> {{ (envio.pesoEstimado ) }}</td>
 		<td>
 			<b>PESO FACTURADO</b>
 		</td>
