@@ -16,7 +16,7 @@ class GuiasController extends AbstractController
     {   
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $envio = $envioRepository->findOneBy(['numeroGuia' => $numeroGuia]);
+        $envio = $envioRepository->findOneBy(['numeroEnvio' => $numeroGuia]);
 
         if (!$envio) {
             return $this->json(['existe' => false], 404);
