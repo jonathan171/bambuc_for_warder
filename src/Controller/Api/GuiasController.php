@@ -55,7 +55,8 @@ class GuiasController extends AbstractController
             'existe' => true,
             'numero_guia' => $envio->getNumeroEnvio(),
             'estado' => $envio->getEstado(),
-            'valor'  => $envio->getTotalACobrar()
+            'valor'  => $envio->getTotalACobrar(),
+            'peso'   => $envio->getTotalPesoCobrar()
             // Más campos si quieres
         ]);
     }
