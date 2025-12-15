@@ -160,48 +160,46 @@ class FacturaController extends AbstractController
     #[Route('/table', name: 'app_factura_table', methods: ['GET', 'POST'])]
     public function table(Request $request, EntityManagerInterface $entityManager, FacturaRepository $facturaRepository): Response
     {
-        // Unificamos GET / POST
         $params = $request->isMethod('POST')
             ? $request->request
             : $request->query;
 
-        // Search
+        // search (array)
         $searchArr   = $params->all('search');
         $searchValue = $searchArr['value'] ?? '';
 
-        // Paginación
+            // paginación (scalars)
         $start  = (int) $params->get('start', 0);
         $length = (int) $params->get('length', 10);
-        $page   = $length > 0 ? (int) floor($start / $length) : 0;
 
-        // Columnas y orden
-        $columns = $params->all('columns');
-        $order   = $params->all('order');
+        // order (array)
+        $order = $params->all('order');
 
-        $orderBy = null;
-        if (!empty($order) && isset($order[0])) {
-            $columnIndex = $order[0]['column'];
-            $orderBy = [
-                'column' => $columns[$columnIndex]['data'] ?? null,
-                'dir'    => $order[0]['dir'] ?? 'asc',
-            ];
-        }
+        // filtros extra (scalar)
+        $nacional = $params->get('nacional');
 
-        // Consulta al repositorio
+        $page = $length > 0 ? (int) floor($start / $length) : 0;
+
         $data_table = $facturaRepository->findByDataTable([
             'page'     => $page,
             'pageSize' => $length,
-            'search'   => $searchValue,
-            'order'    => $orderBy,
+            'search'   => $searchValue,   // <- ya normalizado
+            'order'    => $order,         // array
+            'nacional' => $nacional,
+            'company'  => $params->get('company'),
         ]);
 
-        // Respuesta para DataTables
-        return $this->json([
-            'draw'            => (int) $params->get('draw', 1),
-            'recordsTotal'    => $data_table['totalRecords'],
-            'recordsFiltered' => $data_table['totalRecords'],
-            'data'            => $data_table['data'],
-        ]);
+        // Objeto requerido por Datatables
+
+        $responseData = array(
+            "draw" => '',
+            "recordsTotal" => $data_table['totalRecords'],
+            "recordsFiltered" => $data_table['totalRecords'],
+            "data" => $data_table['data']
+        );
+
+
+        return $this->json($responseData);
     }
 
     #[Route('/{id}/show', name: 'app_factura_show', methods: ['GET'])]
