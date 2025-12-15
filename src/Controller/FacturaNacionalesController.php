@@ -120,7 +120,10 @@ class FacturaNacionalesController extends AbstractController
         EntityManagerInterface $entityManager
     ) {
 
-        $enviosId = (array) $request->request->get('envId');
+        $params = $request->request;
+
+        // envId es ARRAY
+        $enviosId = $params->all('envId');
         $factura = $entityManager->getRepository(Factura::class)->find($request->request->get('factura_id'));
         $unidad =  $entityManager->getRepository(UnidadesMedida::class)->find(67);
 
