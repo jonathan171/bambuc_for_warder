@@ -250,7 +250,7 @@ class EnviosNacionalesController extends AbstractController
         }
 
         // Consulta al repositorio
-        $data_table = $envioRepository->findByDataTable([
+        $data_table = $envioNacionalRepository->findByDataTable([
             'page'     => $page,
             'pageSize' => $length,
             'search'   => $searchValue,

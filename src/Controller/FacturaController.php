@@ -188,7 +188,7 @@ class FacturaController extends AbstractController
         }
 
         // Consulta al repositorio
-        $data_table = $envioRepository->findByDataTable([
+        $data_table = $facturaRepository->findByDataTable([
             'page'     => $page,
             'pageSize' => $length,
             'search'   => $searchValue,
