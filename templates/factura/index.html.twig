@@ -178,41 +178,30 @@
 $(document).ready(function () {
 
 $('#data_table_facturas').DataTable({
-serverSide: true,
-responsive: true,
-pageLength: 50,
-sPaginationType: "full_numbers",
-language: {
-"url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-},
-ajax: {
-"url": '{{ path('app_factura_table') }}' + '?nacional=  {{ is_nacional }}&company=' + $("#company").val(),
-"type": "POST"
-},
-columns: [
-{
-data: 'fecha'
-},
-{
-data: 'numero'
-},
-{
-data: 'cliente'
-},
-{
-data: 'total'
-}, {
-data: 'actions'
-}, {
-data: 'soporte_pago'
-}
-
-],
-columnDefs: [],
-order: [
-[0, "desc"],
-[1, "desc"]
-]
+	serverSide: true,
+	responsive: true,
+	pageLength: 50,
+	sPaginationType: "full_numbers",
+	language: {
+		"url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+		},
+	ajax: {
+		"url": '{{ path('app_factura_table') }}' + '?nacional=  {{ is_nacional }}&company=' + $("#company").val(),
+		"type": "POST"
+	},
+	columns: [
+		{ data: 'fecha' },
+		{ data: 'numero' },
+		{ data: 'cliente' },
+		{ data: 'total' },
+		{ data: 'actions', orderable: false, searchable: false, render: function(data){ return data; } },
+		{ data: 'soporte_pago', orderable: false, searchable: false, render: function(data){ return data; } }
+	],
+	columnDefs: [],
+	order: [
+		[0, "desc"],
+		[1, "desc"]
+	]
 });
 
 $('#data_table_facturas tbody').on('change', '.file_forma_de_pago', function (event) {
