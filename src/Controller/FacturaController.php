@@ -191,13 +191,14 @@ class FacturaController extends AbstractController
 
         // Objeto requerido por Datatables
 
-        $responseData = array(
-            "draw" => '',
-            "recordsTotal" => $data_table['totalRecords'],
-            "recordsFiltered" => $data_table['totalRecords'],
-            "data" => $data_table['data']
-        );
+        $draw = (int) $params->get('draw', 1);
 
+        $responseData = [
+            'draw' => $draw,
+            'recordsTotal' => $data_table['totalRecords'],      // total real (ideal: sin filtros)
+            'recordsFiltered' => $data_table['totalRecords'],   // ideal: total filtrado
+            'data' => $data_table['data'],
+        ];
 
         return $this->json($responseData);
     }
