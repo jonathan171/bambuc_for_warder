@@ -722,8 +722,8 @@ class ImpresionController extends AbstractController
     #[Route('/impresion_remision_todos', name: 'app_impresion_remision_todos', methods: ['GET','POST'])]
     public function impresionRemisionTodos(Request $request, EntityManagerInterface $entityManager)
     {
-
-        $datos = (array)$request->request->get('datos');
+        $params = $request->request;
+        $datos = $params->all('datos');
        
 
         // create new PDF document
