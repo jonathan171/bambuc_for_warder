@@ -586,7 +586,8 @@ class ImpresionController extends AbstractController
     #[Route('/impresion_stiker_todos', name: 'app_impresion_stiker_todos', methods: ['GET','POST'])]
     public function stikerTodos(Request $request, EntityManagerInterface $entityManager)
     {
-        $datos = (array)$request->request->get('datos');
+        $params = $request->request;
+        $datos = $params->all('datos');
         
         // create new PDF document
         $pdf = new TCPDF('P', PDF_UNIT, array(100,100), true, 'UTF-8', false);
