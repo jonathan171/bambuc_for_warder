@@ -329,5 +329,123 @@
 				});
 			});
 		});
+
+		function Reportar(id) {
+			
+			$.ajax({
+				url: '{{ path('app_factura_reportar') }}',
+				data: {
+					id: id
+				},
+				type: 'POST',
+				dataType: 'json',
+				success: function (json) {
+					alertify.success('Factura enviada correctamente por favor  verifica la respuesta de la Dian');
+					$("#data_table_facturas").DataTable().ajax.reload(null, false);
+				},
+				error: function (xhr, status) {
+					alert('Disculpe, existió un problema');
+				}
+			});
+
+		}
+
+		function ReportarNotacrData(id) {
+
+
+		var idFactura = id;
+
+
+		var url = '{{ path('app_nota_credito_reportar') }}';
+
+		$.ajax({
+		method: 'POST',
+		url: url,
+		data: {
+		'id': idFactura,
+		'tipo': '91'
+		}
+		}).error(function (e) {
+		alertify.error('Hubo un Error con el reporte de Notas Porfavor verifica los datos o Ponte en contacto con el area de soporte');
+		}).success(function (data) { // si todo sale bien en la consulta
+
+		var dataparse = JSON.parse(data);
+		// console.log(itt['xml']);
+
+
+		});
+		setTimeout(function () {
+		location.reload();
+		}, 5000);
+		// console.log('hola');
+
+		}
+
+		function verErrores(idFactura) {
+
+		ParaError = "{{ path('app_factura_error_dian') }}";
+
+
+		$('#diverrores').load(ParaError, {idFactura: idFactura});
+
+		$("#erroresDian").dialog({width: 800, height: 500});
+
+		}
+
+		function mostrarNotasDebito(factura_id) {
+		Paratarifas = '{{ path('app_nota_credito_index') }}';
+		jQuery('#divnotasdebito').load(Paratarifas, {factura_id: factura_id});
+		$("#notasdebito").dialog({width: 800, height: 500});
+
+		}
+
+		function mostrarNotasCredito(factura_id) {
+		Paratarifas = '{{ path('app_nota_credito_index') }}';
+		jQuery('#divnotascredito').load(Paratarifas, {factura_id: factura_id});
+		$("#notascredito").dialog({width: 800, height: 500});
+
+		}
+		function verificar(id) {
+		$('#verificar' + id).hide();
+		$.ajax({
+		url: '{{ path('app_factura_verificar') }}',
+		data: {
+		id: id
+		},
+		type: 'POST',
+		dataType: 'json',
+		success: function (json) {
+
+		alertify.success('Factura Verificada correctamente');
+		$("#data_table_facturas").DataTable().ajax.reload(null, false);
+
+		},
+		error: function (xhr, status) {
+		alert('Disculpe, existió un problema');
+		}
+		});
+
+		}
+		function desverificar(id) {
+		$('#desverificar' + id).hide();
+		$.ajax({
+		url: '{{ path('app_factura_desverificar') }}',
+		data: {
+		id: id
+		},
+		type: 'POST',
+		dataType: 'json',
+		success: function (json) {
+
+		alertify.success('Factura fue Desverificada correctamente');
+		$("#data_table_facturas").DataTable().ajax.reload(null, false);
+
+		},
+		error: function (xhr, status) {
+		alert('Disculpe, existió un problema');
+		}
+		});
+
+		}
 </script>
 {% endblock %}
