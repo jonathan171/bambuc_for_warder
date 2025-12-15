@@ -191,22 +191,26 @@
 				pageLength: 50,
 				sPaginationType: "full_numbers",
 				language: {
-				url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+					url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
 				},
 				ajax: {
-				url: "{{ path('app_factura_table') }}" + "?nacional={{ is_nacional }}&company=" + $("#company").val(),
-				type: "POST"
+					url: "{{ path('app_factura_table') }}",
+					type: "POST",
+					data: function (d) {
+					d.nacional = {{ is_nacional|default(0) }};
+					d.company  = $('#company').val();
+					}
 				},
 				columns: [
-				{ data: 'fecha' },
-				{ data: 'numero' },
-				{ data: 'cliente' },
-				{ data: 'total' },
-				{ data: 'actions', orderable: false, searchable: false, render: d => d },
-				{ data: 'soporte_pago', orderable: false, searchable: false, render: d => d }
+					{ data: 'fecha' },
+					{ data: 'numero' },
+					{ data: 'cliente' },
+					{ data: 'total' },
+					{ data: 'actions', orderable: false, searchable: false, render: function (d) { return d; } },
+					{ data: 'soporte_pago', orderable: false, searchable: false, render: function (d) { return d; } }
 				],
 				order: [[0, "desc"], [1, "desc"]]
-			});
+				});
 
 			// recargar al cambiar company (ojo: quité los espacios después de nacional=)
 			$('#company').change(function () {
