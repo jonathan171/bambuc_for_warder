@@ -171,305 +171,159 @@
 	{{ macroRedirect.scriptRedirect}}
 	<script>
 		{% if is_granted('ROLE_NACIONAL') or  is_granted('ROLE_AUXILIAR_NACIONAL') %}
-{% set is_nacional = 1 %}
-{% else %}
-{% set is_nacional = 0 %}
-{% endif %}
-$(document).ready(function () {
+			{% set is_nacional = 1 %}
+		{% else %}
+			{% set is_nacional = 0 %}
+		{% endif %}
+		$(document).ready(function () {
 
-$('#data_table_facturas').DataTable({
-	serverSide: true,
-	responsive: true,
-	pageLength: 50,
-	sPaginationType: "full_numbers",
-	language: {
-		"url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-		},
-	ajax: {
-		"url": '{{ path('app_factura_table') }}' + '?nacional=  {{ is_nacional }}&company=' + $("#company").val(),
-		"type": "POST"
-	},
-	columns: [
-		{ data: 'fecha' },
-		{ data: 'numero' },
-		{ data: 'cliente' },
-		{ data: 'total' },
-		{ data: 'actions', orderable: false, searchable: false, render: function(data){ return data; } },
-		{ data: 'soporte_pago', orderable: false, searchable: false, render: function(data){ return data; } }
-	],
-	columnDefs: [],
-	order: [
-		[0, "desc"],
-		[1, "desc"]
-	]
-});
+			// =========================
+			// FACTURAS
+			// =========================
+			if ($.fn.DataTable.isDataTable('#data_table_facturas')) {
+				$('#data_table_facturas').DataTable().destroy();
+			}
 
-$('#data_table_facturas tbody').on('change', '.file_forma_de_pago', function (event) {
-const dataId = $(this).data('id');
-const file = event.target.files[0];
+			const dtFacturas = $('#data_table_facturas').DataTable({
+				serverSide: true,
+				processing: true,
+				responsive: true,
+				pageLength: 50,
+				sPaginationType: "full_numbers",
+				language: {
+				url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+				},
+				ajax: {
+				url: "{{ path('app_factura_table') }}" + "?nacional={{ is_nacional }}&company=" + $("#company").val(),
+				type: "POST"
+				},
+				columns: [
+				{ data: 'fecha' },
+				{ data: 'numero' },
+				{ data: 'cliente' },
+				{ data: 'total' },
+				{ data: 'actions', orderable: false, searchable: false, render: d => d },
+				{ data: 'soporte_pago', orderable: false, searchable: false, render: d => d }
+				],
+				order: [[0, "desc"], [1, "desc"]]
+			});
 
-if (file) {
-const formData = new FormData();
-formData.append('file', file);
-formData.append('data_id', dataId);
+			// recargar al cambiar company (ojo: quité los espacios después de nacional=)
+			$('#company').change(function () {
+				const url = "{{ path('app_factura_table') }}" + "?nacional={{ is_nacional }}&company=" + $("#company").val();
+				dtFacturas.ajax.url(url).load();
+			});
 
-$.ajax({
-context: this,
-url: '{{ path('app_factura_save_soporte') }}',
-data: formData,
-type: 'POST',
-processData: false,
-contentType: false,
-success: function (json) {
+			// subir soporte de pago
+			$('#data_table_facturas tbody').on('change', '.file_forma_de_pago', function (event) {
+				const dataId = $(this).data('id');
+				const file = event.target.files[0];
 
-alertify.success('Archivo guardado Correctamente');
-$("#data_table_facturas").DataTable().ajax.reload(null, false);
+				if (!file) return;
 
+				const formData = new FormData();
+				formData.append('file', file);
+				formData.append('data_id', dataId);
 
-},
-error: function (xhr, status) {
-alert('Disculpe, existió un problema');
-}
-});
-}
+				$.ajax({
+				context: this,
+				url: "{{ path('app_factura_save_soporte') }}",
+				data: formData,
+				type: 'POST',
+				processData: false,
+				contentType: false,
+				success: function () {
+					alertify.success('Archivo guardado Correctamente');
+					dtFacturas.ajax.reload(null, false);
+				},
+				error: function () {
+					alert('Disculpe, existió un problema');
+				}
+				});
+			});
 
-});
+			// =========================
+			// RECIBOS
+			// =========================
+			if ($.fn.DataTable.isDataTable('#data_table_recibos')) {
+				$('#data_table_recibos').DataTable().destroy();
+			}
 
-$('#company').change(function () {
+			const dtRecibos = $('#data_table_recibos').DataTable({
+				serverSide: true,
+				processing: true,
+				responsive: true,
+				pageLength: 50,
+				sPaginationType: "full_numbers",
+				language: {
+				url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+				},
+				ajax: {
+				url: "{{ path('app_recibo_caja_table') }}",
+				type: "POST"
+				},
+				columns: [
+				{ data: 'fecha' },
+				{ data: 'numero_recibo' },
+				{ data: 'total' },
+				{ data: 'actions', orderable: false, searchable: false, render: d => d }
+				],
+				order: [[1, "desc"]]
+			});
 
-let url = '{{ path('app_factura_table') }}' + '?nacional=  {{ is_nacional }}&company=' + $("#company").val();
-$('#data_table_facturas').DataTable().ajax.url(url).load();
+		});
+		$(document).ready(function () {
+			const canvas = document.getElementById('signaturePad');
+			const container = document.getElementById('canvasContainer');
+			let signaturePad;
+			let reciboId = null;
 
-});
+			function setCanvasSize() {
+				const ratio = Math.max(window.devicePixelRatio || 1, 1);
+				canvas.width = container.offsetWidth * ratio;
+				canvas.height = container.offsetHeight * ratio;
+				canvas.getContext('2d').scale(ratio, ratio);
+			}
 
-});
+			$('#firmaModal').on('shown.bs.modal', function (event) {
+				const button = $(event.relatedTarget);
+				reciboId = button.data('recibo-id');
 
-function Reportar(id) {
-$('#reportar' + id).hide();
-$.ajax({
-url: '{{ path('app_factura_reportar') }}',
-data: {
-id: id
-},
-type: 'POST',
-dataType: 'json',
-success: function (json) {
+				setCanvasSize();
+				signaturePad = new SignaturePad(canvas);
+				signaturePad.clear();
+			});
 
-alertify.success('Factura enviada correctamente por favor  verifica la respuesta de la Dian');
-$("#data_table_facturas").DataTable().ajax.reload(null, false);
+			$('#clearSignature').on('click', function () {
+				if (signaturePad) signaturePad.clear();
+			});
 
-},
-error: function (xhr, status) {
-alert('Disculpe, existió un problema');
-}
-});
+			$('#saveSignature').on('click', function () {
+				if (!reciboId) return alert('No se pudo obtener el ID del recibo.');
+				if (!signaturePad || signaturePad.isEmpty()) return alert('Por favor, registre una firma antes de guardar.');
 
-}
+				const firmaBase64 = signaturePad.toDataURL('image/png');
 
-function ReportarNotacrData(id) {
-
-
-var idFactura = id;
-
-
-var url = '{{ path('app_nota_credito_reportar') }}';
-
-$.ajax({
-method: 'POST',
-url: url,
-data: {
-'id': idFactura,
-'tipo': '91'
-}
-}).error(function (e) {
-alertify.error('Hubo un Error con el reporte de Notas Porfavor verifica los datos o Ponte en contacto con el area de soporte');
-}).success(function (data) { // si todo sale bien en la consulta
-
-var dataparse = JSON.parse(data);
-// console.log(itt['xml']);
-
-
-});
-setTimeout(function () {
-location.reload();
-}, 5000);
-// console.log('hola');
-
-}
-
-function verErrores(idFactura) {
-
-ParaError = "{{ path('app_factura_error_dian') }}";
-
-
-$('#diverrores').load(ParaError, {idFactura: idFactura});
-
-$("#erroresDian").dialog({width: 800, height: 500});
-
-}
-
-function mostrarNotasDebito(factura_id) {
-Paratarifas = '{{ path('app_nota_credito_index') }}';
-jQuery('#divnotasdebito').load(Paratarifas, {factura_id: factura_id});
-$("#notasdebito").dialog({width: 800, height: 500});
-
-}
-
-function mostrarNotasCredito(factura_id) {
-Paratarifas = '{{ path('app_nota_credito_index') }}';
-jQuery('#divnotascredito').load(Paratarifas, {factura_id: factura_id});
-$("#notascredito").dialog({width: 800, height: 500});
-
-}
-function verificar(id) {
-$('#verificar' + id).hide();
-$.ajax({
-url: '{{ path('app_factura_verificar') }}',
-data: {
-id: id
-},
-type: 'POST',
-dataType: 'json',
-success: function (json) {
-
-alertify.success('Factura Verificada correctamente');
-$("#data_table_facturas").DataTable().ajax.reload(null, false);
-
-},
-error: function (xhr, status) {
-alert('Disculpe, existió un problema');
-}
-});
-
-}
-function desverificar(id) {
-$('#desverificar' + id).hide();
-$.ajax({
-url: '{{ path('app_factura_desverificar') }}',
-data: {
-id: id
-},
-type: 'POST',
-dataType: 'json',
-success: function (json) {
-
-alertify.success('Factura fue Desverificada correctamente');
-$("#data_table_facturas").DataTable().ajax.reload(null, false);
-
-},
-error: function (xhr, status) {
-alert('Disculpe, existió un problema');
-}
-});
-
-}
-
-$('#data_table_recibos').DataTable({
-        serverSide: true,
-        responsive: true,
-        pageLength: 50,
-        sPaginationType: "full_numbers",
-        language: {
-        "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-    },
-    ajax: {
-        "url": '{{ path('app_recibo_caja_table') }}',
-        "type": "POST"
-    },
-    columns: [
-        {
-            data: 'fecha'
-        },
-        {
-            data: 'numero_recibo'
-        },
-        {
-            data: 'total'
-        }, {
-            data: 'actions'
-        }
-
-    ],
-    columnDefs: [],
-    order: [
-		[1, "desc"]
-    ]
-    });
-
-	$(document).ready(function () {
-    const canvas = document.getElementById('signaturePad');
-    const container = document.getElementById('canvasContainer');
-    let signaturePad;
-    let reciboId = null; // Variable para almacenar el ID del recibo
-
-    // Función para configurar el tamaño del lienzo
-    function setCanvasSize() {
-        const ratio = Math.max(window.devicePixelRatio || 1, 1);
-
-        // Configurar las dimensiones físicas del lienzo
-        canvas.width = container.offsetWidth * ratio;
-        canvas.height = container.offsetHeight * ratio;
-
-        // Escalar el contexto del lienzo
-        canvas.getContext('2d').scale(ratio, ratio);
-    }
-
-    // Inicializar el lienzo cuando se muestra el modal
-    $('#firmaModal').on('shown.bs.modal', function (event) {
-        const button = $(event.relatedTarget); // Botón que activó el modal
-        reciboId = button.data('recibo-id'); // Obtener el ID del recibo del atributo data-recibo-id
-
-        console.log('ID del recibo:', reciboId); // Verificar el ID del recibo en la consola
-
-        setCanvasSize(); // Ajustar el tamaño del lienzo
-        signaturePad = new SignaturePad(canvas); // Inicializar SignaturePad
-        signaturePad.clear(); // Asegurar que esté limpio
-    });
-
-    // Limpiar la firma
-    $('#clearSignature').on('click', function () {
-        if (signaturePad) {
-            signaturePad.clear();
-        }
-    });
-
-    // Guardar la firma
-    $('#saveSignature').on('click', function () {
-        if (!reciboId) {
-            alert('No se pudo obtener el ID del recibo.');
-            return;
-        }
-
-        if (signaturePad && signaturePad.isEmpty()) {
-            alert('Por favor, registre una firma antes de guardar.');
-        } else if (signaturePad) {
-            const firmaBase64 = signaturePad.toDataURL('image/png');
-
-            // Enviar la firma y el ID del recibo al backend
-            $.ajax({
-                url: '{{ path('app_recibo_caja_guardar_firma')}}',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    reciboId: reciboId,
-                    firma: firmaBase64,
-                }),
-                success: function (response) {
-                    if (response.success) {
-                        alert('Firma guardada correctamente.');
-                        $('#firmaModal').modal('hide');
-						$("#data_table_facturas").DataTable().ajax.reload(null, false);
-                    } else {
-                        alert('Error al guardar la firma.');
-                    }
-                },
-                error: function (error) {
-                    console.error('Error al enviar la firma:', error);
-                    alert('Ocurrió un error al guardar la firma.');
-                },
-            });
-        }
-    });
-});
-	</script>
+				$.ajax({
+				url: "{{ path('app_recibo_caja_guardar_firma') }}",
+				method: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({ reciboId, firma: firmaBase64 }),
+				success: function (response) {
+					if (response.success) {
+					alert('Firma guardada correctamente.');
+					$('#firmaModal').modal('hide');
+					$('#data_table_recibos').DataTable().ajax.reload(null, false);
+					} else {
+					alert('Error al guardar la firma.');
+					}
+				},
+				error: function (error) {
+					console.error('Error al enviar la firma:', error);
+					alert('Ocurrió un error al guardar la firma.');
+				}
+				});
+			});
+		});
+</script>
 {% endblock %}
