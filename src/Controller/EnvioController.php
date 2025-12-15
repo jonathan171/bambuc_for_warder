@@ -203,7 +203,7 @@ class EnvioController extends AbstractController
     #[Route('/table', name: 'app_envio_table', methods: ['GET', 'POST'])]
     public function table(Request $request, EntityManagerInterface $entityManager, EnvioRepository $envioRepository): Response
     {
-        $search =  $request->request->get('search');
+        $search = $request->request->all('search');
         $start = $request->request->get('start');
         $length = $request->request->get('length');
         $columns = $request->request->get('columns');
