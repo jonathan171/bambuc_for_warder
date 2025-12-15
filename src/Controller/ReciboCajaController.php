@@ -233,29 +233,48 @@ class ReciboCajaController extends AbstractController
         
     }
     #[Route('/table', name: 'app_recibo_caja_table', methods: ['GET', 'POST'])]
-    public function table(Request $request, EntityManagerInterface $entityManager, ReciboCajaRepository $reciboRepository): Response
-    {
-        $search =  $request->request->get('search');
-        $start = $request->request->get('start');
-        $length = $request->request->get('length');
-        $order = $request->request->get('order');
-        $nacional = $request->query->get('nacional');
+    public function table(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        ReciboCajaRepository $reciboRepository
+    ): Response {
+        // Unificamos GET/POST
+        $params = $request->isMethod('POST') ? $request->request : $request->query;
 
+        // Search (array)
+        $searchArr   = $params->all('search');
+        $searchValue = $searchArr['value'] ?? '';
 
+        // Paginación (scalars)
+        $start  = (int) $params->get('start', 0);
+        $length = (int) $params->get('length', 10);
+        $page   = $length > 0 ? (int) floor($start / $length) : 0;
 
-        $data_table  = $reciboRepository->findByDataTable(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'], 'order' => $order, 'nacional'=> $nacional, 'company'=>   $request->query->get('company')]);
+        // Columns and order (arrays)
+        $order = $params->all('order');      // array
+        $columns = $params->all('columns');  // array
 
-        // Objeto requerido por Datatables
+        // Filtros adicionales (scalars)
+        $nacional = $params->get('nacional');
+        $company  = $params->get('company');
 
-        $responseData = array(
-            "draw" => '',
-            "recordsTotal" => $data_table['totalRecords'],
-            "recordsFiltered" => $data_table['totalRecords'],
-            "data" => $data_table['data']
-        );
+        // Consulta al repositorio
+        $data_table = $reciboRepository->findByDataTable([
+            'page'     => $page,
+            'pageSize' => $length,
+            'search'   => $searchValue,
+            'order'    => $order,
+            'nacional' => $nacional,
+            'company'  => $company,
+        ]);
 
-
-        return $this->json($responseData);
+        // Respuesta para DataTables
+        return $this->json([
+            'draw'            => (int) $params->get('draw', 1),
+            'recordsTotal'    => $data_table['totalRecords'],
+            'recordsFiltered' => $data_table['totalRecords'],
+            'data'            => $data_table['data'],
+        ]);
     }
 
     #[Route('/guardar_firma', name: 'app_recibo_caja_guardar_firma', methods: ['POST'])]
