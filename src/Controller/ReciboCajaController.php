@@ -145,7 +145,10 @@ class ReciboCajaController extends AbstractController
         EntityManagerInterface $entityManager
     ) {
 
-        $enviosId = (array) $request->request->get('envId');
+        $params = $request->request;
+
+        // envId es ARRAY
+        $enviosId = $params->all('envId');
         $recibo = $entityManager->getRepository(ReciboCaja::class)->find($request->request->get('recibo'));
         
         foreach ($enviosId as $envioId) {
@@ -190,7 +193,10 @@ class ReciboCajaController extends AbstractController
         EntityManagerInterface $entityManager
     ) {
 
-        $enviosId = (array) $request->request->get('envId');
+        $params = $request->request;
+
+        // envId es ARRAY
+        $enviosId = $params->all('envId');
         $recibo = $entityManager->getRepository(ReciboCaja::class)->find($request->request->get('recibo'));
         
         foreach ($enviosId as $envioId) {
