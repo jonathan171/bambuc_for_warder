@@ -201,32 +201,53 @@ class EnvioController extends AbstractController
 
 
     #[Route('/table', name: 'app_envio_table', methods: ['GET', 'POST'])]
-    public function table(Request $request, EntityManagerInterface $entityManager, EnvioRepository $envioRepository): Response
-    {
-        $search = $request->request->all('search');
-        $start = $request->request->get('start');
-        $length = $request->request->get('length');
-        $columns = $request->request->get('columns');
-        $orderBy = [
-            'column' => $columns[$request->request->get('order')[0]['column']]['data'],
-            'dir' => $request->get('order')[0]['dir'],
-        ];
+    public function table(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        EnvioRepository $envioRepository
+    ): Response {
+        // Unificamos GET / POST
+        $params = $request->isMethod('POST')
+            ? $request->request
+            : $request->query;
 
+        // Search
+        $searchArr   = $params->all('search');
+        $searchValue = $searchArr['value'] ?? '';
 
+        // Paginación
+        $start  = (int) $params->get('start', 0);
+        $length = (int) $params->get('length', 10);
+        $page   = $length > 0 ? (int) floor($start / $length) : 0;
 
-        $data_table  = $envioRepository->findByDataTable(['page' => ($start / $length), 'pageSize' => $length, 'search' => $search['value'], 'order' => $orderBy]);
+        // Columnas y orden
+        $columns = $params->all('columns');
+        $order   = $params->all('order');
 
-        // Objeto requerido por Datatables
+        $orderBy = null;
+        if (!empty($order) && isset($order[0])) {
+            $columnIndex = $order[0]['column'];
+            $orderBy = [
+                'column' => $columns[$columnIndex]['data'] ?? null,
+                'dir'    => $order[0]['dir'] ?? 'asc',
+            ];
+        }
 
-        $responseData = array(
-            "draw" => '',
-            "recordsTotal" => $data_table['totalRecords'],
-            "recordsFiltered" => $data_table['totalRecords'],
-            "data" => $data_table['data']
-        );
+        // Consulta al repositorio
+        $data_table = $envioRepository->findByDataTable([
+            'page'     => $page,
+            'pageSize' => $length,
+            'search'   => $searchValue,
+            'order'    => $orderBy,
+        ]);
 
-
-        return $this->json($responseData);
+        // Respuesta para DataTables
+        return $this->json([
+            'draw'            => (int) $params->get('draw', 1),
+            'recordsTotal'    => $data_table['totalRecords'],
+            'recordsFiltered' => $data_table['totalRecords'],
+            'data'            => $data_table['data'],
+        ]);
     }
     //envios retrasados
     #[Route('/table_retrasos', name: 'app_envio_table_retrasos', methods: ['GET', 'POST'])]
