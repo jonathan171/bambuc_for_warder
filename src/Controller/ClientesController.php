@@ -37,17 +37,27 @@ class ClientesController extends AbstractController
     #[Route('/table', name: 'app_clientes_table', methods: ['GET', 'POST'])]
     public function table(Request $request, ClientesRepository $clienteRepository): Response
     {
-       
-        $search =  $request->request->get('search');
-        $start = $request->request->get('start');
-        $length = $request->request->get('length');
+        $params = $request->isMethod('POST')
+            ? $request->request
+            : $request->query;
+
+        // search (array)
+        $searchArr   = $params->all('search');
+        $searchValue = $searchArr['value'] ?? '';
+
+            // paginación (scalars)
+        $start  = (int) $params->get('start', 0);
+        $length = (int) $params->get('length', 10);
+
+        // order (array)
+        $order = $params->all('order');
 
         
 
         $data_table  = $clienteRepository->findByDataTable([
                              'page' => ($start /$length),
                              'pageSize' =>  $length,
-                             'search' =>  $search["value"]
+                             'search' =>  $searchValue
                             ]);
 
         // Objeto requerido por Datatables
