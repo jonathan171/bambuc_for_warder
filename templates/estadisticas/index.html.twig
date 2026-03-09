@@ -323,16 +323,17 @@ let fechaInicio_rango_pesos ;
 
         
         function cargarGraficoTotalesPorDia(fechaInicio = '', fechaFin = '') {
+            const diffInDays = moment(fechaFin).diff(moment(fechaInicio), 'days');
             let agrupacion = 'daily';
 
-            if (fechaInicio && fechaFin) {
-                const diffInDays = moment(fechaFin).diff(moment(fechaInicio), 'days');
-
-                if (diffInDays > 30 && diffInDays <= 90) {
-                    agrupacion = 'weekly';
-                } else if (diffInDays > 90) {
-                    agrupacion = 'monthly';
-                }
+            if (diffInDays <= 31) {
+                agrupacion = 'daily';
+            } 
+            else if (diffInDays <= 92) {
+                agrupacion = 'monthly'; // <- aquí el cambio importante
+            } 
+            else {
+                agrupacion = 'monthly';
             }
 
             $.ajax({
