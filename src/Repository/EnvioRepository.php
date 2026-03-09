@@ -241,7 +241,7 @@ class EnvioRepository extends ServiceEntityRepository
             );
         } elseif ($agrupacion === 'weekly') {
             $qb->select(
-                "CONCAT(SUBSTRING(e.fechaEnvio, 1, 4), '-', FLOOR((DAYOFYEAR(e.fechaEnvio) - 1) / 7) + 1) as fecha", // Año-Semana
+                "YEARWEEK(e.fechaEnvio, 1) as fecha",
                 "SUM(e.totalACobrar) as total",
                 "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
                 "SUM(CASE WHEN e.facturado_recibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",

@@ -62,14 +62,31 @@ class EstadisticasController extends AbstractController
 
         $data = $envioRepository->getTotalesPorDia($fechaInicio, $fechaFin, $agrupacion);
 
-        $fechas = array_column($data, 'fecha');
-        $totales = array_map('floatval', array_column($data, 'total'));
-        $totalesFacturado = array_map('floatval', array_column($data, 'total_facturado'));
-        $totalesRecibo = array_map('floatval', array_column($data, 'total_recibo'));
-        $totalesSinCobrar = array_map('floatval', array_column($data, 'total_sin_cobrar'));
+        $labels = [];
+        $totales = [];
+        $totalesFacturado = [];
+        $totalesRecibo = [];
+        $totalesSinCobrar = [];
+
+        foreach ($data as $row) {
+
+            $fecha = $row['fecha'];
+
+            if ($agrupacion === 'weekly') {
+                $year = substr($fecha, 0, 4);
+                $week = substr($fecha, 4);
+                $fecha = $year . '-W' . str_pad($week, 2, '0', STR_PAD_LEFT);
+            }
+
+            $labels[] = $fecha;
+            $totales[] = (float) $row['total'];
+            $totalesFacturado[] = (float) $row['total_facturado'];
+            $totalesRecibo[] = (float) $row['total_recibo'];
+            $totalesSinCobrar[] = (float) $row['total_sin_cobrar'];
+        }
 
         return new JsonResponse([
-            'labels' => $fechas,
+            'labels' => $labels,
             'totales' => $totales,
             'totalesFacturado' => $totalesFacturado,
             'totalesRecibo' => $totalesRecibo,

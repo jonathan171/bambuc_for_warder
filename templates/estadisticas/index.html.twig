@@ -323,44 +323,63 @@ let fechaInicio_rango_pesos ;
 
         
         function cargarGraficoTotalesPorDia(fechaInicio = '', fechaFin = '') {
-            // Calcular la diferencia de días entre las fechas
-            const diffInDays = moment(fechaFin).diff(moment(fechaInicio), 'days');
             let agrupacion = 'daily';
 
-            if (diffInDays > 30 && diffInDays <= 90) {
-                agrupacion = 'weekly';
-            } else if (diffInDays > 90) {
-                agrupacion = 'monthly';
+            if (fechaInicio && fechaFin) {
+                const diffInDays = moment(fechaFin).diff(moment(fechaInicio), 'days');
+
+                if (diffInDays > 30 && diffInDays <= 90) {
+                    agrupacion = 'weekly';
+                } else if (diffInDays > 90) {
+                    agrupacion = 'monthly';
+                }
             }
 
             $.ajax({
-                url: '{{ path('app_estadisticas_peso_total_por_dia')}}',
+                url: '{{ path('app_estadisticas_peso_total_por_dia') }}',
                 method: 'GET',
-                data: { fechaInicio: fechaInicio, fechaFin: fechaFin, agrupacion: agrupacion },
+                data: {
+                    fechaInicio: fechaInicio,
+                    fechaFin: fechaFin,
+                    agrupacion: agrupacion
+                },
                 success: function(data) {
+                    let tituloEjeX = 'Fecha';
+
+                    if (agrupacion === 'weekly') {
+                        tituloEjeX = 'Semana';
+                    } else if (agrupacion === 'monthly') {
+                        tituloEjeX = 'Mes';
+                    }
+
                     Highcharts.chart('totalesPorDiaChart', {
                         chart: { type: 'line' },
                         title: { text: 'Total de ingresos por fecha' },
-                        xAxis: { categories: data.labels, title: { text: 'Fecha' }},
+                        xAxis: {
+                            categories: data.labels,
+                            title: { text: tituloEjeX }
+                        },
                         yAxis: {
                             min: 0,
                             title: { text: 'Total ($)' }
                         },
                         tooltip: {
+                            shared: true,
                             formatter: function() {
-                                const index = this.points ? this.points[0].point.index : this.point.index;
+                                const index = this.points[0].point.index;
+                                const total = this.points[0].y;
                                 const totalFacturado = data.totalesFacturado[index];
                                 const totalRecibo = data.totalesRecibo[index];
                                 const totalSinCobrar = data.totalesSinCobrar[index];
+
                                 return `
                                     <b>${this.x}</b><br>
-                                    Total: <b>$${Highcharts.numberFormat(this.y, 2, '.', ',')} COP</b><br>
+                                    Total: <b>$${Highcharts.numberFormat(total, 2, '.', ',')} COP</b><br>
                                     Total en Facturas: <b>$${Highcharts.numberFormat(totalFacturado, 2, '.', ',')} COP</b><br>
                                     Total en Recibos: <b>$${Highcharts.numberFormat(totalRecibo, 2, '.', ',')} COP</b><br>
                                     Total sin Cobrar: <b>$${Highcharts.numberFormat(totalSinCobrar, 2, '.', ',')} COP</b>
                                 `;
-                            },
-                            shared: true
+                            }
                         },
                         series: [{
                             name: 'Total de Ingresos',
