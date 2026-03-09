@@ -226,53 +226,35 @@ class EnvioRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getTotalesPorDia($fechaInicio = null, $fechaFin = null, $agrupacion = 'daily'): array
+    public function getTotalesPorDia(string $fechaInicio, string $fechaFin, string $agrupacion = 'daily'): array
     {
-        
-        $qb = $this->createQueryBuilder('e');
+        $conn = $this->getEntityManager()->getConnection();
 
         if ($agrupacion === 'daily') {
-            $qb->select(
-                "DATE(e.fechaEnvio) as fecha",
-                "SUM(e.totalACobrar) as total",
-                "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
-                "SUM(CASE WHEN e.facturado_recibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
-                "SUM(CASE WHEN e.facturado = 0 AND e.facturado_recibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
-            );
-        }
-        elseif ($agrupacion === 'weekly') {
-            $qb->select(
-                "DATE_FORMAT(e.fechaEnvio, '%x-%v') as fecha",
-                "SUM(e.totalACobrar) as total",
-                "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
-                "SUM(CASE WHEN e.facturado_recibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
-                "SUM(CASE WHEN e.facturado = 0 AND e.facturado_recibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
-            );
-        }
-        elseif ($agrupacion === 'monthly') {
-            $qb->select(
-                "DATE_FORMAT(e.fechaEnvio, '%Y-%m') as fecha",
-                "SUM(e.totalACobrar) as total",
-                "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
-                "SUM(CASE WHEN e.facturado_recibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
-                "SUM(CASE WHEN e.facturado = 0 AND e.facturado_recibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
-            );
+            $groupSelect = "DATE(e.fecha_envio)";
+        } elseif ($agrupacion === 'weekly') {
+            $groupSelect = "DATE_FORMAT(e.fecha_envio, '%x-%v')";
+        } else {
+            $groupSelect = "DATE_FORMAT(e.fecha_envio, '%Y-%m')";
         }
 
-        $qb->groupBy('fecha')
-        ->orderBy('fecha', 'ASC');
+        $sql = "
+            SELECT
+                {$groupSelect} AS fecha,
+                SUM(e.total_a_cobrar) AS total,
+                SUM(CASE WHEN e.facturado = 1 THEN e.total_a_cobrar ELSE 0 END) AS total_facturado,
+                SUM(CASE WHEN e.facturado_recibo = 1 THEN e.total_a_cobrar ELSE 0 END) AS total_recibo,
+                SUM(CASE WHEN e.facturado = 0 AND e.facturado_recibo = 0 THEN e.total_a_cobrar ELSE 0 END) AS total_sin_cobrar
+            FROM envio e
+            WHERE DATE(e.fecha_envio) BETWEEN :fechaInicio AND :fechaFin
+            GROUP BY fecha
+            ORDER BY fecha ASC
+        ";
 
-        if ($fechaInicio) {
-            $qb->andWhere('e.fechaEnvio >= :fechaInicio')
-            ->setParameter('fechaInicio', $fechaInicio);
-        }
-
-        if ($fechaFin) {
-            $qb->andWhere('e.fechaEnvio <= :fechaFin')
-            ->setParameter('fechaFin', $fechaFin);
-        }
-
-        return $qb->getQuery()->getResult();
+        return $conn->executeQuery($sql, [
+            'fechaInicio' => $fechaInicio,
+            'fechaFin' => $fechaFin,
+        ])->fetchAllAssociative();
     }
 
     public function getEnviosPorEmpresa($fechaInicio = null, $fechaFin = null): array
