@@ -233,23 +233,25 @@ class EnvioRepository extends ServiceEntityRepository
 
         if ($agrupacion === 'daily') {
             $qb->select(
-                "SUBSTRING(e.fechaEnvio, 1, 10) as fecha", // Agrupación diaria
+                "DATE(e.fechaEnvio) as fecha",
                 "SUM(e.totalACobrar) as total",
                 "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
                 "SUM(CASE WHEN e.facturado_recibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
                 "SUM(CASE WHEN e.facturado = 0 AND e.facturado_recibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
             );
-        } elseif ($agrupacion === 'weekly') {
+        }
+        elseif ($agrupacion === 'weekly') {
             $qb->select(
-                "YEARWEEK(e.fechaEnvio, 1) as fecha",
+                "DATE_FORMAT(e.fechaEnvio, '%x-%v') as fecha",
                 "SUM(e.totalACobrar) as total",
                 "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
                 "SUM(CASE WHEN e.facturado_recibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
                 "SUM(CASE WHEN e.facturado = 0 AND e.facturado_recibo = 0 THEN e.totalACobrar ELSE 0 END) as total_sin_cobrar"
             );
-        } elseif ($agrupacion === 'monthly') {
+        }
+        elseif ($agrupacion === 'monthly') {
             $qb->select(
-                "CONCAT(SUBSTRING(e.fechaEnvio, 1, 4), '-', SUBSTRING(e.fechaEnvio, 6, 2)) as fecha", // Año-Mes
+                "DATE_FORMAT(e.fechaEnvio, '%Y-%m') as fecha",
                 "SUM(e.totalACobrar) as total",
                 "SUM(CASE WHEN e.facturado = 1 THEN e.totalACobrar ELSE 0 END) as total_facturado",
                 "SUM(CASE WHEN e.facturado_recibo = 1 THEN e.totalACobrar ELSE 0 END) as total_recibo",
