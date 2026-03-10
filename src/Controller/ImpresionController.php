@@ -878,7 +878,7 @@ class ImpresionController extends AbstractController
                 $unidades= $entityManager->getRepository(EnviosNacionalesUnidades::class)->findBy(['envioNacional' => $envio->getId()]);
                 $desRef = '';
                 $origen = $envio->getMunicipioOrigen()->getNombre();
-                $destino = $envio->getMunicipioDestino()->getCode();
+                $destino = $envio->getMunicipioDestino()->getCodigo();
                 $peso = $envio->getPeso();
                  foreach($unidades as $unidad){
                     $desRef .= $unidad->getNumeroGuia() ? $unidad->getNumeroGuia().' ': '';
