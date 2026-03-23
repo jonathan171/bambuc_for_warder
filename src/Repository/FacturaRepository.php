@@ -74,7 +74,7 @@ class FacturaRepository extends ServiceEntityRepository
                 'f.cufe AS cufe',
                 'f.tipoFactura AS tipoFactura',
                 'f.facturado AS facturado',
-               // 'f.respuestaDian AS respuestaDian',
+                'f.respuestaDian AS respuestaDian',
                 'f.soportePago AS soportePago',
                 'fr.prefijo AS prefijo',
                 'c.razonSocial AS clienteRazonSocial',
