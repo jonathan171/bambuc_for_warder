@@ -192,7 +192,9 @@ class ReporteEnvioController extends AbstractController
         $sheet->getStyle("H$cell",)
             ->getNumberFormat()
             ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-        $sheet->getStyle("A$cell:F$cell")->applyFromArray($styleArray);
+        foreach (range('A', 'F') as $columnID) {
+            $sheet->getStyle($columnID . $cell)->applyFromArray($styleArray);
+        }
         $sheet->getStyle("G$cell")->applyFromArray($styleArray);
         $sheet->getStyle("H$cell")->applyFromArray($styleArray);
         $sheet->getStyle("I$cell")->applyFromArray($styleArray);
