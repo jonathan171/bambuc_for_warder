@@ -492,7 +492,7 @@ class EnvioController extends AbstractController
         return $number + ($nearest - fmod($number, $nearest));
     }
 
-    #[Route('/envio/{id}/marcar-facturado', name: 'app_envio_marcar_facturado', methods: ['POST'])]
+    #[Route('/{id}/marcar-facturado', name: 'app_envio_marcar_facturado', methods: ['POST'])]
     public function marcarFacturado(
         Envio $envio,
         EntityManagerInterface $em
