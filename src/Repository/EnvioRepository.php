@@ -127,7 +127,7 @@ class EnvioRepository extends ServiceEntityRepository
         $list = [];
 
         foreach ($items as $item) {
-            $estaFacturado = ($item->getFacturado() == 1 || $item->getFacturadoRecibo() == 1);
+            $estaFacturado = ($item->getFacturado() == 1 || $item->isFacturadoRecibo() == 1);
 
             $actions = '<a class="icon-select" style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut="ocultarEnvio()" title="Ver Envio">
                 <i class="fa fa-eye text-success"></i>
