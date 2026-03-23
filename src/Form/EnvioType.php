@@ -101,6 +101,7 @@ class EnvioType extends AbstractType
                     'DHL' => 'DHL',
                     'FEDEX' => 'FEDEX',
                     'UPS' => 'UPS',
+                    'OTROS' => 'OTROS',
                 ],
                 'attr' => [
                     'class' => 'form-control',
