@@ -90,8 +90,10 @@ class EnvioRepository extends ServiceEntityRepository
             ]);
         }
 
+        // Primero los no facturados
         $query->addOrderBy('prioridadFacturado', 'ASC');
 
+        // Luego el orden del datatable
         if (!empty($options['order']) && !empty($options['order']['column'])) {
             $column = $options['order']['column'];
             $dir    = strtolower($options['order']['dir'] ?? 'desc') === 'asc' ? 'ASC' : 'DESC';
@@ -114,7 +116,7 @@ class EnvioRepository extends ServiceEntityRepository
             $query->addOrderBy('e.fechaEnvio', 'DESC');
         }
 
-        $paginator = new Paginator($query);
+        $paginator  = new Paginator($query);
         $totalItems = count($paginator);
 
         $items = $query->getQuery()
@@ -127,15 +129,67 @@ class EnvioRepository extends ServiceEntityRepository
         foreach ($items as $item) {
             $estaFacturado = ($item->getFacturado() == 1 || $item->isFacturadoRecibo() == 1);
 
-            $actions = '<a class="icon-select" style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut="ocultarEnvio()" title="Ver Envio">
+            $actions = '<a class="icon-select" style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut="ocultarEnvio()" title="Ver Envío">
                 <i class="fa fa-eye text-success"></i>
             </a>';
+
+            if ($item->getVerificado()) {
+                $actions .= '<button class="btn btn-success" id="desverificar'.$item->getId().'" onClick="desverificar('.$item->getId().');" title="Desverificar">
+                    <i class="fas fa-check"></i>
+                </button>';
+            } else {
+                $actions .= '<button class="btn btn-secondary" id="verificar'.$item->getId().'" onClick="verificar('.$item->getId().');" title="Verificar">
+                    <i class="fas fa-check"></i>
+                </button>';
+            }
 
             if (!$estaFacturado) {
                 $actions .= '<button class="btn btn-danger" onclick="marcarFacturado('.$item->getId().')" title="Marcar como facturado">
                     <i class="fas fa-file-invoice-dollar"></i>
                 </button>';
             }
+
+            if ($item->getFacturaItems() || $item->getReciboCajaItem()) {
+
+                if ($item->getFacturaItems()) {
+                    $factura = $item->getFacturaItems()->getFacturaClientes();
+
+                    if ($factura && $factura->getFacturaResolucion()) {
+                        $actions .= '<a class="btn btn-warning" 
+                            title="' . $factura->getFacturaResolucion()->getPrefijo() . '-' . $factura->getNumeroFactura() . '" 
+                            href="/impresion/impresion_factura?id=' . $factura->getId() . '" 
+                            target="_blank">
+                            <i class="fa fa-qrcode"></i>
+                        </a>';
+                    }
+                }
+
+                if ($item->getReciboCajaItem()) {
+                    $recibo = $item->getReciboCajaItem()->getReciboCaja();
+
+                    if ($recibo) {
+                        $actions .= '<a class="btn btn-primary" 
+                            title="RE-' . $recibo->getNumeroRecibo() . '" 
+                            href="/impresion/impresion_recibo?id=' . $recibo->getId() . '" 
+                            target="_blank">
+                            <i class="fa fa-qrcode"></i>
+                        </a>';
+                    }
+                }
+
+            } else {
+                $actions .= '<a class="btn waves-effect waves-light btn-info" href="/envio/' . $item->getId() . '/edit" title="Editar">
+                    <i class="fas fa-pencil-alt"></i>
+                </a>';
+
+                $actions .= '<a class="btn waves-effect waves-light btn-danger" href="/envio/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')" title="Eliminar">
+                    <i class="fas fa-trash-alt"></i>
+                </a>';
+            }
+
+            $actions .= '<a class="btn waves-effect waves-light btn-info" href="/impresion/impresion_dimension_envio?id=' . $item->getId() . '" title="Imprimir" target="_blank">
+                <span class="fas fa-print"></span>
+            </a>';
 
             $list[] = [
                 'numeroEnvio'       => $item->getNumeroEnvio(),
