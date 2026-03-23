@@ -57,10 +57,12 @@ class EnvioRepository extends ServiceEntityRepository
 
     public function findByDataTable(array $options = [])
     {
-        $currentPage = isset($options['page']) ? $options['page'] : 0;
-        $pageSize = isset($options['pageSize']) ? $options['pageSize'] : 10;
+        $currentPage = $options['page'] ?? 0;
+        $pageSize    = $options['pageSize'] ?? 10;
 
         $query = $this->createQueryBuilder('e')
+            ->select('e, p, p1, fi, f')
+            ->addSelect('(CASE WHEN (e.facturado = 1 OR e.facturadoRecibo = 1) THEN 1 ELSE 0 END) AS HIDDEN prioridadFacturado')
             ->innerJoin(Pais::class, 'p', Join::WITH, 'p.id = e.paisDestino')
             ->innerJoin(Pais::class, 'p1', Join::WITH, 'p1.id = e.paisOrigen')
             ->leftJoin(FacturaItems::class, 'fi', Join::WITH, 'fi.id = e.facturaItems')
@@ -69,40 +71,38 @@ class EnvioRepository extends ServiceEntityRepository
         if (!empty($options['search'])) {
             $shearch = '%' . $options['search'] . '%';
             $query->andWhere('
-                e.numeroEnvio like :val OR
-                e.fechaEnvio like :val2 OR
-                e.empresa like :val3 OR
-                e.quienRecibe like :val4 OR
-                e.quienEnvia like :val5 OR
-                p.nombre like :val6 OR
-                p1.nombre like :val7 OR
-                e.referencia like :val8
+                e.numeroEnvio LIKE :val OR
+                e.empresa LIKE :val3 OR
+                e.quienRecibe LIKE :val4 OR
+                e.quienEnvia LIKE :val5 OR
+                p.nombre LIKE :val6 OR
+                p1.nombre LIKE :val7 OR
+                e.referencia LIKE :val8
             ')
             ->setParameters([
-                'val' => $shearch,
-                'val2' => $shearch,
+                'val'  => $shearch,
                 'val3' => $shearch,
                 'val4' => $shearch,
                 'val5' => $shearch,
                 'val6' => $shearch,
                 'val7' => $shearch,
-                'val8' => $shearch
+                'val8' => $shearch,
             ]);
         }
 
-        // Primero mostrar no facturados
-        $query->addOrderBy('(CASE WHEN (e.facturado = 1 OR e.facturadoRecibo = 1) THEN 1 ELSE 0 END)', 'ASC');
+        // primero no facturados
+        $query->addOrderBy('prioridadFacturado', 'ASC');
 
-        // Luego respetar el orden del datatable
-        if (!empty($options['order']['column'])) {
+        // luego el orden del datatable
+        if (!empty($options['order']) && !empty($options['order']['column'])) {
             $column = $options['order']['column'];
-            $dir    = strtoupper($options['order']['dir'] ?? 'DESC') === 'ASC' ? 'ASC' : 'DESC';
+            $dir    = strtolower($options['order']['dir'] ?? 'desc') === 'asc' ? 'ASC' : 'DESC';
 
             $columnMap = [
                 'numeroEnvio' => 'e.numeroEnvio',
-                'fechaEnvio' => 'e.fechaEnvio',
-                'empresa' => 'e.empresa',
-                'quienEnvia' => 'e.quienEnvia',
+                'fechaEnvio'  => 'e.fechaEnvio',
+                'empresa'     => 'e.empresa',
+                'quienEnvia'  => 'e.quienEnvia',
                 'quienRecibe' => 'e.quienRecibe',
                 'paisDestino' => 'p.nombre',
             ];
@@ -117,31 +117,21 @@ class EnvioRepository extends ServiceEntityRepository
         }
 
         $paginator = new Paginator($query);
-        $totalItems = $paginator->count();
+        $totalItems = count($paginator);
 
-        $paginator->getQuery()
+        $items = $query->getQuery()
             ->setFirstResult($pageSize * $currentPage)
             ->setMaxResults($pageSize)
             ->getResult();
 
         $list = [];
 
-        foreach ($paginator as $item) {
+        foreach ($items as $item) {
             $estaFacturado = ($item->getFacturado() == 1 || $item->getFacturadoRecibo() == 1);
 
-            $actions = '<a class="icon-select" style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut ="ocultarEnvio()" title="Ver Envio">
+            $actions = '<a class="icon-select" style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut="ocultarEnvio()" title="Ver Envio">
                 <i class="fa fa-eye text-success"></i>
             </a>';
-
-            if ($item->getVerificado()) {
-                $actions .= '<button class="btn btn-success" id="desverificar'.$item->getId().'" onClick="desverificar('.$item->getId().');">
-                    <i class="fas fa-check"></i>
-                </button>';
-            } else {
-                $actions .= '<button class="btn btn-secondary" id="verificar'.$item->getId().'" onClick="verificar('.$item->getId().');">
-                    <i class="fas fa-check"></i>
-                </button>';
-            }
 
             if (!$estaFacturado) {
                 $actions .= '<button class="btn btn-danger" onclick="marcarFacturado('.$item->getId().')" title="Marcar como facturado">
@@ -149,47 +139,21 @@ class EnvioRepository extends ServiceEntityRepository
                 </button>';
             }
 
-            if ($item->getFacturaItems() || $item->getReciboCajaItem()) {
-                if ($item->getFacturaItems()) {
-                    $actions .= '<a class="btn btn-warning" title="' . $item->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo() . '-' . $item->getFacturaItems()->getFacturaClientes()->getNumeroFactura() . '" href="/impresion/impresion_factura?id=' . $item->getFacturaItems()->getFacturaClientes()->getId() . '" target="_blank">
-                        <i class="fa fa-qrcode"></i>
-                    </a>';
-                }
-
-                if ($item->getReciboCajaItem()) {
-                    $actions .= '<a class="btn btn-primary" title="RE-' . $item->getReciboCajaItem()->getReciboCaja()->getNumeroRecibo() . '" href="/impresion/impresion_recibo?id=' . $item->getReciboCajaItem()->getReciboCaja()->getId() . '" target="_blank">
-                        <i class="fa fa-qrcode"></i>
-                    </a>';
-                }
-            } else {
-                $actions .= '<a class="btn waves-effect waves-light btn-info" href="/envio/' . $item->getId() . '/edit">
-                    <i class="fas fa-pencil-alt"></i>
-                </a>';
-                $actions .= '<a class="btn waves-effect waves-light btn-danger" href="/envio/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')">
-                    <i class="fas fa-trash-alt"></i>
-                </a>';
-            }
-
-            $actions .= '<a class="btn waves-effect waves-light btn-info" href="/impresion/impresion_dimension_envio?id=' . $item->getId() . '" title="Imprimir" target="_blank">
-                <span class="fas fa-print"></span>
-            </a>';
-
             $list[] = [
-                'numeroEnvio' => $item->getNumeroEnvio(),
-                'totalPesoCobrar' => $item->getTotalPesoCobrar(),
-                'fechaEnvio' => $item->getFechaEnvio()->format('Y-m-d'),
-                'empresa' => $item->getEmpresa(),
-                'quienEnvia' => $item->getQuienEnvia(),
-                'quienRecibe' => $item->getQuienRecibe(),
-                'paisDestino' => $item->getPaisDestino()->getNombre(),
-                'actions' => $actions,
+                'numeroEnvio'       => $item->getNumeroEnvio(),
+                'fechaEnvio'        => $item->getFechaEnvio()?->format('Y-m-d'),
+                'empresa'           => $item->getEmpresa(),
+                'quienEnvia'        => $item->getQuienEnvia(),
+                'quienRecibe'       => $item->getQuienRecibe(),
+                'paisDestino'       => $item->getPaisDestino()?->getNombre(),
+                'actions'           => $actions,
                 'pendienteFacturar' => !$estaFacturado,
             ];
         }
 
         return [
             'data' => $list,
-            'totalRecords' => $totalItems
+            'totalRecords' => $totalItems,
         ];
     }
     public function findByDataTableRetrasos(array $options = [])
