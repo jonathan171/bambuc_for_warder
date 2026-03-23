@@ -62,7 +62,7 @@ class EnvioRepository extends ServiceEntityRepository
 
         $query = $this->createQueryBuilder('e')
             ->select('e, p, p1, fi, f')
-            ->addSelect('(CASE WHEN (e.facturado = 1 OR e.facturadoRecibo = 1) THEN 1 ELSE 0 END) AS HIDDEN prioridadFacturado')
+            ->addSelect('(CASE WHEN (e.facturado = 1 OR e.facturado_recibo = 1) THEN 1 ELSE 0 END) AS HIDDEN prioridadFacturado')
             ->innerJoin(Pais::class, 'p', Join::WITH, 'p.id = e.paisDestino')
             ->innerJoin(Pais::class, 'p1', Join::WITH, 'p1.id = e.paisOrigen')
             ->leftJoin(FacturaItems::class, 'fi', Join::WITH, 'fi.id = e.facturaItems')
