@@ -61,7 +61,7 @@ class EnvioRepository extends ServiceEntityRepository
         $pageSize    = $options['pageSize'] ?? 10;
 
         $query = $this->createQueryBuilder('e')
-            ->select('e, p, p1, fi, f')
+            ->select('e')
             ->addSelect('(CASE WHEN (e.facturado = 1 OR e.facturado_recibo = 1) THEN 1 ELSE 0 END) AS HIDDEN prioridadFacturado')
             ->innerJoin(Pais::class, 'p', Join::WITH, 'p.id = e.paisDestino')
             ->innerJoin(Pais::class, 'p1', Join::WITH, 'p1.id = e.paisOrigen')
@@ -90,10 +90,8 @@ class EnvioRepository extends ServiceEntityRepository
             ]);
         }
 
-        // primero no facturados
         $query->addOrderBy('prioridadFacturado', 'ASC');
 
-        // luego el orden del datatable
         if (!empty($options['order']) && !empty($options['order']['column'])) {
             $column = $options['order']['column'];
             $dir    = strtolower($options['order']['dir'] ?? 'desc') === 'asc' ? 'ASC' : 'DESC';
@@ -156,6 +154,7 @@ class EnvioRepository extends ServiceEntityRepository
             'totalRecords' => $totalItems,
         ];
     }
+
     public function findByDataTableRetrasos(array $options = [])
     {
 
