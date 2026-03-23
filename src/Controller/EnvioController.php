@@ -496,7 +496,8 @@ class EnvioController extends AbstractController
     public function marcarFacturado(
         Envio $envio,
         EntityManagerInterface $em
-    ): JsonResponse {
+    ): Response 
+    {
         $envio->setFacturado(1);
         $em->flush();
 
