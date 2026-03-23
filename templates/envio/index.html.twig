@@ -1,7 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Envio index{% endblock %}
+{% block stylesheets %}
+    <style>
+        .fila-pendiente-facturar {
+            background-color: #f8d7da !important;
+        }
 
+        .fila-pendiente-facturar td {
+            color: #721c24 !important;
+            font-weight: 600;
+        }
+    </style>
+{% endblock %}
 {% block body %}
     <h1>Listado De Envios</h1>
     {% for message in app.flashes('notice') %}
@@ -81,6 +92,11 @@
             columnDefs: [
                 
             ],
+            createdRow: function(row, data) {
+                if (data.pendienteFacturar) {
+                    $(row).addClass('fila-pendiente-facturar');
+                }
+            },
             order: [[ 1, "desc" ]]
         });
    });
@@ -140,6 +156,23 @@
        }
           });
 
+    }
+
+    function marcarFacturado(id) {
+        if (!confirm('¿Marcar este envío como facturado?')) {
+            return;
+        }
+
+        $.ajax({
+            url: '/envio/' + id + '/marcar-facturado',
+            type: 'POST',
+            success: function(response) {
+                $('#data_table_envios').DataTable().ajax.reload(null, false);
+            },
+            error: function(xhr) {
+                alert('No se pudo marcar como facturado');
+            }
+        });
     }
 </script>   
 {% endblock %}

@@ -491,4 +491,18 @@ class EnvioController extends AbstractController
     {
         return $number + ($nearest - fmod($number, $nearest));
     }
+
+    #[Route('/envio/{id}/marcar-facturado', name: 'app_envio_marcar_facturado', methods: ['POST'])]
+    public function marcarFacturado(
+        Envio $envio,
+        EntityManagerInterface $em
+    ): JsonResponse {
+        $envio->setFacturado(1);
+        $em->flush();
+
+        return $this->json([
+            'ok' => true,
+            'message' => 'Envío marcado como facturado'
+        ]);
+    }
 }
