@@ -147,7 +147,7 @@ class ReporteEnvioController extends AbstractController
            
         }
 
-
+        $query->orderBy('e.fechaEnvio', 'ASC');
         $envios = $query->getQuery()->getResult();
 
         // Indice de la celda en la que se comienza a renderizar
@@ -186,7 +186,7 @@ class ReporteEnvioController extends AbstractController
             // Continuar en una nueva fila
             $cell++;
         }
-        $sheet->mergeCells("A$cell:F$cell");
+        //$sheet->mergeCells("A$cell:F$cell");
         $sheet->setCellValue("G$cell", 'TOTAL');
         $sheet->setCellValue("H$cell", $total);
         $sheet->getStyle("H$cell",)
