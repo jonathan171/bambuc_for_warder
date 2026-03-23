@@ -144,7 +144,7 @@ class ReporteEnvioController extends AbstractController
                 $query->andWhere(' e.facturado_recibo = :val3')
                 ->setParameter('val3', 1);
             }else{
-                $query->andWhere(' e.facturado != :val3 OR e.facturado_recibo != :val3')
+                $query->andWhere(' e.facturado != :val3 AND e.facturado_recibo != :val3')
                 ->setParameter('val3', 1);
             }
            
