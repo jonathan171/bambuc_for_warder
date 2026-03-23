@@ -189,13 +189,14 @@ class EnvioRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('e')
             ->select('m.nombre as municipio', 'COUNT(e.id) as total', 'SUM(e.totalACobrar) as total_cobrar')
             ->join('e.municipio', 'm')
-            ->groupBy('m.id');
-        
+            ->groupBy('m.id')
+            ->orderBy('total', 'DESC');
+
         if ($fechaInicio) {
             $qb->andWhere('e.fechaEnvio >= :fechaInicio')
             ->setParameter('fechaInicio', $fechaInicio);
         }
-        
+
         if ($fechaFin) {
             $qb->andWhere('e.fechaEnvio <= :fechaFin')
             ->setParameter('fechaFin', $fechaFin);
