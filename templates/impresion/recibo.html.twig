@@ -150,10 +150,15 @@
 <br>
 <br>
 <br>
-{% if (recibo.firma)%}
-<div class="firma-text">
-     <img src="{{ asset(recibo.firma) }}" alt="logo" width="300">
-</div>
+{% if recibo.firma %}
+    <div class="firma-text">
+        <img src="{{ asset(recibo.firma) }}" alt="Firma" width="300">
+    </div>
+{% else %}
+    <div class="firma-text">
+        <p>{{ "now"|date("d/m/Y") }}</p>
+        <p>Sebastian Ortiz</p>
+    </div>
 {% endif %}
 <div class="firma">
     <span class="firma-text">Firma Recibido</span>
