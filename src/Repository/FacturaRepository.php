@@ -74,7 +74,7 @@ class FacturaRepository extends ServiceEntityRepository
                 'f.cufe AS cufe',
                 'f.tipoFactura AS tipoFactura',
                 'f.facturado AS facturado',
-                'f.respuestaDian AS respuestaDian',
+               // 'f.respuestaDian AS respuestaDian',
                 'f.soportePago AS soportePago',
                 'fr.prefijo AS prefijo',
                 'c.razonSocial AS clienteRazonSocial',
@@ -152,11 +152,11 @@ class FacturaRepository extends ServiceEntityRepository
                     $actions .= '<a class="btn waves-effect waves-light btn-warning" href="/factura_simple/' . $factura['id'] . '/edit"><span class="fas fa-pencil-alt"></span></a>';
                 }
 
-                if (!empty($factura['respuestaDian'])) {
+                /*if (!empty($factura['respuestaDian'])) {
                     $actions .= '<a class="icon-select" style="position:relative; float:right;cursor:pointer;" onClick="verErrores(' . $factura['id'] . ');" title="Ver respuesta Dian">
                         <i class="fas fa-code text-success"></i>
                     </a>';
-                }
+                }*/
             }
 
             if (!empty($factura['soportePago'])) {
