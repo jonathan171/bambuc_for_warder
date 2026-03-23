@@ -170,26 +170,26 @@
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 	{{ macroRedirect.scriptRedirect}}
 	<script>
-		{% if is_granted('ROLE_NACIONAL') or  is_granted('ROLE_AUXILIAR_NACIONAL') %}
+		let dtFacturas = null;
+		let dtRecibos = null;
+
+		{% if is_granted('ROLE_NACIONAL') or is_granted('ROLE_AUXILIAR_NACIONAL') %}
 			{% set is_nacional = 1 %}
 		{% else %}
 			{% set is_nacional = 0 %}
 		{% endif %}
-		$(document).ready(function () {
 
-			// =========================
-			// FACTURAS
-			// =========================
-			if ($.fn.DataTable.isDataTable('#data_table_facturas')) {
-				$('#data_table_facturas').DataTable().destroy();
-			}
+		// =========================
+		// INIT FACTURAS
+		// =========================
+		function initFacturas() {
+			if (dtFacturas !== null) return;
 
-			const dtFacturas = $('#data_table_facturas').DataTable({
+			dtFacturas = $('#data_table_facturas').DataTable({
 				serverSide: true,
 				processing: true,
 				responsive: true,
-				pageLength: 50,
-				sPaginationType: "full_numbers",
+				pageLength: 25,
 				language: {
 					url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
 				},
@@ -197,8 +197,8 @@
 					url: "{{ path('app_factura_table') }}",
 					type: "POST",
 					data: function (d) {
-					d.nacional = {{ is_nacional|default(0) }};
-					d.company  = $('#company').val();
+						d.nacional = {{ is_nacional|default(0) }};
+						d.company  = $('#company').val();
 					}
 				},
 				columns: [
@@ -206,23 +206,21 @@
 					{ data: 'numero' },
 					{ data: 'cliente' },
 					{ data: 'total' },
-					{ data: 'actions', orderable: false, searchable: false, render: function (d) { return d; } },
-					{ data: 'soporte_pago', orderable: false, searchable: false, render: function (d) { return d; } }
+					{ data: 'actions', orderable: false },
+					{ data: 'soporte_pago', orderable: false }
 				],
 				order: [[0, "desc"], [1, "desc"]]
-				});
-
-			// recargar al cambiar company (ojo: quité los espacios después de nacional=)
-			$('#company').change(function () {
-				const url = "{{ path('app_factura_table') }}" + "?nacional={{ is_nacional }}&company=" + $("#company").val();
-				dtFacturas.ajax.url(url).load();
 			});
 
-			// subir soporte de pago
+			// change company
+			$('#company').on('change', function () {
+				dtFacturas.ajax.reload();
+			});
+
+			// subir soporte
 			$('#data_table_facturas tbody').on('change', '.file_forma_de_pago', function (event) {
 				const dataId = $(this).data('id');
 				const file = event.target.files[0];
-
 				if (!file) return;
 
 				const formData = new FormData();
@@ -230,51 +228,68 @@
 				formData.append('data_id', dataId);
 
 				$.ajax({
-				context: this,
-				url: "{{ path('app_factura_save_soporte') }}",
-				data: formData,
-				type: 'POST',
-				processData: false,
-				contentType: false,
-				success: function () {
-					alertify.success('Archivo guardado Correctamente');
-					dtFacturas.ajax.reload(null, false);
-				},
-				error: function () {
-					alert('Disculpe, existió un problema');
-				}
+					context: this,
+					url: "{{ path('app_factura_save_soporte') }}",
+					data: formData,
+					type: 'POST',
+					processData: false,
+					contentType: false,
+					success: function () {
+						alertify.success('Archivo guardado');
+						dtFacturas.ajax.reload(null, false);
+					},
+					error: function () {
+						alert('Error al subir archivo');
+					}
 				});
 			});
+		}
 
-			// =========================
-			// RECIBOS
-			// =========================
-			if ($.fn.DataTable.isDataTable('#data_table_recibos')) {
-				$('#data_table_recibos').DataTable().destroy();
-			}
+		// =========================
+		// INIT RECIBOS
+		// =========================
+		function initRecibos() {
+			if (dtRecibos !== null) return;
 
-			const dtRecibos = $('#data_table_recibos').DataTable({
+			dtRecibos = $('#data_table_recibos').DataTable({
 				serverSide: true,
 				processing: true,
 				responsive: true,
-				pageLength: 50,
-				sPaginationType: "full_numbers",
+				pageLength: 25,
 				language: {
-				url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+					url: "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
 				},
 				ajax: {
-				url: "{{ path('app_recibo_caja_table') }}",
-				type: "POST"
+					url: "{{ path('app_recibo_caja_table') }}",
+					type: "POST"
 				},
 				columns: [
-				{ data: 'fecha' },
-				{ data: 'numero_recibo' },
-				{ data: 'total' },
-				{ data: 'actions', orderable: false, searchable: false, render: d => d }
+					{ data: 'fecha' },
+					{ data: 'numero_recibo' },
+					{ data: 'total' },
+					{ data: 'actions', orderable: false }
 				],
 				order: [[1, "desc"]]
 			});
+		}
 
+		document.addEventListener('shown.bs.tab', function (event) {
+			const target = event.target.getAttribute('href');
+
+			if (target === '#facturas') {
+				initFacturas();
+			}
+
+			if (target === '#recibos') {
+				initRecibos();
+			}
+		});
+
+		// =========================
+		// LOAD INICIAL
+		// =========================
+		$(document).ready(function () {
+			initFacturas(); // solo carga facturas al inicio
 		});
 		$(document).ready(function () {
 			const canvas = document.getElementById('signaturePad');
