@@ -57,182 +57,149 @@ class EnvioRepository extends ServiceEntityRepository
 
     public function findByDataTable(array $options = [])
     {
-        $campos = [
-            0 => 'f.fecha',
-            1 => 'f.numeroFactura',
-            2 => 'c.razonSocial',
-            3 => 'f.total',
-        ];
-
         $currentPage = $options['page'] ?? 0;
         $pageSize    = $options['pageSize'] ?? 10;
-        $search      = trim($options['search'] ?? '');
-        $company     = $options['company'] ?? null;
-        $nacional    = $options['nacional'] ?? null;
 
-        $qb = $this->createQueryBuilder('f')
-            ->select([
-                'f.id AS id',
-                'f.fecha AS fecha',
-                'f.numeroFactura AS numeroFactura',
-                'f.total AS total',
-                'f.cufe AS cufe',
-                'f.tipoFactura AS tipoFactura',
-                'f.facturado AS facturado',
-                'f.soportePago AS soportePago',
-                'fr.prefijo AS prefijo',
-                'c.razonSocial AS clienteRazonSocial',
-                'c.nit AS clienteNit',
-                "(CASE 
-                    WHEN f.respuestaDian IS NOT NULL AND f.respuestaDian <> '' 
-                    THEN 1 ELSE 0 
-                END) AS tieneRespuestaDian",
-            ])
-            ->innerJoin('f.facturaResolucion', 'fr')
-            ->innerJoin('f.cliente', 'c');
+        $query = $this->createQueryBuilder('e')
+            ->select('e')
+            ->addSelect('(CASE WHEN (e.facturado = 1 OR e.facturadoRecibo = 1) THEN 1 ELSE 0 END) AS HIDDEN prioridadFacturado')
+            ->innerJoin(Pais::class, 'p', Join::WITH, 'p.id = e.paisDestino')
+            ->innerJoin(Pais::class, 'p1', Join::WITH, 'p1.id = e.paisOrigen')
+            ->leftJoin(FacturaItems::class, 'fi', Join::WITH, 'fi.id = e.facturaItems')
+            ->leftJoin(Factura::class, 'f', Join::WITH, 'f.id = fi.facturaClientes');
 
-        if ($nacional != 0 && $nacional !== null && $nacional !== '') {
-            $qb->andWhere('f.tipoFactura = :tipo')
-            ->setParameter('tipo', 'FACTURA_VENTA_NACIONAL');
-        }
-
-        if ($search !== '') {
-            $like = '%' . $search . '%';
-
-            $qb->andWhere('
-                CAST(f.numeroFactura AS string) LIKE :search OR
-                fr.prefijo LIKE :search OR
-                c.razonSocial LIKE :search OR
-                c.nit LIKE :search
+        if (!empty($options['search'])) {
+            $shearch = '%' . $options['search'] . '%';
+            $query->andWhere('
+                e.numeroEnvio LIKE :val OR
+                e.empresa LIKE :val3 OR
+                e.quienRecibe LIKE :val4 OR
+                e.quienEnvia LIKE :val5 OR
+                p.nombre LIKE :val6 OR
+                p1.nombre LIKE :val7 OR
+                e.referencia LIKE :val8
             ')
-            ->setParameter('search', $like);
+            ->setParameters([
+                'val'  => $shearch,
+                'val3' => $shearch,
+                'val4' => $shearch,
+                'val5' => $shearch,
+                'val6' => $shearch,
+                'val7' => $shearch,
+                'val8' => $shearch,
+            ]);
         }
 
-        if ($company !== null && $company !== '') {
-            $qb->andWhere('fr.empresa = :empresa')
-            ->setParameter('empresa', $company);
-        }
+        // Primero los no facturados
+        $query->addOrderBy('prioridadFacturado', 'ASC');
 
-        if (!empty($options['order'])) {
-            foreach ($options['order'] as $order) {
-                $columnIndex = (int) ($order['column'] ?? -1);
-                $direction   = strtoupper($order['dir'] ?? 'DESC') === 'ASC' ? 'ASC' : 'DESC';
+        // Luego el orden del datatable
+        if (!empty($options['order']) && !empty($options['order']['column'])) {
+            $column = $options['order']['column'];
+            $dir    = strtolower($options['order']['dir'] ?? 'desc') === 'asc' ? 'ASC' : 'DESC';
 
-                if (isset($campos[$columnIndex])) {
-                    $qb->addOrderBy($campos[$columnIndex], $direction);
-                }
+            $columnMap = [
+                'numeroEnvio' => 'e.numeroEnvio',
+                'fechaEnvio'  => 'e.fechaEnvio',
+                'empresa'     => 'e.empresa',
+                'quienEnvia'  => 'e.quienEnvia',
+                'quienRecibe' => 'e.quienRecibe',
+                'paisDestino' => 'p.nombre',
+            ];
+
+            if (isset($columnMap[$column])) {
+                $query->addOrderBy($columnMap[$column], $dir);
+            } else {
+                $query->addOrderBy('e.fechaEnvio', 'DESC');
             }
         } else {
-            $qb->addOrderBy('f.fecha', 'DESC')
-            ->addOrderBy('f.numeroFactura', 'DESC');
+            $query->addOrderBy('e.fechaEnvio', 'DESC');
         }
 
-        $countQb = $this->createQueryBuilder('f')
-            ->select('COUNT(f.id)')
-            ->innerJoin('f.facturaResolucion', 'fr')
-            ->innerJoin('f.cliente', 'c');
+        $paginator  = new Paginator($query);
+        $totalItems = count($paginator);
 
-        if ($nacional != 0 && $nacional !== null && $nacional !== '') {
-            $countQb->andWhere('f.tipoFactura = :tipo')
-                    ->setParameter('tipo', 'FACTURA_VENTA_NACIONAL');
-        }
-
-        if ($search !== '') {
-            $like = '%' . $search . '%';
-
-            $countQb->andWhere('
-                CAST(f.numeroFactura AS string) LIKE :search OR
-                fr.prefijo LIKE :search OR
-                c.razonSocial LIKE :search OR
-                c.nit LIKE :search
-            ')
-            ->setParameter('search', $like);
-        }
-
-        if ($company !== null && $company !== '') {
-            $countQb->andWhere('fr.empresa = :empresa')
-                    ->setParameter('empresa', $company);
-        }
-
-        $totalItems = (int) $countQb->getQuery()->getSingleScalarResult();
-
-        $rows = $qb->setFirstResult($pageSize * $currentPage)
+        $items = $query->getQuery()
+            ->setFirstResult($pageSize * $currentPage)
             ->setMaxResults($pageSize)
-            ->getQuery()
-            ->getArrayResult();
+            ->getResult();
 
         $list = [];
 
-        foreach ($rows as $factura) {
-            $id = (int) $factura['id'];
+        foreach ($items as $item) {
+            $estaFacturado = ($item->getFacturado() == 1 || $item->isFacturadoRecibo() == 1);
 
-            $actions = '';
-            $reportar = '';
+            $actions = '<a class="icon-select" style="position:relative; float:right;cursor:pointer;" onMouseOver="verEnvio('.$item->getId().');" onMouseOut="ocultarEnvio()" title="Ver Envío">
+                <i class="fa fa-eye text-success"></i>
+            </a>';
 
-            $actions .= '<a class="btn waves-effect waves-light btn-info" href="/impresion/impresion_factura?id=' . $id . '" title="Imprimir" target="_blank">
+            if ($item->getVerificado()) {
+                $actions .= '<button class="btn btn-success" id="desverificar'.$item->getId().'" onClick="desverificar('.$item->getId().');" title="Desverificar">
+                    <i class="fas fa-check"></i>
+                </button>';
+            } else {
+                $actions .= '<button class="btn btn-secondary" id="verificar'.$item->getId().'" onClick="verificar('.$item->getId().');" title="Verificar">
+                    <i class="fas fa-check"></i>
+                </button>';
+            }
+
+            if (!$estaFacturado) {
+                $actions .= '<button class="btn btn-danger" onclick="marcarFacturado('.$item->getId().')" title="Marcar como facturado">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </button>';
+            }
+
+            if ($item->getFacturaItems() || $item->getReciboCajaItem()) {
+
+                if ($item->getFacturaItems()) {
+                    $factura = $item->getFacturaItems()->getFacturaClientes();
+
+                    if ($factura && $factura->getFacturaResolucion()) {
+                        $actions .= '<a class="btn btn-warning" 
+                            title="' . $factura->getFacturaResolucion()->getPrefijo() . '-' . $factura->getNumeroFactura() . '" 
+                            href="/impresion/impresion_factura?id=' . $factura->getId() . '" 
+                            target="_blank">
+                            <i class="fa fa-qrcode"></i>
+                        </a>';
+                    }
+                }
+
+                if ($item->getReciboCajaItem()) {
+                    $recibo = $item->getReciboCajaItem()->getReciboCaja();
+
+                    if ($recibo) {
+                        $actions .= '<a class="btn btn-primary" 
+                            title="RE-' . $recibo->getNumeroRecibo() . '" 
+                            href="/impresion/impresion_recibo?id=' . $recibo->getId() . '" 
+                            target="_blank">
+                            <i class="fa fa-qrcode"></i>
+                        </a>';
+                    }
+                }
+
+            } else {
+                $actions .= '<a class="btn waves-effect waves-light btn-info" href="/envio/' . $item->getId() . '/edit" title="Editar">
+                    <i class="fas fa-pencil-alt"></i>
+                </a>';
+
+                $actions .= '<a class="btn waves-effect waves-light btn-danger" href="/envio/' . $item->getId() . '/delete" onclick="return confirm(\'Estas seguro de borrar este envio\')" title="Eliminar">
+                    <i class="fas fa-trash-alt"></i>
+                </a>';
+            }
+
+            $actions .= '<a class="btn waves-effect waves-light btn-info" href="/impresion/impresion_dimension_envio?id=' . $item->getId() . '" title="Imprimir" target="_blank">
                 <span class="fas fa-print"></span>
             </a>';
 
-            $actions .= "<button onclick='mostrarNotasCredito(" . $id . ");' class='btn btn-info'>NC</button>";
-
-            if (!empty($factura['facturado'])) {
-                $actions .= '<button class="btn btn-success" id="desverificar'.$id.'" onClick="desverificar('.$id.');">
-                    <i class="fas fa-check"></i>
-                </button>';
-            } else {
-                $actions .= '<button class="btn btn-secondary" id="verificar'.$id.'" onClick="verificar('.$id.');">
-                    <i class="fas fa-check"></i>
-                </button>';
-            }
-
-            if (empty($factura['cufe'])) {
-                $reportar = '<button type="button" id="reportar' . $id . '" class="btn" onclick="Reportar(' . $id . ');" title="Reportar Dian">
-                    <img src="/assets/images/facturas/dian.png" height="30" width="30">
-                </button>';
-
-                if ($factura['tipoFactura'] === 'FACTURA_VENTA') {
-                    $actions .= '<a class="btn waves-effect waves-light btn-warning" href="/factura/' . $id . '/edit">
-                        <span class="fas fa-pencil-alt"></span>
-                    </a>';
-                } elseif ($factura['tipoFactura'] === 'FACTURA_VENTA_NACIONAL') {
-                    $actions .= '<a class="btn waves-effect waves-light btn-warning" href="/factura_nacionales/' . $id . '/edit">
-                        <span class="fas fa-pencil-alt"></span>
-                    </a>';
-                } else {
-                    $actions .= '<a class="btn waves-effect waves-light btn-warning" href="/factura_simple/' . $id . '/edit">
-                        <span class="fas fa-pencil-alt"></span>
-                    </a>';
-                }
-
-                if (!empty($factura['tieneRespuestaDian'])) {
-                    $actions .= '<a class="icon-select" style="position:relative; float:right;cursor:pointer;" onClick="verErrores(' . $id . ');" title="Ver respuesta Dian">
-                        <i class="fas fa-code text-success"></i>
-                    </a>';
-                }
-            }
-
-            // Mantengo tu comportamiento actual, pero esto sería ideal moverlo a modal
-            if (!empty($factura['soportePago'])) {
-                $soporte_pago  = '<input type="file" name="archivo_excel" data-id="'.$id.'" class="form-control file_forma_de_pago"/>';
-                $soporte_pago .= '<a href="/uploads/images/'.$factura['soportePago'].'" class="btn btn-dark" target="_blank">
-                    <i class="fa fa-clipboard"></i> '.$factura['soportePago'].'
-                </a>';
-            } else {
-                $soporte_pago = '<input type="file" id="archivo_excel" data-id="'.$id.'" name="archivo_excel" class="form-control file_forma_de_pago"/>';
-            }
-
-            $fecha = $factura['fecha'];
-            if ($fecha instanceof \DateTimeInterface) {
-                $fecha = $fecha->format('Y-m-d');
-            }
-
             $list[] = [
-                'fecha'        => $fecha,
-                'numero'       => $factura['prefijo'] . $factura['numeroFactura'],
-                'cliente'      => $factura['clienteRazonSocial'] . ' (' . $factura['clienteNit'] . ')',
-                'total'        => $factura['total'],
-                'actions'      => $reportar . $actions,
-                'soporte_pago' => $soporte_pago,
+                'numeroEnvio'       => $item->getNumeroEnvio(),
+                'fechaEnvio'        => $item->getFechaEnvio()?->format('Y-m-d'),
+                'empresa'           => $item->getEmpresa(),
+                'quienEnvia'        => $item->getQuienEnvia(),
+                'quienRecibe'       => $item->getQuienRecibe(),
+                'paisDestino'       => $item->getPaisDestino()?->getNombre(),
+                'actions'           => $actions,
+                'pendienteFacturar' => !$estaFacturado,
             ];
         }
 
