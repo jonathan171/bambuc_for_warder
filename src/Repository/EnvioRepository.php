@@ -143,11 +143,11 @@ class EnvioRepository extends ServiceEntityRepository
                 </button>';
             }
 
-            if (!$estaFacturado) {
+            /*if (!$estaFacturado) {
                 $actions .= '<button class="btn btn-danger" onclick="marcarFacturado('.$item->getId().')" title="Marcar como facturado">
                     <i class="fas fa-file-invoice-dollar"></i>
                 </button>';
-            }
+            }*/
 
             if ($item->getFacturaItems() || $item->getReciboCajaItem()) {
 
