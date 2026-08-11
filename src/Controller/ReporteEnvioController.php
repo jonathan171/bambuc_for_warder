@@ -71,9 +71,10 @@ class ReporteEnvioController extends AbstractController
         $sheet->getCell('F4')->setValue("PESO COBRADO");
         $sheet->getCell('G4')->setValue("DESTINATARIO");
         $sheet->getCell('H4')->setValue("VALOR \n DEL \n ENVÍO");
-        $sheet->getCell('I4')->setValue("FACTURA");
-        $sheet->getCell('J4')->setValue("RECIBO");
-        $sheet->getCell('K4')->setValue("REFERENCIA");
+        $sheet->getCell('I4')->setValue("DESCUENTO");
+        $sheet->getCell('J4')->setValue("FACTURA");
+        $sheet->getCell('K4')->setValue("RECIBO");
+        $sheet->getCell('L4')->setValue("REFERENCIA");
 
 
 
@@ -91,7 +92,7 @@ class ReporteEnvioController extends AbstractController
                 ),
             ),
         );
-        foreach (range('A', 'K') as $columnID) {
+        foreach (range('A', 'L') as $columnID) {
 
             $sheet->getStyle($columnID . '4')->applyFromArray($styleArray);
         }
@@ -103,7 +104,8 @@ class ReporteEnvioController extends AbstractController
         $sheet->getColumnDimension('F')->setWidth(15);
         $sheet->getColumnDimension('G')->setWidth(30);
         $sheet->getColumnDimension('H')->setWidth(25);
-        $sheet->getColumnDimension('K')->setWidth(30);
+        $sheet->getColumnDimension('I')->setWidth(15);
+        $sheet->getColumnDimension('L')->setWidth(30);
         $sheet->getStyle('B4')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
         $sheet->getRowDimension('4')->setRowHeight(45, 'pt');
         $sheet->getRowDimension('1')->setRowHeight(100, 'px');
@@ -169,19 +171,23 @@ class ReporteEnvioController extends AbstractController
             $sheet->setCellValue("F$cell", $envio->getTotalPesoCobrar());
             $sheet->setCellValue("G$cell", $envio->getQuienRecibe());
             $sheet->setCellValue("H$cell", $envio->getTotalACobrar());
+            $sheet->setCellValue("I$cell", $envio->getDescuento());
             if($envio->getFacturaItems()){
-                $sheet->setCellValue("I$cell", $envio->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().$envio->getFacturaItems()->getFacturaClientes()->getNumeroFactura());
+                $sheet->setCellValue("J$cell", $envio->getFacturaItems()->getFacturaClientes()->getFacturaResolucion()->getPrefijo().$envio->getFacturaItems()->getFacturaClientes()->getNumeroFactura());
 
             }
             if($envio->getReciboCajaItem()){
-                $sheet->setCellValue("J$cell", "RE".$envio->getReciboCajaItem()->getReciboCaja()->getNumeroRecibo());
+                $sheet->setCellValue("K$cell", "RE".$envio->getReciboCajaItem()->getReciboCaja()->getNumeroRecibo());
             }
             $sheet->getStyle("H$cell",)
                 ->getNumberFormat()
                 ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->setCellValue("K$cell", $envio->getReferencia());
+            $sheet->getStyle("I$cell",)
+                ->getNumberFormat()
+                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->setCellValue("L$cell", $envio->getReferencia());
             $total += $envio->getTotalACobrar();
-            foreach (range('A', 'K') as $columnID) {
+            foreach (range('A', 'L') as $columnID) {
 
                 $sheet->getStyle($columnID . $cell)->applyFromArray($styleArray);
             }
@@ -203,6 +209,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getStyle("I$cell")->applyFromArray($styleArray);
         $sheet->getStyle("J$cell")->applyFromArray($styleArray);
         $sheet->getStyle("K$cell")->applyFromArray($styleArray);
+        $sheet->getStyle("L$cell")->applyFromArray($styleArray);
 
 
         $sheet->setTitle("Reporte envios");

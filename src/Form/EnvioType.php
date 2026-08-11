@@ -80,6 +80,15 @@ class EnvioType extends AbstractType
                 ],
                 'html5' => true
             ])
+            ->add('descuento', NumberType::class, [
+                'required' => false,
+                'empty_data' => '0.00',
+                'attr' => [
+                    'class' => 'form-control',
+                    'step' => '0.01'
+                ],
+                'html5' => true
+            ])
             ->add('fechaEnvio', null, [
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',

@@ -77,6 +77,13 @@ class Envio
      */
     private $totalACobrar = '0.00';
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descuento", type="decimal", precision=20, scale=2, nullable=false, options={"default"="0.00"})
+     */
+    private $descuento = '0.00';
+
      /**
      * @var \DateTime
      *
@@ -299,6 +306,18 @@ class Envio
     public function setTotalACobrar(string $totalACobrar): self
     {
         $this->totalACobrar = $totalACobrar;
+
+        return $this;
+    }
+
+    public function getDescuento(): ?string
+    {
+        return $this->descuento;
+    }
+
+    public function setDescuento(?string $descuento): self
+    {
+        $this->descuento = $descuento ?? '0.00';
 
         return $this;
     }
