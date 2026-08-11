@@ -85,7 +85,9 @@ class EnvioType extends AbstractType
                 'empty_data' => '0.00',
                 'attr' => [
                     'class' => 'form-control',
-                    'step' => '0.01'
+                    'step' => '0.01',
+                    'min' => '0',
+                    'max' => '100'
                 ],
                 'html5' => true
             ])

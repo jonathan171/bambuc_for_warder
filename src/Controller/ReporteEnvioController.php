@@ -71,7 +71,7 @@ class ReporteEnvioController extends AbstractController
         $sheet->getCell('F4')->setValue("PESO COBRADO");
         $sheet->getCell('G4')->setValue("DESTINATARIO");
         $sheet->getCell('H4')->setValue("VALOR \n DEL \n ENVÍO");
-        $sheet->getCell('I4')->setValue("DESCUENTO");
+        $sheet->getCell('I4')->setValue("DESCUENTO %");
         $sheet->getCell('J4')->setValue("FACTURA");
         $sheet->getCell('K4')->setValue("RECIBO");
         $sheet->getCell('L4')->setValue("REFERENCIA");
@@ -180,9 +180,6 @@ class ReporteEnvioController extends AbstractController
                 $sheet->setCellValue("K$cell", "RE".$envio->getReciboCajaItem()->getReciboCaja()->getNumeroRecibo());
             }
             $sheet->getStyle("H$cell",)
-                ->getNumberFormat()
-                ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->getStyle("I$cell",)
                 ->getNumberFormat()
                 ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
             $sheet->setCellValue("L$cell", $envio->getReferencia());
